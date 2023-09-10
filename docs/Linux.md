@@ -14,15 +14,7 @@
 
 6. `cp`：复制文件或目录。
 
-	```bash
-	cp source_file destination_file
-	```
-
 7. `mv`：移动文件或目录，也可用于重命名文件或目录。
-
-	```bash
-	mv source_file destination_file
-	```
 
 8. `rm`：删除文件或目录。
 
@@ -109,3 +101,75 @@ Linux 文件的基本权限就有九个，分别是 **owner/group/others(拥有
 - group = rwx = 4+2+1 = 7
 - others = --- = 0+0+0 = 0
 
+
+## Shell 编程
+
+[Bash scripting cheatsheet (devhints.io)](https://devhints.io/bash)
+
+Example:
+
+```bash
+#!/bin/bash
+echo "Today is " `date`
+
+echo -e "\nenter the path to directory"
+read the_path
+
+echo -e "\n you path has the following files and folders: "
+ls $the_path
+```
+
+```bash
+chmod u+x run_all.sh
+sh run_all.sh
+```
+
+### 条件控制
+
+```bash
+if [[ condition ]];
+then
+	statement
+elif [[ condition ]]; then
+	statement 
+else
+	do this by default
+fi
+```
+
+```bash
+#!/bin/bash
+echo "Please enter a number: "
+read num
+
+if [ $num -gt 0 ]; then
+  echo "$num is positive"
+elif [ $num -lt 0 ]; then
+  echo "$num is negative"
+else
+  echo "$num is zero"
+fi
+```
+
+### 循环
+
+```bash
+#!/bin/bash
+i=1
+while [[ $i -le 10 ]] ; do
+   echo "$i"
+  (( i += 1 ))
+done
+```
+
+```bash
+for ((i = 0 ; i < 100 ; i++)); do
+  echo "$i"
+done
+```
+
+```bash
+for i in {1..5}; do
+    echo "Welcome $i"
+done
+```
