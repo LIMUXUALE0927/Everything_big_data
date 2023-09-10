@@ -14,13 +14,13 @@
 
 6. `cp`：复制文件或目录。
 
-   ```bash
+	```bash
    cp source_file destination_file
    ```
 
 7. `mv`：移动文件或目录，也可用于重命名文件或目录。
 
-   ```bash
+	```bash
    mv source_file destination_file
    ```
 
