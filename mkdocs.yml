@@ -2,11 +2,13 @@ site_name: Everything Big Data
 
 theme:
   name: material
-  language: en
+  language: zh
   features:
     - navigation.tabs
+    - navigation.tabs.sticky
     - search.suggest
     - search.highlight
+    - content.code.copy
   palette: 
     # Palette toggle for light mode
     - scheme: default
@@ -26,7 +28,7 @@ theme:
 
 plugins:
   - search:
-      lang: en
+      lang: zh
 
 markdown_extensions:
   - pymdownx.arithmatex:
