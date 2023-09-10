@@ -642,20 +642,27 @@ if (condition) {
 - 范围步长`1 to 10 by 2`。
 - 范围也是一个集合，也可以遍历普通集合：`for(i <- collection) {}`
 - 循环守卫：即循环保护式，或者叫条件判断式，循环守卫为`true`则进入循环体内部，为`fasle`则跳过，类似于`continue`。
+
   - 写法：
+
   ```scala
   for(i <- collection if condition) {
   }
   ```
+
   - 等价于：
+
   ```scala
   if (i <- collection) {
       if (condition) {
       }
   }
   ```
+
 - 嵌套循环同理。嵌套循环可以将条件合并到一个`for`中：
+
   - 标准写法：
+
   ```scala
   for (i <- 1 to 4) {
           for (j <- 1 to 5) {
@@ -663,27 +670,36 @@ if (condition) {
           }
       }
   ```
+
   - 等价写法：
+
   ```scala
   for (i <- 1 to 4; j <- 1 to 5) {
           println("i = " + i + ", j = " + j)
       }
   ```
+
   - 典型例子，乘法表：
+
   ```scala
   for (i <- 1 to 9; j <- 1 to i) {
       print(s"$j * $i = ${i * j} \t")
       if (j == i) println()
   }
   ```
+
 - 循环中的引入变量，但不是循环变量：
+
   ```scala
   for (i <- 1 to 10; j = 10 - i) {
       println("i = " + i + ", j = " + j)
   }
   ```
+
 - 循环条件也可以用`{}`
+
   - 上面的引入变量循环等价于：
+
   ```scala
   for {
       i <- 1 to 10
@@ -692,8 +708,10 @@ if (condition) {
       println("i = " + i + ", j = " + j)
   }
   ```
+
 - 循环同样有返回值，返回值都是空，也就是`Unit`实例`()`。
 - 循环中同样可以用`yield`返回，外面可以接住用来操作，循环暂停，执行完后再继续循环。就像 Ruby/Python。
+
   ```scala
   val v = for (i <- 1 to 10) yield i * i // default implementation is Vector, Vector(1, 4, 9, 16, 25, 36, 49, 64, 81, 100)
   ```
@@ -716,6 +734,7 @@ do {
 - 使用`breakable`结构来实现`break continue`功能。
 - 循环守卫可以一定程度上替代`continue`。
 - 可以用抛出异常捕获的方式退出循环，替代`break`。
+
   ```scala
   try {
       for (i <- 0 to 10) {
@@ -727,7 +746,9 @@ do {
       case e: Exception => // do nothing
   }
   ```
+
 - 可以使用 Scala 中的`Breaks`类中的`break`方法（只是封装了异常捕获），实现异常抛出和捕获。
+
   ```scala
   import scala.util.control.Breaks
   Breaks.breakable(
@@ -778,7 +799,9 @@ def func(arg1: TypeOfArg1, arg2: ...): RetType = {
   - `def f5(name: String = "alice"): Unit = {}`
   - 和 C++一样，默认参数可以不传，默认参数必须全部放在末尾。
 - 带名称传参：
+
   - 调用时带名称。
+
   ```scala
   def f6(name: String, age: Int = 20, loc: String = "BeiJing"): Unit = {
       println(s"name ${name}, age ${age}, location ${loc}")
@@ -787,6 +810,7 @@ def func(arg1: TypeOfArg1, arg2: ...): RetType = {
   f6("Alice", loc = "Xi'An")
   f6("Michael", 30)
   ```
+
   - 不给名称的就是按顺序赋值。
   - 调用时带名参数必须位于实参列表末尾。
   - 和默认参数一起使用会很方便，比如有多个默认参数，但只想覆盖其中一个。
@@ -802,6 +826,7 @@ def func(arg1: TypeOfArg1, arg2: ...): RetType = {
 - 如果期望是无返回值类型，那么可以省略`=`。这时候没有返回值，函数也可以叫做过程。【2.13.0 已废弃，能编过不过会提示。】
 - 无参函数如果声明时没有加`()`，调用时可以省略`()`。【如果声明时有`()`调用也可以省略，不过 2.13.3 废弃了。】
 - 不关心函数名称时，函数名称和`def`也可以省略，去掉返回值类型，将`=`修改为`=>`定义为匿名函数。
+
   ```scala
   val fun = (name: String) => { println("name") }
   ```
@@ -812,11 +837,13 @@ def func(arg1: TypeOfArg1, arg2: ...): RetType = {
 - `val fun = (name: String) => { println("name") }`
 - 匿名函数定义时不能有函数的返回值类型。
 - 简化原则：
+
   - 参数的类型可以省略，如果可以根据高阶函数形参自动推导。
   - 类型省略之后如果只有一个参数，那么可以省略参数列表的`()`，`name => println(name)`。
   - 匿名函数函数体只要一行，那么`{}`可以省略。
   - 如果参数只出现一次，则参数可以省略，后面出现的参数用`_`代替，`println(_)`也是一个 lambda，表示`name => {println(name)}`。
   - 如果可以推断出当前传入的`println`是一个函数体，而不是函数调用语句，那么可以省略下划线。也就是省略了转调，直接将函数名称作为参数传递。
+
   ```scala
   def f(func: String => Unit): Unit = {
       func("alice")
@@ -826,6 +853,7 @@ def func(arg1: TypeOfArg1, arg2: ...): RetType = {
   f(println(_))
   f(println)
   ```
+
 - 例子：省得太极端就没有可读性了。
 
 ```scala
@@ -1121,8 +1149,10 @@ def sum(a: Int, b: Int): Int = {
 - 命名：包名称只能是常规的标识符（字母数字下划线，数字不能开头）。同样`.`作为不同层级分割符，整体作为包名。
 - 命名规范：一般情况下按照如下规则命名`com.company.projectname.modulename`，视项目规定而定，只是一个名称而已。
 - scala 中的两种包管理方式：
+
   - 第一种，java 风格，每个源文件声明一个包，写在源文件最上方。但源文件位置不需要和包名目录层级一致，只代表逻辑层级关系，不像 java 一样源文件也必须按照包名目录层级关系放置。当然惯例是和 java 一样按照包名目录层级来放置。
   - 第二种，用`{}`嵌套风格定义包：
+
   ```scala
   package com {
       // code in com package
@@ -1144,10 +1174,12 @@ def sum(a: Int, b: Int): Int = {
       }
   }
   ```
+
   - 嵌套风格好处：
     - 一个源文件可以声明多个并列的最顶层的包。
     - 子包中的类可以访问父包中的内容，无需导入。但外层是不能直接访问内层的，需要导入。
   - 如果单文件 VsCode 测试嵌套包，而不是用 IDE 的话，那定义了包就不能直接执行了，需要`scalac`先编译，并指定入口类运行。编译后的字节码文件和 java 一样会自动按照包层级关系排列。
+
   ```shell
   scalac PackageManagement.scala
   scala com.inner.scala.Inner
@@ -2518,9 +2550,9 @@ val myLongFieldNameWithNoRealPoint = foo(someVeryLongFieldName,
 - windows 上没有的命令按照含义操作即可。
 
 ```shell
-$ mkdir foo-build
-$ cd foo-build
-$ touch build.sbt
+mkdir foo-build
+cd foo-build
+touch build.sbt
 ```
 
 开始 sbt shell：
