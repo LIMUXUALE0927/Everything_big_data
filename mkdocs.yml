@@ -9,6 +9,8 @@ theme:
     - search.suggest
     - search.highlight
     - content.code.copy
+    - navigation.top
+    - content.code.annotate
   palette: 
     # Palette toggle for light mode
     - scheme: default
@@ -29,6 +31,7 @@ theme:
 plugins:
   - search:
       lang: zh
+      jieba_dict: dict.txt
 
 markdown_extensions:
   - pymdownx.arithmatex:
@@ -45,6 +48,8 @@ markdown_extensions:
       anchor_linenums: true
   - pymdownx.tasklist:
       custom_checkbox: true
+  - pymdownx.tabbed:
+      alternate_style: true 
 
 extra_javascript:
   - javascripts/mathjax.js
