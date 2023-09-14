@@ -37,6 +37,8 @@ markdown_extensions:
   - pymdownx.arithmatex:
       generic: true
   - admonition
+  - attr_list
+  - md_in_html
   - pymdownx.details
   - pymdownx.superfences
   - pymdownx.critic

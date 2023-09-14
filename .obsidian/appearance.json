@@ -1,5 +1,6 @@
 {
   "accentColor": "",
-  "cssTheme": "Minimal",
-  "translucency": false
+  "cssTheme": "Border",
+  "translucency": true,
+  "textFontFamily": "PingFang SC"
 }
