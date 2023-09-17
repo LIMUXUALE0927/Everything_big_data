@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "docs/数据结构与算法/数据结构与算法复习.md",
+                "file": "docs/数据结构与算法/背包问题.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "docs/数据结构与算法/数据结构与算法复习.md",
+                "file": "docs/数据结构与算法/背包问题.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "docs/数据结构与算法/数据结构与算法复习.md",
+                "file": "docs/数据结构与算法/背包问题.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "docs/数据结构与算法/数据结构与算法复习.md"
+                "file": "docs/数据结构与算法/背包问题.md"
               }
             }
           },
@@ -158,6 +158,8 @@
   },
   "active": "cc698d2e4302f6e1",
   "lastOpenFiles": [
+    "docs/数据结构与算法/线性动态规划.md",
+    "docs/数据结构与算法/数据结构与算法复习.md",
     "docs/ZooKeeper/常见面试题.md",
     "docs/ZooKeeper/ZooKeeper 如何实现分布式锁.md",
     "docs/ZooKeeper",
@@ -172,7 +174,6 @@
     "site/ZooKeeper",
     "site/assets/images/favicon.png",
     "docs/数据结构与算法/背包问题.md",
-    "docs/数据结构与算法/数据结构与算法复习.md",
     "docs/数据结构与算法/区间类问题.md",
     "docs/Linux.md",
     "docs/index.md",
