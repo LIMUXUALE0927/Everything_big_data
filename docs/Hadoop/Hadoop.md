@@ -1,0 +1,67 @@
+## Hadoop 是什么？
+
+**Hadoop 是一个开源的分布式计算框架，主要解决海量数据的存储和计算问题。**
+
+Hadoop 主要由三个模块组成：
+
+- HDFS：分布式文件系统
+- MapReduce：分布式计算框架，或者说分布式编程模型，用户可以基于此进行分布式批处理
+- Yarn：通用的资源管理系统，进行集群资源的统一管理与分配，主要给分布式计算引擎协调管理集群资源
+
+总的来说，HDFS 提供了分布式的存储能力，MapReduce 提供了分布式计算能力，Yarn 提供了集群计算资源的管理和调度能力。
+
+---
+
+## Hadoop 的特点？
+
+- 高可靠性：Hadoop 底层维护多个数据副本，即使 Hadoop 某个计算元素或存储出现故障时，也不会导致数据的丢失
+- 高扩展性：可以通过简单地增加机器的方式，方便的扩展数以千计的节点
+- 高效性：在 MapReduce 的思想下，Hadoop 是分布式并行计算，加快任务处理速度
+- 高容错性：能够自动将失败的任务重新分配
+
+---
+
+## Hadoop 1.0/2.0/3.0 的区别？
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202309301902605.png)
+
+Hadoop1.0 升级到 2.0 架构发生了比较大的变化，新增了 YARN 模块，2.0 到 3.0 在架构上没有改变，但各版本之间在细节上均做了很多优化。
+
+**1.0 与 2.0 的区别：**
+
+从 HDFS 来说：
+
+1. Hadoop2.0 新增了 HDFS HA 机制，HA 增加了 standby namenode 进行热备份，解决了 1.0 的单点故障问题。
+2. Hadoop2.0 新增了 HDFS federation，解决了 HDFS 水平可扩展能力。
+
+> HDFS federation
+> 允许有多个 namenode 独立运行组成联邦。每个 datanode 向所有 namenode 进行注册。每个 namenode 维护一个命名空间卷（互相独立）上层通过一个挂载表组织来访问数据。
+
+从 MapReduce 来说：
+
+- 1.0 中 MapReduce 同时处理业务逻辑运算和资源的调度，耦合性较大；2.0 中增加了 Yarn。Yarn 只负责资源的调度，MapReduce 只负责运算。
+
+**2.0 与 3.0 的区别：**
+
+1. Java 运行环境升级为 1.8
+2. HDFS 支持纠删码：纠删码相比于副本机制节省了一半以上的存储空间，普通副本机制需要 3 倍存储空间而纠删码可以节省近一半的存储空间。
+3. YARN 时间线服务
+4. 支持多余 2 个以上的 NameNode：3.0 支持单 active namenode + 多 standby namenode 部署方式进一步提升了可用性。
+5. MapReduce 本地优化，性能提升了 30%。
+
+---
+
+## Hadoop 集群工作时启动了哪些进程？
+
+- NameNode
+- DataNode
+- Secondary NameNode
+- ResourceManager
+- NodeManager
+
+在 HA 模式下：
+
+- ZKFC：监控 NameNode 的健康状态，并维持和 ZK 集群的联系，在节点失效时自动进行故障转移
+- JournalNode：存储共享 NameNode 的 editlog
+
+---
