@@ -320,3 +320,167 @@ Case 3：读数据时发现 Block 数据出错了
 - client 读取 block 数据时，同时会读取到 block 的校验和，若 client 针对读取过来的 block 数据，计算检验和，其值与读取过来的校验和不一样，说明 block 数据损坏。
 
 - 然后 client 从存储此 block 副本的其它 DataNode 上读取 block 数据（也会计算校验和）。同时，client 会告知 namenode 此情况
+
+---
+
+## HDFS 小文件问题
+
+- **对于 NameNode 来说**，NameNode 存储着文件系统的元数据，每个文件、目录、块大概有 **150 字节** 的元数据，因此文件数量的限制也由 NN 内存大小决定，如果小文件过多则会造成 NN 的压力过大
+- **对于 DataNode 来说**，文件的 block 是存储在 datanode 本地系统上，底层的磁盘上，甚至不同的挂载目录，不同的磁盘上。大量的小文件，意味着数据着寻址需要花费很多时间，尤其对于高负载的集群来说（磁盘使用率 50% 以上的集群），花费在寻址的时间比文件读取写入的时间更多。这种就违背了 blocksize 大小设计的初衷（实践显示最佳效果是：寻址时间仅占传输时间的 1%）。这样会造成磁盘的读写很慢，拥有大量小文件会导致更多的磁盘搜索。
+- **对于计算来说**，小文件对于计算的影响就是需要大量节点之间频繁建立联系，数据传输等，浪费资源，消耗时间长。其次小文件相关大量的任务初始化时间甚至比计算时间还长，造成计算资源的使用浪费，降低集群的吞吐量。
+
+基于 HDFS 文件系统的计算，block 是最小粒度的数据处理单元。块的多少往往影响应用程序的吞吐量。更多的文件，意味着更多的块，以及更多的节点分布。
+
+比如以 MapReduce 任务为例（hive 等），在 MapReduce 中，会为每个读取的块生成一个单独的 Map 任务，如果大量小文件，大量的块，意味着着更多任务调度，任务创建开销，以及更多的任务管理开销（MapReduce 作业的 application master 是一个 Java 应用，它的主类是 MRAppMaster。它通过创建一定数量的 bookkeeping object 跟踪作业进度来初始化作业，该对象接受任务报告的进度和完成情况）。**虽然可以开启 map 前文件合并，但是这也需要不停地从不同节点建立连接，数据读取，网络传输，然后进行合并，同样会增加消耗资源和增加计算时间，成本也很高。**
+
+!!! note " 小文件问题解决方案"
+
+思路一：合并小文件
+
+- Hadoop Archive 文件归档
+
+Hadoop 提供了归档工具（如 Hadoop Archives，HAR），可以将多个小文件打包为一个归档文件。归档文件在逻辑上看起来像一个目录，但实际上是一个存档文件，可以减少元数据开销并提高读取性能。
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202310010540458.png)
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202310010543539.png)
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202310010550295.png)
+
+- SequenceFile 序列化文件
+
+对于一些小文件，可以将它们序列化为一个文件或对象，并将其存储为二进制数据。这样可以减少文件数量，节省元数据空间，并提高读取/写入性能。
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202310021715272.png)
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202310021716969.png)
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202310021719514.png)
+
+\*\*sync 同步标记用于数据的定位和切分。
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202310021720183.png)
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202310021720307.png)
+
+block 压缩比 record 压缩提供更高的压缩率，使用 Sequence File 时，通常首选 block 压缩。
+
+- SequenceFile 文件，主要由一条条 record 记录组成；每个 record 是键值对形式的
+
+- SequenceFile 文件可以作为小文件的存储容器；
+
+  - 每条 record 保存一个小文件的内容
+  - 小文件名作为当前 record 的键；
+  - 小文件的内容作为当前 record 的值；
+  - 如 10000 个 100KB 的小文件，可以编写程序将这些文件放到一个 SequenceFile 文件。
+
+- 一个 SequenceFile 是**可分割**的，所以 MapReduce 可将文件切分成块，每一块独立操作。
+
+我们直接将数据写入一个 SequenceFile 文件，省去小文件作为中间媒介。
+
+---
+
+## 3.0 新功能
+
+### Disk Balancer 磁盘均衡器
+
+相较于个人 PC，服务器一般可以通过挂载多个磁盘来提升单机的存储能力。DataNode 在写入新 Block 的时候，可以根据选择策略（**循环策略**和**可用空间策略**）来选择磁盘。
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202310010348012.png)
+
+循环策略可能导致数据不均匀的情况，可用空间策略可能会将新写入的 Block 全写入新加入的磁盘，其他磁盘都空闲，可能会导致读写的瓶颈。因此，需要一种 Intra DataNode Balancing（DataNode 内部数据块的均匀分布）来解决 Intra-DataNode 偏斜问题。
+
+**这里注意区分 Disk Balancer 和 HDFS Balancer。**
+
+Disk Balancer 是针对一个 DataNode 节点内的多个磁盘而言的，而 HDFS Balancer 是平衡多个 DataNode 节点的数据分布。
+
+### Erasure Coding 纠删码
+
+[HDFS Erasure Coding--纠删码架构调整\_哔哩哔哩\_bilibili](https://www.bilibili.com/video/BV11N411d7Zh?p=83&vd_source=f3af28d1fd89af1eb80db058885d7130)
+
+3 副本策略弊端：除原始块外还需要额外保存 2 个副本，有额外的 200% 的额外存储开销。
+
+纠删码技术（Erasure Coding）是一种编码容错技术，最早用于数据传输中的数据恢复。**它通过对数据进行分块，然后计算出校验数据，使得每个部分的数据产生关联性。** 当一部分数据丢失时，可以通过剩余的数据块和校验块计算出丢失的数据块。
+
+纠删码技术可以提高 50% 以上的存储利用率，并且保证数据的可靠性。**在保证数据可靠性的基础上，提高了数据的存储利用率。**
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202310010402834.png)
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202310010403301.png)
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202310010407428.png)
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202310010410139.png)
+
+---
+
+## HDFS HA
+
+高可用是为了解决一个系统的单点故障问题，使得集群在单点故障时仍能正常地向外提供服务，通常是通过**主备切换**的方法实现。
+
+在 Hadoop 2.0 以前的版本，NameNode 面临**单点故障 (Single Point of Failure, SPOF)** 风险，也就是说，一旦 NameNode 节点挂了，整个集群就不可用了，而且需要借助辅助 NameNode 来手工干预重启集群，这将延长集群的停机时间。
+
+Hadoop 2.0 版本支持一个备用节点用于自动恢复 NameNode 故障，Hadoop 3.0 则支持多个备用 NameNode 节点，这使得整个集群变得更加可靠。
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202310010416637.png)
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202310010421553.png)
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202310010425444.png)
+
+当系统中其中一项设备失效而无法运作时，另一项设备即可自动接手原失效系统所执行的工作，这就是**故障切换**。
+
+故障切换：
+
+- 手动切换
+- 自动故障切换：系统自动把集群控制器切换到备用 NameNode，且切换过程不需要人工干预。
+
+!!! note "HDFS HA 解决方案：QJM"
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202309180225901.png)
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202310010433529.png)
+
+任何一种 HA 解决方案，都必须考虑如何解决 2 个问题：
+
+- 主备数据同步
+- 故障转移（主备切换）
+  - 防止脑裂问题
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202310010436108.png)
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202310010439438.png)
+
+**QJM 主备数据状态同步的问题解决方案：Journal Node。**
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202310010452405.png)
+
+故障转移解释：**通过 ZK 实现分布式锁实现主备切换**。2 个 ZKFC 去 ZK 集群上注册节点（ephemeral 节点），谁注册成功，谁代表的机器上的 NN 就是 Active NN，没注册成功的 ZKFC 对 znode 注册监听，监听这个 znode 是否消失。如果 ZKFC 发现 Active NN 不健康，断开和 ZK 的连接，会话消失，注册的 znode 节点被删除，会触发监听，通知给 Standby NN 的 ZKFC。Standby NN 上的 ZKFC 收到监听通知，注册成功，Standby NN 成为新的 Active NN。
+
+脑裂问题：如果 ZKFC 谎报军情怎么办？-- 通过 **Fencing（隔离）机制**。通过远程补刀强制杀死进程的方式（或者用户事先定义的 shell 脚本完成隔离）。
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202310010450385.png)
+
+---
+
+## HDFS Federation 联邦
+
+**HDFS 联邦主要是为了解决 NameNode 内存不够和多用户命名空间的隔离问题**。同时由于 NameNode 还是客户端对 HDFS 的唯一入口，因此联邦还能提升 NameNode 的吞吐量。
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202310010455066.png)
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202310010457528.png)
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202310010458828.png)
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202310010503359.png)
+
+Hadoop 的 HA 结构，解决了单点故障问题，但是 NameNode 本质上还是只有一个工作节点，如果数据量很大的情况下虽然可以增加 DataNode 提高存储能力，但是 **NameNode 可能会成为系统瓶颈**，也就是元数据信息无法存储了，为了解决这个问题，Hadoop 又引入了联邦机制。
+
+联邦机制的原理也比较容易理解，既然一个 NameNode 资源不足了，那就加机器，使用多个 NameNode，但是 Hadoop 多 NameNode 的设计结构比较特殊。
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202309180231053.png)
+
+如上图， Hadoop 的联邦机制采用了**横向扩展**的方式，但并不是每个 NameNode 负责独立的部分 DataNode 节点，因为这相当于是多个集群。Hadoop 将 DataNode 节点的资源分为多份，每一份由一个 NameNode 负责维护元数据信息，每个 NameNode 之间是独立的，彼此之间不需要协调，DataNode 向所有的 NameNode 报告心跳信息和 block 信息，同时处理来自 NameNode 的命令，DataNode 通过 NameServiceId 区分不同的 NameNode。一个 NameNode 故障不会影响集群中的其他 NameNode 提供服务。
+
+联邦机制虽然带来了很多便利，但是也附带了一些新的问题，最典型的就是由于 namespace 被拆分成多个，且互相独立，一个文件路径只允许存在一个 namespace 中，如果应用程序需要访问多个文件路径（跨 namespace），那么不可避免的会产生**交叉访问 namespace 的情况**。此外，启用 Federation 后，**HDFS 很多管理命令都会失效**，比如 hdfs dfsadmin、hdfs fsck、hdfs dfs cp/mv 等。
