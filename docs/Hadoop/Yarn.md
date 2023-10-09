@@ -68,7 +68,17 @@ Yarn 是经典的主从（master/slave）架构。主要由 ResourceManager、No
 
 ![](https://raw.githubusercontent.com/MXJULY/image/main/img/202309291842974.png)
 
-详细版：
+详细版 V1：
+
+- 用户通过 Yarn 客户端向 RM 申请提交应用程序
+- RM 为应用程序的 ApplicationMaster 分配一个 Container，然后与对应的 NM 通信，要求在上面启动 AM
+- AM 启动后向 RM 注册，与 RM 保持周期性心跳，通过 RPC 通信提交自己的资源需求
+- AM 通过心跳领取到资源，与对应的 NM 通信，启动对应的 Container
+- NM 会为即将启动的任务设置好环境，下载好需要的资源（jar 包、配置文件等），通过任务启动脚本启动任务
+- 拉起后的任务，通过心跳与 AM 汇报自己的运行情况
+- 任务执行完后，AM 通知 RM 清理 Container，注销自己
+
+详细版 V2：
 
 1. MR 程序提交到客户端所在的节点。
 2. YarnRunner 向 ResourceManager 申请一个 Application。

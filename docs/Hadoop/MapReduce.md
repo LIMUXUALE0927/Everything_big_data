@@ -302,7 +302,6 @@ job.setCombinerClass(WordCountCombiner.class);
 
 溢写的过程总结：
 
-- 分区（如果有）
 - 排序
 - combiner（如果有）
 - 压缩（如果有）
