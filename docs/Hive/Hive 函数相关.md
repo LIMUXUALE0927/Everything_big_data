@@ -23,3 +23,69 @@
 ![](https://raw.githubusercontent.com/MXJULY/image/main/img/202310200232537.png)
 
 ---
+
+## NTILE
+
+NTILE(n)，用于将分组数据按照顺序切分成 n 片，返回当前切片值。如果切片不均匀，默认增加第一个切片的分布。
+
+```sql
+SELECT *
+FROM geeks_demo;
+```
+
+| ID  |
+| --- |
+| 1   |
+| 2   |
+| 3   |
+| 4   |
+| 5   |
+| 6   |
+| 7   |
+| 8   |
+| 9   |
+| 10  |
+
+```sql
+SELECT ID,
+NTILE (3) OVER (
+ORDER BY ID
+) Group_number
+FROM geeks_demo;
+```
+
+| ID  | Group_number |
+| --- | ------------ |
+| 1   | 1            |
+| 2   | 1            |
+| 3   | 1            |
+| 4   | 1            |
+| 5   | 2            |
+| 6   | 2            |
+| 7   | 2            |
+| 8   | 3            |
+| 9   | 3            |
+| 10  | 3            |
+
+```sql
+SELECT
+	category_name,
+	month,
+	FORMAT(net_sales,'C','en-US') net_sales,
+	NTILE(4) OVER(
+		PARTITION BY category_name
+		ORDER BY net_sales DESC
+	) net_sales_group
+FROM
+	sales.vw_netsales_2017;
+```
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202310231654384.png)
+
+---
+
+## LAG
+
+LAG(col, n, DEFAULT) 用于统计窗口内往上第 n 行值。
+
+第一个参数为列名，第二个参数为往上第 n 行（可选，默认为 1），第三个参数 为默认值（当往上第 n 行为 NULL 时候，取默认值，如不指定，则为 NULL）。
