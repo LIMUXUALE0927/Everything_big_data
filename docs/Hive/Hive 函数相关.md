@@ -335,6 +335,15 @@ group by user_id;
 
 `concat_ws(seperator, list)` 用于将 list 用 seperator 间隔，合并为一个字符串。
 
+这个实现对应 MySQL 中的 `group_concat()`：
+
+```sql
+select user_id,
+       group_concat(order_id)
+from user_order
+group by user_id;
+```
+
 结果：
 
 | user_id | orders                                                |
