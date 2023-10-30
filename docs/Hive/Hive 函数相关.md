@@ -18,7 +18,7 @@
 
 1. 自定义一个 Java 类，继承 UDAF 类
 2. 内部定义一个静态类，实现 UDAFEvaluator 接口
-3. 实现 init, iterate, terminatePartial, merge, terminate，共 5 个方法
+3. 实现 init(), iterate(), terminatePartial(), merge(), terminate()，共 5 个方法
 
 ![](https://raw.githubusercontent.com/MXJULY/image/main/img/202310200232537.png)
 
