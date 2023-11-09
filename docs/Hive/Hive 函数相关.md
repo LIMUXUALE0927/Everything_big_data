@@ -307,6 +307,8 @@ group by id;
 
 ## 行转列（聚合数据）
 
+### Case 1
+
 数据：
 
 | user_id | order_id |
@@ -350,6 +352,64 @@ group by user_id;
 | ------- | ----------------------------------------------------- |
 | 104399  | 1715131,2105395,1758844,981085,2444143,1458638,968412 |
 | 104400  | 1609001,2986088,1795054                               |
+
+---
+
+### Case 2
+
+数据：
+
+| id  | stuid | course  | score |
+| --- | ----- | ------- | ----- |
+| 1   | 1     | chinese | 43    |
+| 2   | 1     | math    | 55    |
+| 3   | 1     | english | 55    |
+| 4   | 2     | chinese | 77    |
+| 5   | 2     | math    | 88    |
+| 6   | 2     | english | 88    |
+| 7   | 3     | chinese | 98    |
+| 8   | 3     | math    | 65    |
+| 9   | 3     | english | 80    |
+
+要求：查询语文成绩大于英语成绩的学生的学号
+
+```sql
+select stuid,
+       max(chinese_score) as chinese_score,
+       max(math_score)    as math_score,
+       max(english_score) as english_score
+from (select stuid,
+             if(course = 'chinese', score, 0) as chinese_score,
+             if(course = 'math', score, 0)    as math_score,
+             if(course = 'english', score, 0) as english_score
+      from scores) t
+group by stuid
+having chinese_score > english_score;
+```
+
+注意这个子查询：
+
+```sql
+select stuid,
+       if(course = 'chinese', score, 0) as chinese_score,
+       if(course = 'math', score, 0)    as math_score,
+       if(course = 'english', score, 0) as english_score
+from scores
+```
+
+结果：
+
+| stuid | chinese_score | math_score | english_score |
+| ----- | ------------- | ---------- | ------------- |
+| 1     | 43            | 0          | 0             |
+| 1     | 0             | 55         | 0             |
+| 1     | 0             | 0          | 55            |
+| 2     | 77            | 0          | 0             |
+| 2     | 0             | 88         | 0             |
+| 2     | 0             | 0          | 88            |
+| 3     | 98            | 0          | 0             |
+| 3     | 0             | 65         | 0             |
+| 3     | 0             | 0          | 80            |
 
 ---
 
