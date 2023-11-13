@@ -843,3 +843,468 @@ val result = add(2, 3) // 调用函数，结果为 5
 综上所述，方法和函数在 Scala 中有一些区别，包括语法定义、调用方式、作为值的能力和一等公民特性。这些概念的理解对于编写和组织 Scala 代码非常重要。
 
 ---
+
+## Scala 集合
+
+### 不可变数组
+
+```scala
+// 创建不可变数组
+val arr1 = new Array[Int](5)
+// 另一种创建不可变数组的方式，来自于Array的伴生对象的apply方法
+val arr2 = Array(1, 2, 3, 4, 5)
+
+println(arr1(0))
+arr1(1) = 1
+
+// for 循环
+// arr1.indices == 0 until arr1.length
+for (i <- arr2.indices) {
+  println(arr2(i))
+}
+
+for (elem <- arr2) {
+  println(elem)
+}
+
+val iter = arr2.iterator
+while (iter.hasNext) {
+  println(iter.next())
+}
+
+arr2.foreach(println)
+
+arr2.mkString(",")
+
+// 添加元素（不可变数组添加后会返回新数组）
+val arr3 = arr2 :+ 6
+val arr4 = 0 +: arr2
+```
+
+```scala
+// 多维数组
+val arr = Array.ofDim[Int](2, 3) // 2 rows, 3 columns
+arr(0)(0) = 1
+
+for (i <- arr.indices; j <- arr(i).indices) {
+  println(s"($i)($j) = ${arr(i)(j)}")
+}
+
+arr.foreach(row => row.foreach(println))
+arr.foreach(_.foreach(println))
+```
+
+---
+
+### 可变数组
+
+```scala
+import scala.collection.mutable.ArrayBuffer
+
+val arr1 = new ArrayBuffer[Int]()
+val arr2 = ArrayBuffer[Int](1, 2, 3, 4, 5)
+
+println(arr1)
+println(arr2)
+
+// 添加元素
+arr1.append(2)
+arr1.prepend(1)
+arr1.insert(2, 3)
+println(arr1)
+
+arr1.appendAll(arr2)
+println(arr1)
+
+// 删除元素
+arr1.remove(0)  // 删除下标为 0 的元素
+arr1 -= 2  // 删除第一个出现的 2
+
+// 可变数组转不可变数组
+val arr3 = arr1.toArray
+// 不可变数组转可变数组
+val arr4 = arr3.toBuffer
+```
+
+---
+
+### 不可变 List
+
+```scala
+val list1 = List(1, 2, 3, 4, 5)
+
+println(list1(1))
+list1.foreach(println)
+
+// 添加元素
+val list2 = list1 :+ 6
+val list3 = 0 +: list1
+
+println(list3)
+
+// 合并列表
+val list4 = list1 ++ list1
+println(list4)
+```
+
+### 可变 List
+
+```scala
+import scala.collection.mutable.ListBuffer
+
+val list1 = new ListBuffer[Int]()
+val list2 = ListBuffer(1, 2, 3)
+
+// 添加元素
+list1.append(2, 3)
+list1.prepend(1)
+list1 += 4 += 5
+0 +=: list1
+println(list1)
+
+// 合并列表
+val list3 = ListBuffer(4, 5)
+list2.appendAll(list3)
+println(list2)
+```
+
+---
+
+### 不可变 Set
+
+默认情况下，Scala 使用的是不可变的 Set，如果想使用可变的 Set，需要引入 `scala.collection.mutable.Set` 包。
+
+```scala
+val set1 = Set(1, 2, 3, 3)
+println(set1)
+
+// 添加元素
+val set2 = set1 + 4
+
+// 合并 Set
+val set3 = set1 ++ Set(4, 5, 6)
+
+// 删除元素
+val set4 = set1 - 3
+```
+
+---
+
+### 可变 Set
+
+```scala
+import scala.collection.mutable
+
+val set1 = mutable.Set(1, 2, 3)
+println(set1)
+
+// 添加元素
+set1.add(4)
+
+// 删除元素
+set1.remove(1)
+
+// 合并两个集合
+val set2 = mutable.Set(3, 4, 5)
+set1 ++= set2
+println(set1)
+```
+
+---
+
+### 不可变 Map
+
+```scala
+val map1 = Map("a" -> 1, "b" -> 2, "c" -> 3)
+val map2 = Map[String, Int]()
+println(map1)
+
+map1.foreach(println)
+
+for (k <- map1.keys) println(k)
+for (v <- map1.values) println(v)
+for ((k, v) <- map1) println(k + "--" + v)
+
+map1.get("a") // 注意结果为：Option[Int] = Some(1)
+map1.get("a").get
+map1("a")
+
+map1.getOrElse("d", 0)
+map1("d") // 报错
+```
+
+---
+
+### 可变 Map
+
+```scala
+import scala.collection.mutable
+
+val map1 = mutable.Map("a" -> 1, "b" -> 2, "c" -> 3)
+println(map1)
+
+map1.put("d", 4)
+
+map1.remove("d")
+
+map1("a") = 10
+println(map1)
+```
+
+---
+
+### 元组
+
+```scala
+val tuple = (1, 2, 3, 4)
+tuple._1
+tuple._2
+tuple._3
+tuple._4
+
+for (x <- tuple.productIterator) {
+  println(x)
+}
+
+tuple.productArity // 元组的长度
+```
+
+---
+
+### 常用方法
+
+集合通用属性和方法：
+
+- 线性序列才有长度`length`、所有集合类型都有大小`size`。
+- 遍历`for (elem <- collection)`、迭代器`for (elem <- collection.iterator)`。
+- 生成字符串`toString` `mkString`，像`Array`这种是隐式转换为 scala 集合的，`toString`是继承自`java.lang.Object`的，需要自行处理。
+- 是否包含元素`contains`。
+
+衍生集合的方式：
+
+- 获取集合的头元素`head`（元素）和剩下的尾`tail`（集合）。
+- 集合最后一个元素`last`（元素）和除去最后一个元素的初始数据`init`（集合）。
+- 反转`reverse`。
+- 取前后 n 个元素`take(n) takeRight(n)`
+- 去掉前后 n 个元素`drop(n) dropRight(n)`
+- 交集`intersect`
+- 并集`union`，线性序列的话已废弃用`concat`连接。
+- 差集`diff`，得到属于自己、不属于传入参数的部分。
+- 拉链`zip`，得到两个集合对应位置元素组合起来构成二元组的集合，大小不匹配会丢掉其中一个集合不匹配的多余部分。
+- 滑窗`sliding(n, step = 1)`，框住特定个数元素，方便移动和操作。得到迭代器，可以用来遍历，每个迭代的元素都是一个 n 个元素集合。步长大于 1 的话最后一个窗口元素数量可能个数会少一些。
+
+集合的简单计算操作：
+
+- 求和`sum` 求乘积`product` 最小值`min` 最大值`max`
+- `maxBy(func)`支持传入一个函数获取元素并返回比较依据的值，比如元组默认就只会判断第一个元素，要根据第二个元素判断就返回第二个元素就行`xxx.maxBy(_._2)`。
+- 排序`sorted`，默认从小到大排序。从大到小排序`sorted(Ordering[Int].reverse)`。
+- 按元素排序`sortBy(func)`，指定要用来做排序的字段。也可以再传一个隐式参数逆序`sortBy(func)(Ordering[Int].reverse)`
+- 自定义比较器`sortWith(cmp)`，比如按元素升序排列`sortWith((a, b) => a < b)`或者`sortWith(_ < _)`，按元组元素第二个元素升序`sortWith(_._2 > _._2)`。
+
+```scala
+val list = List(3, 12, -1, 9, 6)
+list.sorted
+list.sorted.reverse
+list.sorted(Ordering[Int].reverse)
+list.sortWith(_ < _) // ascending
+list.sortWith(_ > _) // descending
+
+val list2 = List(("a", 5), ("b", 1), ("c", 8), ("d", 2), ("e", -3), ("f", 4))
+list2.sorted // sort by first element
+list2.sorted.reverse
+list2.sortBy(_._2) // sort by second element
+list2.sortBy(_._2).reverse
+list2.sortBy(_._2)(Ordering[Int].reverse)
+list2.sortWith(_._2 < _._2) // sort by second element (ascending)
+list2.sortWith(_._2 > _._2) // sort by second element (descending)
+```
+
+---
+
+### 高级计算函数
+
+- 大数据的处理核心就是映射（map）和规约（reduce）。
+- 映射操作（广义上的 map）：
+  - 过滤：自定义过滤条件，`filter(Elem => Boolean)`
+  - 转化/映射（狭义上的 map）：自定义映射函数，`map(Elem => NewElem)`
+  - 扁平化（flatten）：将集合中集合元素拆开，去掉里层集合，放到外层中来。`flatten`
+  - 扁平化+映射：先映射，再扁平化，`flatMap(Elem => NewElem)`
+  - 分组（group）：指定分组规则，`groupBy(Elem => Key)`得到一个 Map，key 根据传入的函数运用于集合元素得到，value 是对应元素的序列。
+- 规约操作（广义的 reduce）：
+  - 简化/规约（狭义的 reduce）：对所有数据做一个处理，规约得到一个结果（比如连加连乘操作）。`reduce((CurRes, NextElem) => NextRes)`，传入函数有两个参数，第一个参数是第一个元素（第一次运算）和上一轮结果（后面的计算），第二个是当前元素，得到本轮结果，最后一轮的结果就是最终结果。`reduce`调用`reduceLeft`从左往右，也可以`reduceRight`从右往左（实际上是递归调用，和一般意义上的从右往左有区别，看下面例子）。
+  - 折叠（fold）：`fold(InitialVal)((CurRes, Elem) => NextRes)`相对于`reduce`来说其实就是`fold`自己给初值，从第一个开始计算，`reduce`用第一个做初值，从第二个元素开始算。`fold`调用`foldLeft`，从右往左则用`foldRight`（翻转之后再`foldLeft`）。具体逻辑还得还源码。从右往左都有点绕和难以理解，如果要使用需要特别注意。
+- 以上：
+
+```scala
+object HighLevelCalculations {
+    def main(args: Array[String]): Unit = {
+        val list = List(1, 10, 100, 3, 5, 111)
+
+        // 1. map functions
+        // filter
+        val evenList = list.filter(_ % 2 == 0)
+        println(evenList)
+
+        // map
+        println(list.map(_ * 2))
+        println(list.map(x => x * x))
+
+        // flatten
+        val nestedList: List[List[Int]] = List(List(1, 2, 3), List(3, 4, 5), List(10, 100))
+        val flatList = nestedList(0) ::: nestedList(1) ::: nestedList(2)
+        println(flatList)
+
+        val flatList2 = nestedList.flatten
+        println(flatList2) // equals to flatList
+
+        // map and flatten
+        // example: change a string list into a word list
+        val strings: List[String] = List("hello world", "hello scala", "yes no")
+        val splitList: List[Array[String]] = strings.map(_.split(" ")) // divide string to words
+        val flattenList = splitList.flatten
+        println(flattenList)
+
+        // merge two steps above into one
+        // first map then flatten
+        val flatMapList = strings.flatMap(_.split(" "))
+        println(flatMapList)
+
+        // divide elements into groups
+        val groupMap = list.groupBy(_ % 2) // keys: 0 & 1
+        val groupMap2 = list.groupBy(data => if (data % 2 == 0) "even" else "odd") // keys : "even" & "odd"
+        println(groupMap)
+        println(groupMap2)
+
+        val worldList = List("China", "America", "Alice", "Curry", "Bob", "Japan")
+        println(worldList.groupBy(_.charAt(0)))
+
+        // 2. reduce functions
+        // narrowly reduce
+        println(List(1, 2, 3, 4).reduce(_ + _)) // 1+2+3+4 = 10
+        println(List(1, 2, 3, 4).reduceLeft(_ - _)) // 1-2-3-4 = -8
+        println(List(1, 2, 3, 4).reduceRight(_ - _)) // 1-(2-(3-4)) = -2, a little confusing
+
+        // fold
+        println(List(1, 2, 3, 4).fold(0)(_ + _)) // 0+1+2+3+4 = 10
+        println(List(1, 2, 3, 4).fold(10)(_ + _)) // 10+1+2+3+4 = 20
+        println(List(1, 2, 3, 4).foldRight(10)(_ - _)) // 1-(2-(3-(4-10))) = 8, a little confusing
+    }
+}
+```
+
+集合应用案例：
+
+- Map 的默认合并操作是用后面的同 key 元素覆盖前面的，如果要定制为累加他们的值可以用`fold`。
+
+```scala
+// merging two Map will override the value of the same key
+// custom the merging process instead of just override
+val map1 = Map("a" -> 1, "b" -> 3, "c" -> 4)
+val map2 = mutable.Map("a" -> 6, "b" -> 2, "c" -> 5, "d" -> 10)
+val map3 = map1.foldLeft(map2)(
+    (mergedMap, kv) => {
+        mergedMap(kv._1) = mergedMap.getOrElse(kv._1, 0) + kv._2
+        mergedMap
+    }
+)
+println(map3) // HashMap(a -> 7, b -> 5, c -> 9, d -> 10)
+```
+
+- 经典案例：单词计数：分词，计数，取排名前三结果。
+
+```scala
+// count words in string list, and get 3 highest frequency words
+def wordCount(): Unit = {
+    val stringList: List[String] = List(
+        "hello",
+        "hello world",
+        "hello scala",
+        "hello spark from scala",
+        "hello flink from scala"
+    )
+
+    // 1. split
+    val wordList: List[String] = stringList.flatMap(_.split(" "))
+    println(wordList)
+
+    // 2. group same words
+    val groupMap: Map[String, List[String]] = wordList.groupBy(word => word)
+    println(groupMap)
+
+    // 3. get length of the every word, to (word, length)
+    val countMap: Map[String, Int] = groupMap.map(kv => (kv._1, kv._2.length))
+
+    // 4. convert map to list, sort and take first 3
+    val countList: List[(String, Int)] = countMap.toList
+        .sortWith(_._2 > _._2)
+        .take(3)
+
+    println(countList) // result
+}
+```
+
+- 单词计数案例扩展，每个字符串都可能出现多次并且已经统计好出现次数，解决方式，先按次数合并之后再按照上述例子处理。
+
+```scala
+// strings has their frequency
+def wordCountAdvanced(): Unit = {
+    val tupleList: List[(String, Int)] = List(
+        ("hello", 1),
+        ("hello world", 2),
+        ("hello scala", 3),
+        ("hello spark from scala", 1),
+        ("hello flink from scala", 2)
+    )
+
+    val newStringList: List[String] = tupleList.map(
+        kv => (kv._1.trim + " ") * kv._2
+    )
+
+    // just like wordCount
+    val wordCountList: List[(String, Int)] = newStringList
+        .flatMap(_.split(" "))
+        .groupBy(word => word)
+        .map(kv => (kv._1, kv._2.length))
+        .toList
+        .sortWith(_._2 > _._2)
+        .take(3)
+
+    println(wordCountList) // result
+}
+```
+
+- 当然这并不高效，更好的方式是利用上已经统计的频率信息。
+
+```scala
+def wordCountAdvanced2(): Unit = {
+    val tupleList: List[(String, Int)] = List(
+        ("hello", 1),
+        ("hello world", 2),
+        ("hello scala", 3),
+        ("hello spark from scala", 1),
+        ("hello flink from scala", 2)
+    )
+
+    // first split based on the input frequency
+    val preCountList: List[(String, Int)] = tupleList.flatMap(
+        tuple => {
+            val strings: Array[String] = tuple._1.split(" ")
+            strings.map(word => (word, tuple._2)) // Array[(String, Int)]
+        }
+    )
+
+    // group as words
+    val groupedMap: Map[String, List[(String, Int)]] = preCountList.groupBy(_._1)
+    println(groupedMap)
+
+    // count frequency of all words
+    val countMap: Map[String, Int] = groupedMap.map(
+        kv => (kv._1, kv._2.map(_._2).sum)
+    )
+    println(countMap)
+
+    // to list, sort and take first 3 words
+    val countList = countMap.toList.sortWith(_._2 > _._2).take(3)
+    println(countList)
+}
+```
