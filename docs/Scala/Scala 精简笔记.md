@@ -1136,60 +1136,56 @@ list2.sortWith(_._2 > _._2) // sort by second element (descending)
 - 以上：
 
 ```scala
-object HighLevelCalculations {
-    def main(args: Array[String]): Unit = {
-        val list = List(1, 10, 100, 3, 5, 111)
+val list = List(1, 10, 100, 3, 5, 111)
 
-        // 1. map functions
-        // filter
-        val evenList = list.filter(_ % 2 == 0)
-        println(evenList)
+// 1. map functions
+// filter
+val evenList = list.filter(_ % 2 == 0)
+println(evenList)
 
-        // map
-        println(list.map(_ * 2))
-        println(list.map(x => x * x))
+// map
+println(list.map(_ * 2))
+println(list.map(x => x * x))
 
-        // flatten
-        val nestedList: List[List[Int]] = List(List(1, 2, 3), List(3, 4, 5), List(10, 100))
-        val flatList = nestedList(0) ::: nestedList(1) ::: nestedList(2)
-        println(flatList)
+// flatten
+val nestedList: List[List[Int]] = List(List(1, 2, 3), List(3, 4, 5), List(10, 100))
+val flatList = nestedList(0) ::: nestedList(1) ::: nestedList(2)
+println(flatList)
 
-        val flatList2 = nestedList.flatten
-        println(flatList2) // equals to flatList
+val flatList2 = nestedList.flatten
+println(flatList2) // equals to flatList
 
-        // map and flatten
-        // example: change a string list into a word list
-        val strings: List[String] = List("hello world", "hello scala", "yes no")
-        val splitList: List[Array[String]] = strings.map(_.split(" ")) // divide string to words
-        val flattenList = splitList.flatten
-        println(flattenList)
+// map and flatten
+// example: change a string list into a word list
+val strings: List[String] = List("hello world", "hello scala", "yes no")
+val splitList: List[Array[String]] = strings.map(_.split(" ")) // divide string to words
+val flattenList = splitList.flatten
+println(flattenList)
 
-        // merge two steps above into one
-        // first map then flatten
-        val flatMapList = strings.flatMap(_.split(" "))
-        println(flatMapList)
+// merge two steps above into one
+// first map then flatten
+val flatMapList = strings.flatMap(_.split(" "))
+println(flatMapList)
 
-        // divide elements into groups
-        val groupMap = list.groupBy(_ % 2) // keys: 0 & 1
-        val groupMap2 = list.groupBy(data => if (data % 2 == 0) "even" else "odd") // keys : "even" & "odd"
-        println(groupMap)
-        println(groupMap2)
+// divide elements into groups
+val groupMap = list.groupBy(_ % 2) // keys: 0 & 1
+val groupMap2 = list.groupBy(data => if (data % 2 == 0) "even" else "odd") // keys : "even" & "odd"
+println(groupMap)
+println(groupMap2)
 
-        val worldList = List("China", "America", "Alice", "Curry", "Bob", "Japan")
-        println(worldList.groupBy(_.charAt(0)))
+val worldList = List("China", "America", "Alice", "Curry", "Bob", "Japan")
+println(worldList.groupBy(_.charAt(0)))
 
-        // 2. reduce functions
-        // narrowly reduce
-        println(List(1, 2, 3, 4).reduce(_ + _)) // 1+2+3+4 = 10
-        println(List(1, 2, 3, 4).reduceLeft(_ - _)) // 1-2-3-4 = -8
-        println(List(1, 2, 3, 4).reduceRight(_ - _)) // 1-(2-(3-4)) = -2, a little confusing
+// 2. reduce functions
+// narrowly reduce
+println(List(1, 2, 3, 4).reduce(_ + _)) // 1+2+3+4 = 10
+println(List(1, 2, 3, 4).reduceLeft(_ - _)) // 1-2-3-4 = -8
+println(List(1, 2, 3, 4).reduceRight(_ - _)) // 1-(2-(3-4)) = -2, a little confusing
 
-        // fold
-        println(List(1, 2, 3, 4).fold(0)(_ + _)) // 0+1+2+3+4 = 10
-        println(List(1, 2, 3, 4).fold(10)(_ + _)) // 10+1+2+3+4 = 20
-        println(List(1, 2, 3, 4).foldRight(10)(_ - _)) // 1-(2-(3-(4-10))) = 8, a little confusing
-    }
-}
+// fold
+println(List(1, 2, 3, 4).fold(0)(_ + _)) // 0+1+2+3+4 = 10
+println(List(1, 2, 3, 4).fold(10)(_ + _)) // 10+1+2+3+4 = 20
+println(List(1, 2, 3, 4).foldRight(10)(_ - _)) // 1-(2-(3-(4-10))) = 8, a little confusing
 ```
 
 集合应用案例：
@@ -1308,3 +1304,299 @@ def wordCountAdvanced2(): Unit = {
     println(countList)
 }
 ```
+
+---
+
+## Scala 隐式转换
+
+在 Scala 中，隐式转换是一种特性，它允许编译器在需要时自动地进行类型转换或添加方法调用。通过隐式转换，可以方便地扩展现有类的功能，提供更富表现力和灵活性的代码。
+
+以下是关于 Scala 隐式转换的一些重要概念和用法：
+
+- **隐式转换函数（Implicit Conversion Functions）**：隐式转换函数是一种特殊的函数，它用于将一个类型转换为另一个类型。隐式转换函数使用 `implicit` 关键字进行声明，并且通常定义在隐式转换函数的作用域内。当编译器发现类型不匹配的表达式时，它会在作用域内查找适用的隐式转换函数，并自动应用转换。例如：
+
+```scala
+implicit def intToString(i: Int): String = i.toString
+
+val str: String = 42  // 编译器自动应用隐式转换将 Int 转换为 String
+println(str)  // 输出: "42"
+```
+
+在上面的示例中，我们定义了一个将 `Int` 类型转换为 `String` 类型的隐式转换函数 `intToString`。当我们将整数 `42` 赋值给字符串类型的变量时，编译器会自动应用该隐式转换函数。
+
+- **隐式参数（Implicit Parameters）**：隐式参数允许我们定义在函数或方法中的参数，在调用时使用隐式值而不是显式传递。隐式参数使用 `implicit` 关键字进行声明，并且通常定义在作用域内。当调用带有隐式参数的函数时，编译器会在作用域内查找适用的隐式值，并自动传入函数。例如：
+
+```scala
+def greet(name: String)(implicit greeting: String): Unit = {
+  println(s"$greeting, $name!")
+}
+
+implicit val defaultGreeting: String = "Hello"
+
+greet("Alice")  // 编译器自动传入隐式参数 defaultGreeting
+```
+
+在上面的示例中，我们定义了一个带有隐式参数 `greeting` 的 `greet` 函数。我们还定义了一个隐式值 `defaultGreeting`，它被自动传入函数作为隐式参数。当我们调用 `greet("Alice")` 时，编译器会自动应用隐式值 `"Hello"` 作为 `greeting` 参数的值。
+
+- **隐式类（Implicit Classes）**：隐式类是一种特殊的类，它用于在现有类上添加附加的方法。隐式类使用 `implicit` 关键字进行声明，并且必须定义在顶层对象、类或特质中。当隐式类的实例调用附加的方法时，编译器会自动将实例转换为隐式类，并应用相应的方法。例如：
+
+```scala
+implicit class StringOps(s: String) {
+  def greet(): Unit = {
+    println(s"Hello, $s!")
+  }
+}
+
+"Alice".greet()  // 编译器自动将字符串转换为 StringOps，并应用 greet 方法
+```
+
+在上面的示例中，我们定义了一个隐式类 `StringOps`，它在 `String` 类型上添加了一个 `greet` 方法。当我们使用字符串字面量 `"Alice"` 调用 `greet()` 方法时，编译器会自动将字符串转换为 `StringOps` 的实例，并应用 `greet` 方法。
+
+---
+
+## Scala 模式匹配
+
+```scala
+value match {
+    case caseVal1 => returnVal1
+    case caseVal2 => returnVal2
+    ...
+    case _ => defaultVal
+}
+```
+
+- 每一个 case 条件成立才返回，否则继续往下走。
+- `case`匹配中可以添加模式守卫，用条件判断来代替精确匹配。
+
+```scala
+def abs(num: Int): Int= {
+    num match {
+        case i if i >= 0 => i
+        case i if i < 0 => -i
+    }
+}
+```
+
+- 模式匹配支持类型：所有类型字面量，包括字符串、字符、数字、布尔值、甚至数组列表等。
+- 你甚至可以传入 `Any` 类型变量，匹配不同类型常量。
+- 需要注意默认情况处理，`case _` 也需要返回值，如果没有但是又没有匹配到，就抛出运行时错误。默认情况 `case _` 不强制要求通配符（只是在不需要变量的值建议这么做），也可以用 `case abc` 一个变量来接住，可以什么都不做，可以使用它的值。
+- 通过指定匹配变量的类型（用特定类型变量接住），可以匹配类型而不匹配值，也可以混用。
+- 需要注意类型匹配时由于泛型擦除，可能并不能严格匹配泛型的类型参数，编译器也会报警告。但`Array`是基本数据类型，对应于 java 的原生数组类型，能够匹配泛型类型参数。
+
+```scala
+// match type
+def describeType(x: Any) = x match {
+    case i: Int => "Int " + i
+    case s: String => "String " + s
+    case list: List[String] => "List " + list
+    case array: Array[Int] => "Array[Int] " + array
+    case a => "Something else " + a
+}
+println(describeType(20)) // match
+println(describeType("hello")) // match
+println(describeType(List("hi", "hello"))) // match
+println(describeType(List(20, 30))) // match
+println(describeType(Array(10, 20))) // match
+println(describeType(Array("hello", "yes"))) // not match
+println(describeType((10, 20))) // not match
+```
+
+- 对于数组可以定义多种匹配形式，可以定义模糊的元素类型匹配、元素数量匹配或者精确的某个数组元素值匹配，非常强大。
+
+```scala
+for (arr <- List(
+    Array(0),
+    Array(1, 0),
+    Array(1, 1, 0),
+    Array(10, 2, 7, 5),
+    Array("hello", 20, 50)
+)) {
+    val result = arr match {
+        case Array(0) => "0"
+        case Array(1, 0) => "Array(1, 0)"
+        case Array(x: Int, y: Int) => s"Array($x, $y)" // Array of two elements
+        case Array(0, _*) => s"an array begin with 0"
+        case Array(x, 1, z) => s"an array with three elements, no.2 is 1"
+        case Array(x:String, _*) => s"array that first element is a string"
+        case _ => "somthing else"
+    }
+    println(result)
+```
+
+- `List` 匹配和 `Array` 差不多，也很灵活。还可用用集合类灵活的运算符来匹配。
+  - 比如使用 `::` 运算符匹配 `first :: second :: rest`，将一个列表拆成三份，第一个第二个元素和剩余元素构成的列表。
+- 注意模式匹配不仅可以通过返回值当做表达式来用，也可以仅执行语句类似于传统 `switch-case` 语句不关心返回值，也可以既执行语句同时也返回。
+- 元组匹配：
+  - 可以匹配 n 元组、匹配元素类型、匹配元素值。如果只关心某个元素，其他就可以用通配符或变量。
+  - 元组大小固定，所以不能用 `_*`。
+
+变量声明匹配：
+
+- 变量声明也可以是一个模式匹配的过程。
+- 元组常用于批量赋值。
+- `val (x, y) = (10, "hello")`
+- `val List(first, second, _*) = List(1, 3, 4, 5)`
+- `val List(first :: second :: rest) = List(1, 2, 3, 4)`
+
+`for` 推导式中也可以进行模式匹配：
+
+- 元组中取元素时，必须用 `_1 _2 ...`，可以用元组赋值将元素赋给变量，更清晰一些。
+- `for ((first, second) <- tupleList)`
+- `for ((first, _) <- tupleList)`
+- 指定特定元素的值，可以实现类似于循环守卫的功能，相当于加一层筛选。比如 `for ((10, second) <- tupleList)`
+- 其他匹配也同样可以用，可以关注数量、值、类型等，相当于做了筛选。
+- 元组列表匹配、赋值匹配、`for` 循环中匹配非常灵活，灵活运用可以提高代码可读性。
+
+匹配对象：
+
+- 对象内容匹配。
+- 直接 `match-case` 中匹配对应引用变量的话语法是有问题的。编译报错信息提示：不是样例类也没有一个合法的 `unapply/unapplySeq` 成员实现。
+- 要匹配对象，需要实现伴生对象 `unapply` 方法，用来对对象属性进行拆解以做匹配。
+
+样例类：
+
+- 第二种实现对象匹配的方式是样例类。
+- `case class className` 定义样例类，会直接将打包 `apply` 和拆包 `unapply` 的方法直接定义好。
+- 样例类定义中主构造参数列表中的 `val` 甚至都可以省略，如果是 `var` 的话则不能省略，最好加上的感觉，奇奇怪怪的各种边角简化。
+
+对象匹配和样例类例子：
+
+```scala
+object MatchObject {
+    def main(args: Array[String]): Unit = {
+        val person = new Person("Alice", 18)
+
+        val result: String = person match {
+            case Person("Alice", 18) => "Person: Alice, 18"
+            case _ => "something else"
+        }
+        println(result)
+
+        val s = Student("Alice", 18)
+        val result2: String = s match {
+            case Student("Alice", 18) => "Student: Alice, 18"
+            case _ => "something else"
+        }
+        println(result2)
+    }
+}
+
+
+class Person(val name: String, val age: Int)
+object Person {
+    def apply(name: String, age: Int) = new Person(name, age)
+    def unapply(person: Person): Option[(String, Int)] = {
+        if (person == null) { // avoid null reference
+            None
+        } else {
+            Some((person.name, person.age))
+        }
+    }
+}
+
+case class Student(name: String, age: Int) // name and age are vals
+```
+
+偏函数：
+
+- 偏函数是函数的一种，通过偏函数我们可以方便地对参数做更精确的检查，例如偏函数输入类型是 `List[Int]`，需要第一个元素是 0 的集合，也可以通过模式匹配实现的。
+- 定义：
+
+```scala
+val partialFuncName: PartialFunction[List[Int], Option[Int]] = {
+    case x :: y :: _ => Some(y)
+}
+```
+
+- 通过一个变量定义方式定义，`PartialFunction` 的泛型类型中，前者是参数类型，后者是返回值类型。函数体中用一个 `case` 语句来进行模式匹配。上面例子返回输入的 `List` 集合中的第二个元素。
+- 一般一个偏函数只能处理输入的一部分场景，实际中往往需要定义多个偏函数用以组合使用。
+- 例子：
+
+```scala
+object PartialFunctionTest {
+    def main(args: Array[String]): Unit = {
+        val list: List[(String, Int)] = List(("a", 12), ("b", 10), ("c", 100), ("a", 5))
+
+        // keep first constant and double second value of the tuple
+        // 1. use map
+        val newList = list.map(tuple => (tuple._1, tuple._2 * 2))
+        println(newList)
+
+        // 2. pattern matching
+        val newList1 = list.map(
+            tuple => {
+                tuple match {
+                    case (x, y) => (x, y * 2)
+                }
+            }
+        )
+        println(newList1)
+
+        // simplify to partial function
+        val newList2 = list.map {
+            case (x, y) => (x, y * 2) // this is a partial function
+        }
+        println(newList2)
+
+        // application of partial function
+        // get absolute value, deal with: negative, 0, positive
+        val positiveAbs: PartialFunction[Int, Int] = {
+            case x if x > 0 => x
+        }
+        val negativeAbs: PartialFunction[Int, Int] = {
+            case x if x < 0 => -x
+        }
+        val zeroAbs: PartialFunction[Int, Int] = {
+            case 0 => 0
+        }
+
+        // combine a function with three partial functions
+        def abs(x: Int): Int = (positiveAbs orElse negativeAbs orElse zeroAbs) (x)
+        println(abs(-13))
+        println(abs(30))
+        println(abs(0))
+    }
+}
+```
+
+---
+
+## Scala 样例类
+
+在 Scala 中，`case class` 是一种特殊的类，用于定义不可变的数据结构。它们具有一些特殊的属性和方法，使得它们非常适合用于模式匹配和数据传递。
+
+以下是 `case class` 的一些特点和用法：
+
+1. **不可变性**：`case class` 默认是不可变的，即一旦创建，它们的属性值是不可修改的。这有助于编写更安全和可靠的代码。
+
+2. **自动生成的方法**：编译器会自动生成一些常用的方法，如构造函数、getter 和 setter 方法、`equals` 和 `hashCode` 方法等。这使得使用 `case class` 更加方便。
+
+3. **模式匹配**：`case class` 是 Scala 中模式匹配（pattern matching）的重要组成部分。模式匹配允许你根据数据结构的形状和属性值来进行条件匹配和提取。
+
+4. **值比较**：`case class` 的 `equals` 方法会按照属性值比较两个对象是否相等，而不是比较引用。这使得可以直接使用 `==` 运算符进行值比较。
+
+下面是一个简单的 `case class` 的示例：
+
+```scala
+case class Person(name: String, age: Int)
+
+// 创建一个 Person 对象
+val person = Person("Alice", 30)
+
+// 获取属性值
+val name = person.name
+val age = person.age
+
+// 输出对象
+println(person) // 输出：Person(Alice,30)
+
+// 模式匹配
+person match {
+  case Person("Alice", age) => println(s"Hello, Alice! Your age is $age")
+  case Person(name, _) => println(s"Hello, $name!")
+}
+```
+
+在上面的示例中，`Person` 是一个 `case class`，它有两个属性 `name` 和 `age`。我们可以使用 `Person` 的构造函数来创建对象，并通过属性名访问属性值。我们还可以使用模式匹配来根据对象的属性值进行条件匹配和提取。
+
+总而言之，`case class` 是 Scala 中用于定义不可变数据结构的特殊类，它们提供了方便的方法和模式匹配的支持。这使得在 Scala 中处理复杂的数据结构变得更加简单和直观。
