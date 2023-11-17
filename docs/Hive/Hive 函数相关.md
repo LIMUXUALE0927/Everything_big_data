@@ -499,3 +499,9 @@ from (select *,
             group by shop, user_id) t1) t2
 where rk <= 3;
 ```
+
+---
+
+## posexplode
+
+[posexplode table-valued generator function | Databricks on AWS](https://docs.databricks.com/en/sql/language-manual/functions/posexplode.html)
