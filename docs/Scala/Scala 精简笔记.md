@@ -1600,3 +1600,30 @@ person match {
 在上面的示例中，`Person` 是一个 `case class`，它有两个属性 `name` 和 `age`。我们可以使用 `Person` 的构造函数来创建对象，并通过属性名访问属性值。我们还可以使用模式匹配来根据对象的属性值进行条件匹配和提取。
 
 总而言之，`case class` 是 Scala 中用于定义不可变数据结构的特殊类，它们提供了方便的方法和模式匹配的支持。这使得在 Scala 中处理复杂的数据结构变得更加简单和直观。
+
+---
+
+## Scala 排序
+
+- 排序 `sorted`，默认从小到大排序。从大到小排序 `sorted(Ordering[Int].reverse)`。
+- 按元素排序 `sortBy(func)`，指定要用来做排序的字段。也可以再传一个隐式参数逆序 `sortBy(func)(Ordering[Int].reverse)`。
+- 自定义比较器 `sortWith(cmp)`，比如按元素升序排列 `sortWith((a, b) => a < b)` 或者 `sortWith(_ < _)`，按元组元素第二个元素升序 `sortWith(_._2 > _._2)`。
+
+```scala
+val list = List(3, 12, -1, 9, 6)
+list.sorted
+list.sorted.reverse
+list.sorted(Ordering[Int].reverse)
+list.sortWith(_ < _) // ascending
+list.sortWith(_ > _) // descending
+
+val list2 = List(("a", 5), ("b", 1), ("c", 8), ("d", 2), ("e", -3), ("f", 4))
+list2.sorted // sort by first element
+list2.sorted.reverse
+list2.sortBy(_._2) // sort by second element
+list2.sortBy(_._2).reverse
+list2.sortBy(_._2)(Ordering[Int].reverse)
+list2.sortBy(tuple => (tuple._1, -tuple._2)) // sort by first element ascending, second element descending
+list2.sortWith(_._2 < _._2) // sort by second element (ascending)
+list2.sortWith(_._2 > _._2) // sort by second element (descending)
+```
