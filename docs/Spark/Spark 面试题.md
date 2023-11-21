@@ -61,24 +61,6 @@ Cluster 模式：
 
 ---
 
-## Spark 的三个开发入门类
-
-- SparkConf
-
-SparkConf 是 Spark 的配置类，作用是将默认配置文件中的 kv 对加载到内存之中。另外我们看到该类中有一个核心的数据结构：ConcurrentHashMap，因此是一个线程线程安全的 kv 结构。该类中有大量的 set 和 get 方法。
-
-注意：一旦 SparkConf 对象被传递给 Spark，它就会被克隆，并且用户不能再修改它。Spark 不支持在运行时修改配置。
-
-- SparkContext
-
-SparkContext 是 Spark 中的主要入口点，它是与 Spark 集群通信的核心对象。SparkContext 的核心作用是初始化 Spark 应用程序运行所需要的核心组件，包括高层调度器(DAGScheduler)、底层调度器(TaskScheduler)和调度器的通信终端(SchedulerBackend)，同时还会负责 Spark 程序向 Master 注册程序等。
-
-- SparkSession
-
-SparkSession 也是 Spark 中的主要入口点。SparkSession 主要用在 SparkSQL 中，当然也可以用在其他场合，他可以代替 SparkContext。SparkSession 实际上封装了 SparkContext。
-
----
-
 ## RDD
 
 ---
@@ -92,3 +74,5 @@ SparkSession 也是 Spark 中的主要入口点。SparkSession 主要用在 Spar
 - **情况二：mapPartitions OOM**
 
 mapPartitions 可以以分区为单位进行数据转换操作，但是会将整个分区的数据加载到内存进行引用，处理完的数据是不会被释放的，存在对象的引用，只有程序结束才会释放。因此在内存较小、数据量较大的场合下，容易导致 OOM。
+
+- **情况三：Hash Join OOM**
