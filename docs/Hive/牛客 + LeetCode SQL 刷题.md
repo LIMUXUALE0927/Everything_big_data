@@ -177,6 +177,165 @@ order by date, name;
 
 ---
 
+### :fire: [国庆期间每类视频点赞量和转发量](https://www.nowcoder.com/practice/f90ce4ee521f400db741486209914a11)
+
+:star: 滑动窗口
+
+MySQL:
+
+```sql
+select *
+from (select t1.tag,
+             t1.dt,
+             sum(t1.if_like_sum) over (partition by t1.tag order by t1.dt rows 6 preceding)    as sum_like_cnt_7d,
+             max(t1.if_retweet_sum) over (partition by t1.tag order by t1.dt rows 6 preceding) as max_retweet_cnt_7d
+      from (select tag,
+                   date(start_time) as dt,
+                   sum(if_like)     as if_like_sum,
+                   sum(if_retweet)  as if_retweet_sum
+            from tb_user_video_log l
+                     inner join tb_video_info v on l.video_id = v.video_id
+            group by tag, dt) t1) t2
+where t2.dt between '2021-10-01' and '2021-10-03'
+order by t2.tag desc, t2.dt asc;
+```
+
+HQL:
+
+```sql
+select *
+from (select t1.tag,
+             t1.dt,
+             sum(t1.if_like_sum) over (partition by t1.tag order by t1.dt rows 6 preceding)    as sum_like_cnt_7d,
+             max(t1.if_retweet_sum) over (partition by t1.tag order by t1.dt rows 6 preceding) as max_retweet_cnt_7d
+      from (select tag,
+                   to_date(start_time) as dt,
+                   sum(if_like)        as if_like_sum,
+                   sum(if_retweet)     as if_retweet_sum
+            from tb_user_video_log l
+                     inner join tb_video_info v on l.video_id = v.video_id
+            group by tag, to_date(start_time)) t1) t2
+where t2.dt between '2021-10-01' and '2021-10-03'
+order by t2.tag desc, t2.dt asc;
+```
+
+---
+
+### :fire: [近一个月发布的视频中热度最高的 top3 视频](https://www.nowcoder.com/practice/0226c7b2541c41e59c3b8aec588b09ff)
+
+MySQL:
+
+```sql
+SELECT video_id,
+       ROUND((100 * comp_play_rate + 5 * like_cnt + 3 * comment_cnt + 2 * retweet_cnt)
+                 / (TIMESTAMPDIFF(DAY, recently_end_date, cur_date) + 1), 0) as hot_index
+FROM (SELECT video_id,
+             AVG(IF(TIMESTAMPDIFF(SECOND, start_time, end_time)
+                        >= duration, 1, 0)) as comp_play_rate,
+             SUM(if_like)                   as like_cnt,
+             COUNT(comment_id)              as comment_cnt,
+             SUM(if_retweet)                as retweet_cnt,
+             MAX(DATE(end_time))            as recently_end_date, -- 最近被播放日期
+             MAX(DATE(release_time))        as release_date,      -- 发布日期
+             MAX(cur_date)                  as cur_date           -- 非分组列，加MAX避免语法错误
+      FROM tb_user_video_log
+               JOIN tb_video_info USING (video_id)
+               LEFT JOIN (SELECT MAX(DATE(end_time)) as cur_date
+                          FROM tb_user_video_log) as t_max_date ON 1
+      GROUP BY video_id
+      HAVING TIMESTAMPDIFF(DAY, release_date, cur_date) < 30) as t_video_info
+ORDER BY hot_index DESC
+LIMIT 3;
+```
+
+HQL:
+
+```sql
+with cte as (select *
+             from (select l.*,
+                          v.duration,
+                          v.release_time,
+                          tmp.cur
+                   from tb_video_info v
+                            inner join tb_user_video_log l on v.video_id = l.video_id
+                            left join (select max(to_date(l.end_time)) as cur from tb_user_video_log l) tmp on 1 = 1) t
+             where to_date(release_time) between date_sub(cur, 29) and cur)
+select video_id,
+       round((100 * finished_rate + 5 * like_cnt + 3 * comment_cnt + 2 * retweet_cnt)
+                 / recent_interval, 0) as hot_index
+from (select video_id,
+             sum(if(unix_timestamp(end_time) -
+                    unix_timestamp(start_time) >= duration, 1, 0)) / count(1) as finished_rate,
+             sum(if_like)                                                     as like_cnt,
+             count(comment_id)                                                as comment_cnt,
+             sum(if_retweet)                                                  as retweet_cnt,
+             datediff(max(cur), max(to_date(end_time))) + 1                   as recent_interval
+      from cte
+      group by video_id) t
+order by hot_index desc
+limit 3;
+```
+
+---
+
+### :fire: [统计活跃间隔对用户分级结果](https://www.nowcoder.com/practice/6765b4a4f260455bae513a60b6eed0af)
+
+MySQL:
+
+```sql
+with cte as (select uid,
+                    date(in_time)              as in_date,
+                    date(out_time)             as out_date,
+                    max(date(in_time)) over () as today
+             from tb_user_log
+             order by uid, in_date, out_date)
+select user_grade,
+       round(count(1) / max(tmp.total), 2) as ratio
+from (select *,
+             case
+                 when df_latest >= 30 then "流失用户"
+                 when df_latest >= 7 then "沉睡用户"
+                 when df_earliest < 7 then "新晋用户"
+                 else "忠实用户" end as user_grade
+      from (select uid,
+                   datediff(max(today), min(in_date)) + 1 as df_earliest,
+                   datediff(max(today), max(in_date)) + 1 as df_latest
+            from cte
+            group by uid) t1) t2
+         left join (select count(distinct uid) as total from tb_user_log) tmp on 1 = 1
+group by user_grade
+order by ratio desc, user_grade asc;
+```
+
+HQL:
+
+```sql
+with cte as (select uid,
+                    to_date(in_time)              as in_date,
+                    to_date(out_time)             as out_date,
+                    max(to_date(in_time)) over () as today
+             from tb_user_log
+             order by uid, in_date, out_date)
+select user_grade,
+       round(count(1) / max(tmp.total), 2) as ratio
+from (select *,
+             case
+                 when df_latest >= 30 then "流失用户"
+                 when df_latest >= 7 then "沉睡用户"
+                 when df_earliest < 7 then "新晋用户"
+                 else "忠实用户" end as user_grade
+      from (select uid,
+                   datediff(max(today), min(in_date)) + 1 as df_earliest,
+                   datediff(max(today), max(in_date)) + 1 as df_latest
+            from cte
+            group by uid) t1) t2
+         left join (select count(distinct uid) as total from tb_user_log) tmp on 1 = 1
+group by user_grade
+order by ratio desc, user_grade asc;
+```
+
+---
+
 ## 其他
 
 ### [SQL218 获取所有非 manager 员工当前的薪水情况](https://www.nowcoder.com/practice/8fe212a6c71b42de9c15c56ce354bebe?tpId=82&tqId=29753&rp=1&ru=%2Fexam%2Fcompany&qru=%2Fexam%2Fcompany&sourceUrl=%2Fexam%2Fcompany&difficulty=undefined&judgeStatus=undefined&tags=&title=)
@@ -277,3 +436,5 @@ from email e
 group by date
 order by date;
 ```
+
+---
