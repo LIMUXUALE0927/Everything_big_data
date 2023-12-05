@@ -1,6 +1,6 @@
-# 牛客 + LeetCode SQL 刷题
+# SQL 刷题
 
-## 窗口函数
+## 未分类
 
 ### [SQL215 查找在职员工自入职以来的薪水涨幅情况](https://www.nowcoder.com/practice/fc7344ece7294b9e98401826b94c6ea5?tpId=82&tqId=29753&rp=1&ru=%2Fexam%2Fcompany&qru=%2Fexam%2Fcompany&sourceUrl=%2Fexam%2Fcompany&difficulty=undefined&judgeStatus=undefined&tags=&title=)
 
@@ -336,8 +336,6 @@ order by ratio desc, user_grade asc;
 
 ---
 
-## 其他
-
 ### [SQL218 获取所有非 manager 员工当前的薪水情况](https://www.nowcoder.com/practice/8fe212a6c71b42de9c15c56ce354bebe?tpId=82&tqId=29753&rp=1&ru=%2Fexam%2Fcompany&qru=%2Fexam%2Fcompany&sourceUrl=%2Fexam%2Fcompany&difficulty=undefined&judgeStatus=undefined&tags=&title=)
 
 ```sql
@@ -376,19 +374,6 @@ inner join (
 
 on t1.dept_no = t2.dept_no and
 t1.emp_salary > t2.manager_salary
-```
-
----
-
-### [SQL235 构造一个触发器 audit_log](https://www.nowcoder.com/practice/7e920bb2e1e74c4e83750f5c16033e2e?tpId=82&tags=&title=&difficulty=0&judgeStatus=0&rp=1&sourceUrl=%2Fexam%2Fcompany)
-
-```sql
-create trigger audit_log
-after insert on employees_test
-for each row
-begin
-    insert into audit values(new.id,new.name);
-end
 ```
 
 ---
@@ -435,6 +420,293 @@ from email e
          inner join user u2 on e.receive_id = u2.id and u2.is_blacklist = 0
 group by date
 order by date;
+```
+
+---
+
+### :fire: [验证刷题效果，输出题目真实通过率](https://www.nowcoder.com/practice/c4fd4b545a704877b510f18503ad523f)
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202312050537078.png)
+
+MySQL:
+
+```sql
+select user_id,
+       count(distinct if(result_info = 1, question_id, null)) / count(distinct question_id) as question_pass_rate,
+       sum(result_info) / count(result_info) as pass_rate,
+       count(result_info) / count(distinct question_id) as question_per_cnt
+from done_questions_record
+group by user_id
+having question_pass_rate > 0.6
+order by user_id;
+```
+
+HQL:
+
+```sql
+select user_id,
+       count(distinct if(result_info = 1, question_id, null)) / count(distinct question_id) as question_pass_rate,
+       sum(result_info) / count(result_info) as pass_rate,
+       count(result_info) / count(distinct question_id) as question_per_cnt
+from done_questions_record
+group by user_id
+having count(distinct if(result_info = 1, question_id, null)) / count(distinct question_id) > 0.6
+order by user_id
+```
+
+---
+
+### :fire: [未完成试卷数大于 1 的有效用户](https://www.nowcoder.com/practice/46cb7a33f7204f3ba7f6536d2fc04286)
+
+HQL:
+
+```sql
+select uid,
+       sum(if(submit_time is null, 1, 0))                            as incomplete_cnt,
+       sum(if(submit_time is not null, 1, 0))                        as complete_cnt,
+       collect_set(concat_ws(':', string(to_date(start_time)), tag)) as detail
+from exam_record er
+         inner join examination_info ei
+                    on er.exam_id = ei.exam_id
+where year(start_time) = 2021
+group by uid
+having complete_cnt > 1
+   and incomplete_cnt > 1
+   and incomplete_cnt < 5
+order by incomplete_cnt desc;
+```
+
+---
+
+### [连续两次作答试卷的最大时间窗](https://www.nowcoder.com/practice/9dcc0eebb8394e79ada1d4d4e979d73c)
+
+MySQL:
+
+```sql
+with t1 as (select *,
+                   datediff(date(start_time), lag(start_time) over (partition by uid order by start_time)) +
+                   1 as diff
+            from exam_record
+            where year(start_time) = '2021')
+select uid,
+       days_window,
+       round(avg_cnt * days_window, 2) as avg_exam_cnt
+from (select uid,
+             max(diff)                                                            as days_window,
+             count(start_time) / (datediff(max(start_time), min(start_time)) + 1) as avg_cnt
+      from t1
+      group by uid
+      having count(distinct date(start_time)) >= 2) t
+order by days_window desc, avg_exam_cnt desc
+```
+
+HQL:
+
+Hive 不支持 `having count(distinct date(start_time)) >= 2`
+
+```sql
+with cte as (select *,
+                    datediff(to_date(start_time), lag(start_time) over (partition by uid order by start_time)) +
+                    1 as diff
+             from exam_record
+             where year(start_time) = '2021')
+select uid,
+       days_window,
+       round(avg_cnt * days_window, 2) as avg_exam_cnt
+from (select *
+      from (select uid,
+                   max(diff)                                                            as days_window,
+                   count(start_time) / (datediff(max(start_time), min(start_time)) + 1) as avg_cnt,
+                   count(distinct to_date(start_time))                                  as cnt
+            from cte
+            group by uid) t1) t2
+where cnt >= 2
+order by days_window desc, avg_exam_cnt desc
+```
+
+---
+
+### :fire: [未完成率较高的 50%用户近三个月答卷情况](https://www.nowcoder.com/practice/3e598a2dcd854db8b1a3c48e5904fe1c)
+
+MySQL:
+
+```mysql
+# 统计SQL试卷上用户未完成率及百分比排位:
+with t1 as (select *,
+                   percent_rank() over (order by incomplete_rate desc) as prk
+            from (select uid,
+                         sum(if(submit_time is null, 1, 0)) / count(start_time) as incomplete_rate
+                  from exam_record er
+                           inner join examination_info ei on er.exam_id = ei.exam_id
+                  where tag = 'SQL'
+                  group by uid) tmp),
+# 有试卷作答记录的近三个月
+     t2 as (select er.uid,
+                   date_format(start_time, '%Y%m')                                   as start_month,
+                   dense_rank() over (order by date_format(start_time, '%Y%m') desc) as drk,
+                   submit_time
+            from exam_record er)
+select uid,
+       start_month,
+       count(start_month) as total_cnt,
+       count(submit_time) as complete_cnt
+from t2
+where uid in (select uid from t1 where prk <= 0.5)
+  and uid in (select uid from user_info where level = 6 or level = 7)
+  and drk <= 3
+group by uid, start_month
+order by uid, start_month;
+```
+
+Spark SQL:
+
+```sql
+with t1 as (select *,
+                   percent_rank() over (order by incomplete_rate desc) as prk
+            from (select uid,
+                         sum(if(submit_time is null, 1, 0)) / count(start_time) as incomplete_rate
+                  from exam_record er
+                           inner join examination_info ei on er.exam_id = ei.exam_id
+                  where tag = 'SQL'
+                  group by uid) tmp),
+     t2 as (select er.uid,
+                   date_format(start_time, 'yyyy-MM')                                   as start_month,
+                   dense_rank() over (order by date_format(start_time, 'yyyy-MM') desc) as drk,
+                   submit_time
+            from exam_record er)
+select uid,
+       start_month,
+       count(start_month) as total_cnt,
+       count(submit_time) as complete_cnt
+from t2
+where uid in (select uid from t1 where prk <= 0.5)
+  and uid in (select uid from user_info where level = 6 or level = 7)
+  and drk <= 3
+group by uid, start_month
+order by uid, start_month;
+```
+
+---
+
+### [每月及截止当月的答题情况](https://www.nowcoder.com/practice/1ce93d5cec5c4243930fc5e8efaaca1e)
+
+MySQL:
+
+```sql
+with cte as (select uid,
+                    start_month,
+                    sum(if(rn = 1, 1, 0)) as is_first
+             from (select uid,
+                          date_format(start_time, '%Y%m')                          as start_month,
+                          row_number() over (partition by uid order by start_time) as rn
+                   from exam_record) t
+             group by start_month, uid)
+select *,
+       max(month_add_uv) over (order by start_month) as max_month_add_uv,
+       sum(month_add_uv) over (order by start_month) as sum_month_add_uv
+from (select start_month,
+             count(distinct uid) as mau,
+             sum(is_first)       as month_add_uv
+      from cte
+      group by start_month) t1
+order by start_month;
+```
+
+HQL:
+
+```sql
+with cte as (select uid,
+                    start_month,
+                    sum(if(rn = 1, 1, 0)) as is_first
+             from (select uid,
+                          date_format(start_time, 'yyyyMM')                        as start_month,
+                          row_number() over (partition by uid order by start_time) as rn
+                   from exam_record) t
+             group by start_month, uid)
+select *,
+       max(month_add_uv) over (order by start_month) as max_month_add_uv,
+       sum(month_add_uv) over (order by start_month) as sum_month_add_uv
+from (select start_month,
+             count(distinct uid) as mau,
+             sum(is_first)       as month_add_uv
+      from cte
+      group by start_month) t1
+order by start_month;
+```
+
+---
+
+### :fire: [根据指定记录是否存在输出不同情况](https://www.nowcoder.com/practice/f72d3fc27dc14f3aae76ee9823ccca6b)
+
+使用 EXISTS 和 NOT EXISTS 来实现互斥条件。
+
+MySQL:
+
+```sql
+with cte as (select ui.uid,
+                    level,
+                    count(start_time)                                                                 as total_cnt,
+                    count(start_time) - count(submit_time)                                            as incomplete_cnt,
+                    round(ifnull((count(start_time) - count(submit_time)) / count(start_time), 0), 3) as incomplete_rate
+             from user_info ui
+                      left join exam_record er on er.uid = ui.uid
+             group by ui.uid)
+select uid,
+       incomplete_cnt,
+       incomplete_rate
+from cte
+where exists(select 1
+             from cte
+             where level = 0
+               and incomplete_cnt > 2)
+  and level = 0
+union all
+select uid,
+       incomplete_cnt,
+       incomplete_rate
+from cte
+where not exists(select 1
+                 from cte
+                 where level = 0
+                   and incomplete_cnt > 2)
+  and total_cnt > 0
+order by incomplete_rate;
+```
+
+HQL:
+
+注意：Hive 中的使用 EXISTS 必须添加相关性条件，否则会报错。
+
+```sql
+with t1 as (select ui.uid,
+                   max(level)                                                                     as level,
+                   count(start_time)                                                              as total_cnt,
+                   count(start_time) - count(submit_time)                                         as incomplete_cnt,
+                   round(nvl((count(start_time) - count(submit_time)) / count(start_time), 0), 3) as incomplete_rate
+            from user_info ui
+                     left join exam_record er on er.uid = ui.uid
+            group by ui.uid),
+     t2 as (select *
+            from t1
+            where level = 0 and incomplete_cnt > 2)
+select uid,
+       incomplete_cnt,
+       incomplete_rate
+from t1
+where exists (select 1
+              from t2
+              where t2.uid = t1.uid) -- 添加相关性条件
+  and level = 0
+union all
+select uid,
+       incomplete_cnt,
+       incomplete_rate
+from t1
+where not exists (select 1
+                  from t2
+                  where t2.uid = t1.uid) -- 添加相关性条件
+  and total_cnt > 0
+order by incomplete_rate;
 ```
 
 ---
