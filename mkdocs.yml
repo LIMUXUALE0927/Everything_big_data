@@ -31,7 +31,7 @@ theme:
 plugins:
   - search:
       lang: zh
-      jieba_dict: dict.txt
+      # jieba_dict: dict.txt
 
 markdown_extensions:
   - pymdownx.arithmatex:
