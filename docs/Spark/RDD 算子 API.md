@@ -62,6 +62,8 @@ mapRDD2.collect()
 
 map 的输入函数应用于 RDD 中的每个元素，而 mapPartitions 的输入函数应用于每个分区。因此，如果 RDD 中有 N 个元素，有 M 个分区，那么 map 的函数将被调用 N 次，而 mapPartitions 函数将被调用 M 次，每次调用都会处理一个分区的数据。**mapPartitions 把每个分区中的内容作为整体来处理的，因此减少了总的处理数据的次数。**
 
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202312112003249.png)
+
 计算每个分区奇数的和与偶数的和：
 
 ```scala
@@ -395,14 +397,6 @@ val rdd2: RDD[(Int, String)] =
 
 ---
 
-### reduceByKey
-
-可以将数据按照相同的 key 对 value 进行聚合。如果 Key 的数据只有一个，是不会参与计算的。
-
-`reduceByKey` 要求分区内（combine）和分区间的聚合规则是相同的。如果分区内和分区间要按照不同规则计算，则要使用 `aggregateByKey` 。（如分区内求最大值，分区间求和）
-
----
-
 ### groupByKey
 
 将数据源的数据根据 key 对 value 进行分组。reduceByKey = groupByKey + reduce。
@@ -416,7 +410,14 @@ val groupRDD: RDD[(String, Iterable[Int])] = rdd.groupByKey()
 val groupRDD1: RDD[(String, Iterable[(String, Int)])] = rdd.groupBy(_._1)
 ```
 
-`groupByKey` 由于会根据 key 对数据进行分组，因此可能导致 **shuffle**。而在 Spark 中，shuffle 操作必须落盘处理（因此 shuffle 操作效率很低），不能在内存中等待数据，否则容易导致 OOM。
+**groupByKey 在不同情况下会生成不同类型的 RDD 和数据依赖关系**。如果 RDD1 调用 groupByKey 生成 RDD2，那么 RDD2 的类型和数据依赖关系如下：
+
+- 如果 RDD1 和 RDD2 的分区器不同，会产生 Shuffle Dependency
+- 如果 RDD1 和 RDD2 的分区器相同，并且分区数相同，那么就不需要 Shuffle Dependency
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202312112008266.png)
+
+`groupByKey` 由于会根据 key 对数据进行分组，因此可能导致 **shuffle** 过程中产生大量中间数据、占用内存大，容易导致 OOM。
 
 !!! question "groupByKey 和 reduceByKey 的区别？"
 
@@ -430,6 +431,19 @@ val groupRDD1: RDD[(String, Iterable[(String, Int)])] = rdd.groupBy(_._1)
 
 ---
 
+### reduceByKey
+
+```scala
+def reduceByKey(func: (V, V) => V): RDD[(K, V)]
+def reduceByKey(func: (V, V) => V, numPartitions: Int): RDD[(K, V)]
+```
+
+可以将数据按照相同的 key 对 value 进行聚合。如果 Key 的数据只有一个，是不会参与计算的。
+
+`reduceByKey` 要求分区内（combine）和分区间的聚合规则是相同的。如果分区内和分区间要按照不同规则计算，则要使用 `aggregateByKey` 。（如分区内求最大值，分区间求和）
+
+---
+
 ### aggregateByKey
 
 函数签名：
@@ -439,7 +453,9 @@ def aggregateByKey[U: ClassTag](zeroValue: U)(seqOp: (U, V) => U,
   combOp: (U, U) => U): RDD[(K, U)]
 ```
 
-**将数据根据不同的规则进行分区内计算和分区间计算。**
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202312112009299.png)
+
+通用版的 `reduceByKey`，**将数据根据不同的规则进行分区内计算和分区间计算。**
 
 `aggregateByKey` 存在函数柯里化，有 2 个参数列表：
 
@@ -475,7 +491,9 @@ def combineByKey[C](
   mergeCombiners: (C, C) => C): RDD[(K, C)] // 分区间的计算规则
 ```
 
-最通用的对 key-value 型 rdd 进行聚集操作的聚集函数 (aggregation function)。类似于 aggregate()，combineByKey() 允许用户返回值的类型与输入不一致。
+combineByKey()是一个通用的基础聚合操作。常用的聚合操作，如 aggregateByKey()、reduceByKey()都是利用 combineByKey()实现的。
+
+**aggregateByKey() 和 combineByKey() 唯一的区别：combineByKey() 的 createCombiner 是一个初始化函数，而 aggregateByKey() 的 zeroValue 是一个初始值**。比如：combineByKey() 可以根据每个 record 的 Value 值为每个 record 定制初始值。
 
 小练习：将数据 List(("a", 88), ("b", 95), ("a", 91), ("b", 93), ("a", 95), ("b", 98)) 求每个 key 的平均值
 
@@ -488,28 +506,34 @@ val combineRdd: RDD[(String, (Int, Int))] = input.combineByKey(
   (acc1: (Int, Int), acc2: (Int, Int)) => (acc1._1 + acc2._1, acc1._2 + acc2._2))
 ```
 
+---
+
+### foldByKey
+
+```scala
+def foldByKey(zeroValue: V, numPartitions: Int)(func: (V, V) => V): RDD[(K, V)]
+```
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202312112015625.png)
+
+foldByKey 是 aggregateByKey 的简化操作，将 aggregateByKey 中的分区内和分区间计算规则相同的情况进行简化，同时多了初始值 zeroValue。
+
+#### 总结
+
 !!! question "reduceByKey、foldByKey、aggregateByKey、combineByKey 的区别?"
 
-| reduceByKey                                    | CombineByKey                                                                             |
+| reduceByKey                                    | combineByKey                                                                             |
 | ---------------------------------------------- | ---------------------------------------------------------------------------------------- |
 | `reduceByKey` 在内部调用 `combineByKey`        | `combineByKey` 是通用 API，由 `reduceByKey` 和 `aggregateByKey` 使用                     |
 | `reduceByKey` 的输入类型和 outputType 是相同的 | `combineByKey` 更灵活，因此可以提到所需的 outputType。输出类型不一定需要与输入类型相同。 |
 
-reduceByKey：相同 key 的第一个数据不进行任何计算，分区内和分区间计算规则相同
+- reduceByKey：没有初始值，分区内和分区间计算规则相同
 
-FoldByKey：相同 key 的第一个数据和初始值进行分区内计算，分区内和分区间计算规则相同
+- foldByKey：有初始值的 reduceByKey，分区内和分区间计算规则相同
 
-AggregateByKey：相同 key 的第一个数据和初始值进行分区内计算，分区内和分区间计算规则可以不相同
+- aggregateByKey：有初始值，分区内和分区间计算规则可以不同
 
-CombineByKey：当计算时，发现数据结构不满足要求时，可以让第一个数据转换结构。分区内和分区间计算规则不相同。
-
-![](https://raw.githubusercontent.com/MXJULY/image/main/img/202307241936834.png)
-
-![](https://raw.githubusercontent.com/MXJULY/image/main/img/202307241936836.png)
-
-![](https://raw.githubusercontent.com/MXJULY/image/main/img/202307241936033.png)
-
-![](https://raw.githubusercontent.com/MXJULY/image/main/img/202307241936040.png)
+- combineByKey：最通用的聚合操作。有初始化函数，发现数据结构不满足要求时，可以让第一个数据转换结构。分区内和分区间计算规则可以不同。
 
 ---
 
@@ -540,6 +564,8 @@ rdd.join(rdd1).collect().foreach(println)
 在类型为 (K,V) 和 (K,W) 的 RDD 上调用，返回一个 `(K,(Iterable<V>,Iterable<W>))` 类型的 RDD
 
 cogroup = connect + group
+
+![](https://raw.githubusercontent.com/MXJULY/image/main/img/202312112029894.png)
 
 ```scala
 val rdd1 = sc.makeRDD(List(("a", 1), ("b", 2)))
