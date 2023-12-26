@@ -710,3 +710,107 @@ order by incomplete_rate;
 ```
 
 ---
+
+### [10 月的新户客单价和获客成本](https://www.nowcoder.com/practice/d15ee0798e884f829ae8bd27e10f0d64)
+
+=== "SQL"
+
+      ```mysql
+      with t1 as (select order_id,
+                        uid,
+                        date(event_time)                                         as order_date,
+                        row_number() over (partition by uid order by event_time) as rn,
+                        total_amount
+                  from tb_order_overall),
+      t2 as (select *
+                  from t1
+                  where rn = 1
+                  and date_format(order_date, '%Y-%m') = '2021-10')
+      select round(avg(amount), 1) as avg_amount,
+            round(avg(cost), 1)   as avg_cost
+      from (select avg(total_amount)                                                    as amount,
+                  (sum(price * cnt) - max(total_amount)) / count(distinct t2.order_id) as cost
+            from t2
+                  inner join tb_order_detail tod on t2.order_id = tod.order_id
+            group by t2.order_id) t;
+      ```
+
+=== "HQL"
+
+      ```sql
+      with t1 as (select order_id,
+                        uid,
+                        to_date(event_time)                                      as order_date,
+                        row_number() over (partition by uid order by event_time) as rn,
+                        total_amount
+                  from tb_order_overall),
+      t2 as (select *
+                  from t1
+                  where rn = 1
+                  and date_format(order_date, 'yyyy-MM') = '2021-10')
+      select round(avg(amount), 1) as avg_amount,
+            round(avg(cost), 1)   as avg_cost
+      from (select avg(total_amount)                                                    as amount,
+                  (sum(price * cnt) - max(total_amount)) / count(distinct t2.order_id) as cost
+            from t2
+                  inner join tb_order_detail tod on t2.order_id = tod.order_id
+            group by t2.order_id) t;
+      ```
+
+---
+
+### :fire: :fire: [工作日各时段叫车量、等待接单时间和调度时间](https://www.nowcoder.com/practice/34f88f6d6dc549f6bc732eb2128aa338)
+
+=== "SQL"
+
+      ```mysql
+      with t1 as (select tcr.uid,
+                        tcr.event_time, -- 下单时间
+                        tcr.order_id,
+                        tco.order_time, -- 接单时间
+                        tco.start_time, -- 开始时间
+                        tco.finish_time,
+                        case
+                        when hour(tcr.event_time) in (7, 8) then '早高峰'
+                        when hour(tcr.event_time) between 9 and 16 then '工作时间'
+                        when hour(tcr.event_time) in (17, 18, 19) then '晚高峰'
+                        else '休息时间' end as period
+                  from tb_get_car_record tcr
+                        inner join tb_get_car_order tco on tcr.order_id = tco.order_id
+                  where dayofweek(tcr.event_time) between 2 and 6)
+      select period,
+            count(1)                                                                      as get_car_num,
+            round(avg((unix_timestamp(order_time) - unix_timestamp(event_time)) / 60), 1) as avg_wait_time,
+            round(avg((unix_timestamp(start_time) - unix_timestamp(order_time)) / 60), 1) as avg_dispatch_time
+      from t1
+      group by period
+      order by get_car_num;
+      ```
+
+=== "HQL"
+
+      ```sql
+      with t1 as (select tcr.uid,
+                        tcr.event_time, -- 下单时间
+                        tcr.order_id,
+                        tco.order_time, -- 接单时间
+                        tco.start_time, -- 开始时间
+                        tco.finish_time,
+                        case
+                        when hour(tcr.event_time) in (7, 8) then '早高峰'
+                        when hour(tcr.event_time) between 9 and 16 then '工作时间'
+                        when hour(tcr.event_time) in (17, 18, 19) then '晚高峰'
+                        else '休息时间' end as period
+                  from tb_get_car_record tcr
+                        inner join tb_get_car_order tco on tcr.order_id = tco.order_id
+                  where dayofweek(tcr.event_time) between 2 and 6)
+      select period,
+            count(1)                                                          as get_car_num,
+            round(avg((unix_timestamp(order_time) - unix_timestamp(event_time)) / 60), 1) as avg_wait_time,
+            round(avg((unix_timestamp(start_time) - unix_timestamp(order_time)) / 60), 1) as avg_dispatch_time
+      from t1
+      group by period
+      order by get_car_num;
+      ```
+
+---

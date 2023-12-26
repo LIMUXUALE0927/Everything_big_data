@@ -94,7 +94,15 @@ LAG(col, n, DEFAULT) 用于统计窗口内往上第 n 行值。
 
 ## 日期相关函数
 
-### DATE_SUB() 和 SUBDATE()
+### DATEDIFF()
+
+### DATE_ADD() & DATE_SUB()
+
+### UNIX_TIMESTAMP()
+
+### DAYOFWEEK()
+
+### DATE_FORMAT()
 
 ---
 
