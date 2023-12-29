@@ -814,3 +814,59 @@ order by incomplete_rate;
       ```
 
 ---
+
+### :fire: :fire: [SQL179 各城市最大同时等车人数](https://www.nowcoder.com/practice/f301eccab83c42ab8dab80f28a1eef98?tpId=268)
+
+进入时间：event_time，开始打车的时间即为等车开始。
+
+离开时间：有 3 种情况
+
+- 状态 1：司机接单前取消，则没有生成 order_id，这种情况 order_id IS NULL 记录 end_time
+- 状态 2：司机接单后取消，则没有上车时间，start_time IS NULL 记录 finish_time
+- 状态 3：正常上车，记录 start_time，start_time IS NOT NULL
+
+状态 2 和 3 可以直接使用 ifnull() 合并，ifnull(start_time,finish_time) 如果 start_time 空则返回 finish_time，不空则 start_time
+
+定义完用户进入等车和离开等车这两种事件之后，关联所有表格，使用窗口函数排序累加即可。
+
+=== "SQL"
+
+      ```mysql
+      with t1 as (select city, event_time as uv_time, 1 as uv -- 进入等车状态
+                  from tb_get_car_record
+                  union all
+                  select city, coalesce(start_time, finish_time, end_time) as uv_time, -1 as uv -- 离开等车状态（start_time：上车时间，finish_time：订单完成时间，end_time：打车结束时间）
+                  from tb_get_car_order tco
+                        left join tb_get_car_record tcr on tcr.order_id = tco.order_id),
+      t2 as (select city,
+                        sum(uv) over (partition by city order by uv_time, uv desc) as uv_cnt -- 每个城市等车瞬时UV（扫描线算法）
+                  from t1
+                  where date_format(uv_time, '%Y-%m') = '2021-10')
+      select city,
+            max(uv_cnt) as max_wait_uv -- 每个城市等车UV峰值
+      from t2
+      group by city
+      order by max_wait_uv, city;
+      ```
+
+=== "HQL"
+
+      ```sql
+      with t1 as (select city, event_time as uv_time, 1 as uv -- 进入等车状态
+                  from tb_get_car_record
+                  union all
+                  select city, coalesce(start_time, finish_time, end_time) as uv_time, -1 as uv -- 离开等车状态（start_time：上车时间，finish_time：订单完成时间，end_time：打车结束时间）
+                  from tb_get_car_order tco
+                        left join tb_get_car_record tcr on tcr.order_id = tco.order_id),
+      t2 as (select city,
+                        sum(uv) over (partition by city order by uv_time, uv desc) as uv_cnt -- 每个城市等车瞬时UV（扫描线算法）
+                  from t1
+                  where date_format(uv_time, 'yyyy-MM') = '2021-10')
+      select city,
+            max(uv_cnt) as max_wait_uv -- 每个城市等车UV峰值
+      from t2
+      group by city
+      order by max_wait_uv, city;
+      ```
+
+---
