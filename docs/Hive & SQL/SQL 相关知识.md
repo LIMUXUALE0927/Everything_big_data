@@ -94,3 +94,9 @@ select dealid, count(distinct uid) num from order group by dealid;
 当只有一个 distinct 字段时，如果不考虑 Map 阶段的 Hash GroupBy，只需要将 Group By 字段和 Distinct 字段组合为 map 输出 key，利用 mapreduce 的排序，同时将 Group By 字段作为 reduce 的 key，在 reduce 阶段保存 LastKey 即可完成去重。
 
 ![](https://raw.githubusercontent.com/MXJULY/image/main/img/202310170405313.png)
+
+---
+
+## 递归 SQL
+
+[一篇学会 SQL 中的递归的用法](https://www.51cto.com/article/677598.html)
