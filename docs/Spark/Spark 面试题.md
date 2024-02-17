@@ -181,6 +181,20 @@ spark-submit 是在 spark 安装目录中 bin 目录下的一个 **shell 脚本�
 
 ---
 
+## Spark 调度系统
+
+Spark 的调度系统主要包括三个部分：DAGScheduler, SchedulerBackend 和 TaskScheduler。
+
+任务调度流程：
+
+1. DAGScheduler 根据用户代码构建 DAG，以 Shuffle 为边界划分 Stages
+2. DAGScheduler 基于 Stages 创建 TaskSets，并交给 TaskScheduler 请求调度
+3. SchedulerBackend 获取集群内可用计算资源（以 WorkOffer 为粒度提供计算资源）
+4. TaskScheduler 对于给定的 WorkOffer，结合任务的本地倾向性完成任务调度
+5. SchedulerBackend 将任务分发给 Executor 进行执行
+
+---
+
 ## Spark 为什么比 MR 快
 
 1. Spark 采用 RDD + DAG 的计算模型，对于复杂的计算，中间结果不需要落盘，只需要在最后一次 reduce 落盘即可。而 MR 每一轮计算只能包含一个 Map 和一个 Reduce，多轮计算的中间结果需要落盘，因此会造成大量的磁盘 IO，降低了计算效率。
