@@ -69,7 +69,7 @@
 实现 Runnable 接口和 Callable 接口有什么区别呢？
 
 - Runnable 接口不会返回结果或抛出检查异常，但是 Callable 接口可以。
-- 所以，如果任务不需要返回结果或抛出异常推荐使用 Runnable 接口 。
+- 所以，如果任务不需要返回结果或抛出异常推荐使用 Runnable 接口。
 
 ---
 
@@ -362,10 +362,13 @@ ThreadPoolExecutor(int corePoolSize,
 5. workQueue：用于保存任务的阻塞队列。
 6. threadFactory：创建线程的工厂类。可以通过指定线程工厂为每个创建出来的线程设置更有意义的名字。
 7. handler：饱和策略。
-   - AbortPolicy： 直接拒绝所提交的任务
-   - CallerRunsPolicy：只用调用者所在的线程来执行任务
-   - DiscardPolicy：不处理直接丢弃掉任务
-   - DiscardOldestPolicy：丢弃掉阻塞队列中存放时间最久的任务，执行当前任务
+
+饱和策略：
+
+- AbortPolicy： 直接拒绝所提交的任务
+- CallerRunsPolicy：只用调用者所在的线程来执行任务
+- DiscardPolicy：不处理直接丢弃掉任务
+- DiscardOldestPolicy：丢弃掉阻塞队列中存放时间最久的任务，执行当前任务
 
 ---
 
