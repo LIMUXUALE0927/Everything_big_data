@@ -26,7 +26,7 @@ Apache Flink 是一个分布式流处理引擎，用于对无界和有界数据�
 
 - 支持程序自动优化：避免特定情况下 Shuffle、排序等昂贵操作，中间结果有必要进行缓存
 
-**Flink 的四大基石**
+## Flink 的四大基石
 
 Flink 之所以能这么流行，离不开它最重要的四个基石：**Checkpoint、State、Time、Window**。
 
@@ -38,9 +38,9 @@ Flink 之所以能这么流行，离不开它最重要的四个基石：**Checkp
 
 - 另外流计算中一般在对流数据进行操作之前都会先进行开窗，即基于一个什么样的窗口上做这个计算。Flink 提供了开箱即用的各种窗口，比如滑动窗口、滚动窗口、会话窗口以及非常灵活的自定义的窗口。
 
-**Flink 的核心组成部分：**
+## Flink 的核心组成部分
 
-![](https://hcavh6tzye.feishu.cn/space/api/box/stream/download/asynccode/?code=MDc2NjU2ZWJiNGJhYjIxMmY2ZTdkYmVmN2UwNTFhY2RfNGhrbFJNOFU3VENlaVg1bXY2TnlQbUM1azl0b2dqTXVfVG9rZW46S0hFd2JkdTBCb29RTkx4dngzcmN6dUg3bjllXzE3MjcxNTQxNzE6MTcyNzE1Nzc3MV9WNA)
+![](https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202409241520141.png)
 
 Flink 分别提供了面向流式处理的接口（DataStream API）和面向批处理的接口（DataSet API）。因此，Flink 既可以完成流处理，也可以完成批处理。Flink 支持的拓展库涉及机器学习（FlinkML）、复杂事件处理（CEP）、以及图计算（Gelly），还有分别针对流处理和批处理的 Table API。
 
@@ -64,9 +64,9 @@ Lambda 架构在传统周期性批处理架构的基础上添加了一个由低�
 
 3. Lambda 架构较难配置和维护
 
-暂时无法在飞书文档外展示此内容
+![](https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202409241522060.png)
 
-## Ch2：流处理基础
+## 流处理基础
 
 **状态**
 
@@ -76,9 +76,9 @@ Lambda 架构在传统周期性批处理架构的基础上添加了一个由低�
 
 算子是数据流程序的基本功能单元，他们从输入获取数据，对其进行计算，然后产生数据并发往输出以供后续处理。**没有输入端的算子称为数据源，没有输出端的算子称为数据汇。**
 
-![](https://hcavh6tzye.feishu.cn/space/api/box/stream/download/asynccode/?code=YTdjNTMzZWFhMmZkZmI5NjhjMjI4MWJhZmE2OTk2ZDRfZHY3b0d0RVRzSGo3aHJDbndrS0ZGTjFOT3RMR1BOUzNfVG9rZW46S2ZGb2JnWFNSb1AyTFZ4S3BGM2NOeE5KbmFmXzE3MjcxNTQxNzE6MTcyNzE1Nzc3MV9WNA)
+![Logical Dataflow(JobGraph)](https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202409241524222.png)
 
-![](https://hcavh6tzye.feishu.cn/space/api/box/stream/download/asynccode/?code=ZmM0MmE1MGE5ODdmOTE0NDAzZThhMjZiNWRhMjcyNTZfY2FJTnh3ZGUzOGxQdUZzUGR5WU5NdU1tUWMzVGxFZDdfVG9rZW46S3g0TGJLQmRjb0FacUp4cW5VeWM0UVZnbm1iXzE3MjcxNTQxNzE6MTcyNzE1Nzc3MV9WNA)
+![](https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202409241525096.png)
 
 **数据交换策略**
 
@@ -92,7 +92,7 @@ Lambda 架构在传统周期性批处理架构的基础上添加了一个由低�
 
 - **随机策略（Random Strategy）：**会将数据均匀分配至算子的所有任务，以实现计算任务的负载均衡。
 
-![](https://hcavh6tzye.feishu.cn/space/api/box/stream/download/asynccode/?code=YmEyMzlkMDhlZDQ1MWFiOWJhOTJlNTNjNzk1NmI5YWNfSDRDUU92T0xGcVFZWW9XN2RkdGdUQW56bjdhMGxIWUVfVG9rZW46UVBFNWJpV2l5bzJRaHd4RzNGUmNpekxFbmtjXzE3MjcxNTQxNzE6MTcyNzE1Nzc3MV9WNA)
+![](https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202409241525064.png)
 
 **延迟和吞吐**
 
@@ -105,3 +105,193 @@ Lambda 架构在传统周期性批处理架构的基础上添加了一个由低�
 - 一旦事件到达速率过高，系统就会被迫开始缓冲事件。如果系统持续以力不能及的高速率接收数据，那么缓冲区可能会用尽，继而可能导致数据丢失。**这种情形通常被称为「背压」（backpressure）。**
 
 通过并行处理多条数据流，可以在处理更多事件的同时降低延迟。
+
+## Flink 组件
+
+Flink 中的几个关键组件：
+
+- Client
+- JobManager
+- TaskManager
+
+我们的代码，实际上是由客户端获取并做转换，之后提交给 JobManger 的。JobManager 负责对作业进行中央调度管理，而它获取到要执行的作业后，会进一步处理转换，然后分发任务给众多的 TaskManager，负责具体的任务执行。
+
+![](https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202409241647511.png)
+
+## Flink 部署模式
+
+Flink 为各种场景提供了不同的部署模式，主要有以下三种：
+
+- 会话模式（Session Mode）
+- 单作业模式（Per-Job Mode）
+- 应用模式（Application Mode）
+
+它们的区别主要在于：
+
+- 集群的生命周期以及资源的分配方式
+- 应用的 main() 到底在哪里执行：Client 还是 JobManager
+
+### 会话模式
+
+会话模式其实最符合常规思维。我们需要先启动一个集群，保持一个会话，在这个会话中通过客户端提交作业。集群启动时所有资源就都已经确定，所以所有提交的作业会竞争集群中的资源。
+
+![](https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202409241653351.png)
+
+集群的生命周期是超越于作业之上的，作业结束了就释放资源，集群依然正常运行。当然缺点也是显而易见的：因为资源是共享的，所以资源不够了，提交新的作业就会失败。另外，同一个 TaskManager 上可能运行了很多作业，如果其中一个发生故障导致 TaskManager 宕机，那么所有作业都会受到影响。
+
+**会话模式比较适合于单个规模小、执行时间短的大量作业**。
+
+### 单作业模式
+
+会话模式因为资源共享会导致很多问题，所以为了更好地隔离资源，我们可以考虑为每个提交的作业启动一个集群，这就是所谓的单作业（Per-Job）模式。
+
+单作业模式也很好理解，就是严格的一对一，集群只为这个作业而生。同样由客户端运行应用程序，然后启动集群，作业被提交给 JobManager，进而分发给 TaskManager 执行。作业完成后，集群就会关闭，所有资源也会释放。这样一来，每个作业都有它自己的 JobManager 管理，占用独享的资源，即使发生故障，它的 TaskManager 宕机也不会影响其他作业。
+
+这些特性使得单作业模式在生产环境运行更加稳定，所以是实际应用的首选模式。需要注意的是，Flink 本身无法直接这样运行，所以单作业模式一般需要借助一些资源管理框架来启动集群，比如 YARN、Kubernetes。
+
+### 应用模式
+
+直接把应用提交到 JobManger 上运行。而这也就代表着，我们需要为每一个提交的应用单独启动一个 JobManager，也就是创建一个集群。这个 JobManager 只为执行这一个应用而存在，执行结束之后 JobManager 也就关闭了，这就是所谓的应用模式。
+
+### StandAlone 模式
+
+### Yarn 模式
+
+---
+
+## Flink 运行时架构
+
+![](https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202409241740652.png)
+
+### Client
+
+调用程序的 main 方法，将代码转换成“数据流图”（Dataflow Graph），并最终生成作业图（JobGraph），一并发送给 JobManager。
+
+### JobManager
+
+JobManger 包含 3 个不同的组件：
+
+- JobMaster
+- ResourceManager
+- Dispatcher
+
+**JobMaster：**
+
+JobMaster 是 JobManager 中最核心的组件，负责处理单独的作业（Job）。所以 JobMaster 和具体的 Job 是一一对应的，多个 Job 可以同时运行在一个 Flink 集群中, 每个 Job 都有一个自己的 JobMaster。
+
+在作业提交时，JobMaster 会先接收到要执行的应用。这里所说应用一般是客户端提交来的，包括：Jar 包，数据流图（dataflow graph），和作业图（JobGraph）。
+
+JobMaster 会把 JobGraph 转换成一个物理层面的数据流图，这个图被叫作**执行图（ExecutionGraph）**，它包含了所有可以并发执行的任务。JobMaster 会向资源管理器（ResourceManager）发出请求，申请执行任务必要的资源。一旦它获取到了足够的资源，就会将执行图分发到真正运行它们的 TaskManager 上。
+
+而在运行过程中， JobMaster 会负责所有需要中央协调的操作，比如说检查点（checkpoint）的协调。
+
+**ResourceManager：**
+
+ResourceManager 主要负责资源的分配和管理，在 Flink 集群中只有一个。所谓「资源」，主要是指 TaskManager 的任务槽（task slots）。任务槽就是 Flink 集群中的资源调配单元，包含了机器用来执行计算的一组 CPU 和内存资源。每一个任务（Task）都需要分配到一个 slot 上执行。
+
+这里注意要把 Flink 内置的 ResourceManager 和其他资源管理平台（比如 YARN）的 ResourceManager 区分开。
+
+Flink 的 ResourceManager，针对不同的环境和资源管理平台（比如 Standalone 部署，或者 YARN），有不同的具体实现。在 Standalone 部署时，因为 TaskManager 是单独启动的（没有 Per-Job 模式），所以 ResourceManager 只能分发可用 TaskManager 的任务槽，不能单独启动新 TaskManager。
+
+而在有资源管理平台时，就不受此限制。当新的作业申请资源时，ResourceManager 会将有空闲槽位的 TaskManager 分配给 JobMaster。如果 ResourceManager 没有足够的任务槽，它还可以向资源提供平台发起会话，请求提供启动 TaskManager 进程的容器。另外，ResourceManager 还负责停掉空闲的 TaskManager，释放计算资源。
+
+**Dispatcher：**
+
+Dispatcher 主要负责提供一个 REST 接口，用来提交应用，并且负责为每一个新提交的作业启动一个新的 JobMaster 组件。Dispatcher 也会启动一个 Web UI，用来方便地展示和监控作业执行的信息。Dispatcher 在架构中并不是必需的，在不同的部署模式下可能会被忽略掉。
+
+### TaskManager
+
+TaskManager 是 Flink 中的工作进程，数据流的具体计算就是它来做的，所以也被称为“Worker”。Flink 集群中必须至少有一个 TaskManager。当然由于分布式计算的考虑，通常会有多个 TaskManager 运行，每一个 TaskManager 都包含了一定数量的任务槽（task slots）。Slot 是资源调度的最小单位，slot 的数量限制了 TaskManager 能够并行处理的任务数量。
+
+启动之后，TaskManager 会向资源管理器注册它的 slots；收到资源管理器的指令后，TaskManager 就会将一个或者多个槽位提供给 JobMaster 调用， JobMaster 就可以分配任务来执行了。
+
+在执行过程中，TaskManager 可以缓冲数据，还可以跟其他运行同一应用的 TaskManager 交换数据。
+
+---
+
+## Flink 作业提交流程
+
+### 高层级抽象视角
+
+![](https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202409241753536.png)
+
+1. 一般情况下，由客户端（App）通过分发器提供的 REST 接口，将作业提交给 JobManager。
+2. 由分发器启动 JobMaster，并将作业（包含 JobGraph）提交给 JobMaster。
+3. JobMaster 将 JobGraph 解析为可执行的 ExecutionGraph，得到所需的资源数量，然后向资源管理器请求资源（slots）。
+4. 资源管理器判断当前是否由足够的可用资源；如果没有，启动新的 TaskManager。
+5. TaskManager 启动之后，向 ResourceManager 注册自己的可用任务槽（slots）。
+6. 资源管理器通知 TaskManager 为新的作业提供 slots。
+7. TaskManager 连接到对应的 JobMaster，提供 slots。
+8. JobMaster 将需要执行的任务分发给 TaskManager。
+9. TaskManager 执行任务，互相之间可以交换数据。
+
+### StandAlone 模式
+
+在独立模式（Standalone）下，只有会话模式和应用模式两种部署方式。两者整体来看流程是非常相似的：TaskManager 都需要手动启动，所以当 ResourceManager 收到 JobMaster 的请求时，会直接要求 TaskManager 提供资源。而 JobMaster 的启动时间点，会话模式是预先启动，应用模式则是在作业提交时启动。
+
+![](https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202409241757459.png)
+
+我们发现除去第 4 步不会启动 TaskManager，而且直接向已有的 TaskManager 要求资源，其他步骤与上一节所讲抽象流程完全一致。
+
+### Yarn 集群模式
+
+---
+
+## 数据流图
+
+所有的 Flink 程序都可以归纳为由三部分构成：Source、Transformation 和 Sink。
+
+![](https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202409241823628.png)
+
+数据流图中每一条数据流（dataflow）以一个或多个 source 算子开始，以一个或多个 sink 算子结束。
+
+---
+
+## 并行度
+
+在 Flink 执行过程中，每一个算子（operator）可以包含一个或多个子任务（operator subtask），这些子任务在不同的线程、不同的物理机或不同的容器中完全独立地执行。
+
+![](https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202409241827373.png)
+
+**一个特定算子的子任务（subtask）的个数被称之为其并行度（parallelism）**。这样，包含并行子任务的数据流，就是并行数据流，它需要多个分区（stream partition）来分配并行任务。一般情况下，一个流程序的并行度，可以认为就是其所有算子中最大的并行度。一个程序中，不同的算子可能具有不同的并行度。
+
+并行度设置的方法，它们的优先级如下：
+
+1. 对于一个算子，首先看在代码中是否单独指定了它的并行度，这个特定的设置优先级最高，会覆盖后面所有的设置。
+2. 如果没有单独设置，那么采用当前代码中执行环境全局设置的并行度。
+3. 如果代码中完全没有设置，那么采用提交时-p 参数指定的并行度。
+4. 如果提交时也未指定-p 参数，那么采用集群配置文件中的默认并行度。
+
+---
+
+## 算子链
+
+在 Flink 中，并行度相同的一对一（one to one）算子操作，可以直接链接在一起形成一个“大”的任务（task）。
+
+![](https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202409241831916.png)
+
+Flink 为什么要有算子链这样一个设计呢？这是因为将算子链接成 task 是非常有效的优化：可以减少线程之间的切换和基于缓存区的数据交换，在减少时延的同时提升吞吐量。
+
+---
+
+## 任务和任务槽
+
+每个 TaskManager 是一个 JVM 的进程, 可以在不同的线程中执行一个或多个子任务。为了控制一个 worker 能接收多少个 task，worker 通过 task slot 来进行控制（一个 worker 至少有一个 task slot）。
+
+![](https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202409242027459.png)
+
+**每个任务槽（task slot）其实表示了 TaskManager 拥有计算资源的一个固定大小的子集。这些资源就是用来独立执行一个子任务的。**
+
+> 我们之前的 WordCount 程序设置并行度为 2 提交，一共有 5 个并行子任务，可集群即使只有 2 个 task slot 也是可以成功提交并运行的。这又是为什么呢？
+
+这是因为默认情况下，**Flink 是允许子任务共享 slot 的**。只要属于同一个作业，那么对于不同任务节点的并行子任务，就可以放到同一个 slot 上执行。
+
+允许 slot 共享有两个主要好处：
+
+- 只需计算 Job 中最高并行度（parallelism）的 task slot，只要这个满足，其他的 job 也都能满足。
+- 资源分配更加公平，如果有比较空闲的 slot 可以将更多的任务分配给它。图中若没有任务槽共享，负载不高的 Source/Map 等 subtask 将会占据许多资源，而负载较高的窗口 subtask 则会缺乏资源。
+- 有了任务槽共享，可以将基本并行度（base parallelism）从 2 提升到 6。提高了分槽资源的利用率。同时它还可以保障 TaskManager 给 subtask 的分配的 slot 方案更加公平。
+
+![](https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202409242041693.png)
+
+---
