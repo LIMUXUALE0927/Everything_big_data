@@ -36,6 +36,11 @@ plugins:
       lang: zh
   - blog
   - glightbox
+  
+# nav:
+#   - Home: index.md
+#   - Blog:
+#     - blog/index.md
 
 markdown_extensions:
   - pymdownx.arithmatex:
