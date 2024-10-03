@@ -6,6 +6,7 @@ theme:
   features:
     - navigation.tabs
     - navigation.tabs.sticky
+    - navigation.sections
     - search.suggest
     - search.highlight
     - content.code.copy
@@ -14,30 +15,39 @@ theme:
   palette: 
     # Palette toggle for light mode
     - scheme: default
-      primary: teal
+      primary: indigo
       toggle:
-        icon: material/brightness-7 
+        icon: material/toggle-switch
         name: Switch to dark mode
     # Palette toggle for dark mode
     - scheme: slate
-      primary: teal
+      primary: black
       toggle:
-        icon: material/brightness-4
+        icon: material/toggle-switch-off-outline
         name: Switch to light mode
   font:
     text: Roboto
     code: JetBrains Mono
+  icon:
+    logo: material/math-integral-box
 
 plugins:
   - search:
       lang: zh
-      # jieba_dict: dict.txt
+  - blog
+  - glightbox
+  
+# nav:
+#   - Home: index.md
+#   - Blog:
+#     - blog/index.md
 
 markdown_extensions:
   - pymdownx.arithmatex:
       generic: true
   - admonition
   - attr_list
+  - def_list
   - md_in_html
   - pymdownx.details
   - pymdownx.critic
@@ -45,6 +55,7 @@ markdown_extensions:
   - pymdownx.keys
   - pymdownx.mark
   - pymdownx.tilde
+  - abbr
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.tasklist:
