@@ -1,0 +1,2538 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../2.DataStream%20API/">
+      
+      
+        <link rel="next" href="../4.%E5%A4%9A%E6%B5%81%E8%BD%AC%E6%8D%A2/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.44">
+    
+    
+      
+        <title>时间和窗口 - Everything Big Data</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.0253249f.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+   <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../assets/javascripts/glightbox.min.js"></script></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="Everything Big Data" class="md-header__button md-logo" aria-label="Everything Big Data" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m-3.1 3.9s-.7-.3-1-.3c-.6-.1-1 .1-1.2 1.1L12 16.8c-.2.8-.5 1.4-1 1.8-.4.3-.8.4-1.3.4-.8 0-2-.5-2-.5l.5-1.4s.8.3 1 .3c.3.1.5 0 .7-.1s.3-.4.4-.7l1.6-9.2c.1-.8.5-1.4 1-1.9.6-.4 1.3-.5 2.1-.4.7.1 1.5.5 1.5.5z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Everything Big Data
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              时间和窗口
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+    
+  
+  Welcome
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../Linux/" class="md-tabs__link">
+        
+  
+    
+  
+  Linux
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../1.Flink%20%E5%9F%BA%E7%A1%80/" class="md-tabs__link">
+          
+  
+  Flink
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Hadoop/1.%20Hadoop/" class="md-tabs__link">
+          
+  
+  Hadoop
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Hive%20%26%20SQL/1.%20Hive/" class="md-tabs__link">
+          
+  
+  Hive & SQL
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Java/Java%20SE/" class="md-tabs__link">
+          
+  
+  Java
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Scala/Scala%20%E7%B2%BE%E7%AE%80%E7%AC%94%E8%AE%B0/" class="md-tabs__link">
+          
+  
+  Scala
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Spark/1.Spark%20Core/" class="md-tabs__link">
+          
+  
+  Spark
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../ZooKeeper/1.%20ZooKeeper/" class="md-tabs__link">
+          
+  
+  ZooKeeper
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../blog/" class="md-tabs__link">
+          
+  
+  Blog
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/%E6%95%B0%E4%BB%93%E7%90%86%E8%AE%BA/" class="md-tabs__link">
+          
+  
+  数据仓库
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/0.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/" class="md-tabs__link">
+          
+  
+  数据结构与算法
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Everything Big Data" class="md-nav__button md-logo" aria-label="Everything Big Data" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m-3.1 3.9s-.7-.3-1-.3c-.6-.1-1 .1-1.2 1.1L12 16.8c-.2.8-.5 1.4-1 1.8-.4.3-.8.4-1.3.4-.8 0-2-.5-2-.5l.5-1.4s.8.3 1 .3c.3.1.5 0 .7-.1s.3-.4.4-.7l1.6-9.2c.1-.8.5-1.4 1-1.9.6-.4 1.3-.5 2.1-.4.7.1 1.5.5 1.5.5z"/></svg>
+
+    </a>
+    Everything Big Data
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Welcome
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Linux/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Linux
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Flink
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Flink
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1.Flink%20%E5%9F%BA%E7%A1%80/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flink 基础
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2.DataStream%20API/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DataStream API
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    时间和窗口
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    时间和窗口
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      时间语义
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      水位线
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      有序流中的水位线
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      乱序流中的水位线
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      水位线的特性
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      水位线的传递
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      窗口
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      窗口类型
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      窗口的计算机制
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api" class="md-nav__link">
+    <span class="md-ellipsis">
+      窗口 API 调用总结
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      迟到数据的处理
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../4.%E5%A4%9A%E6%B5%81%E8%BD%AC%E6%8D%A2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    多流转换
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../5.%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    状态管理
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../6.%E5%AE%B9%E9%94%99%E6%9C%BA%E5%88%B6/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    容错机制
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Flink%20%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flink 代码示例
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Hadoop
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Hadoop
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hadoop/1.%20Hadoop/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hadoop
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hadoop/2.%20HDFS/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HDFS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hadoop/3.%20MapReduce/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MapReduce
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hadoop/4.%20Yarn/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Yarn
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Hive & SQL
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Hive & SQL
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hive%20%26%20SQL/1.%20Hive/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hive%20%26%20SQL/2.%20Hive%20%E9%9D%A2%E8%AF%95%E9%A2%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive 面试题
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hive%20%26%20SQL/Hive%20%E5%87%BD%E6%95%B0%E7%9B%B8%E5%85%B3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive 函数相关
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hive%20%26%20SQL/Hive%20%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive 性能调优
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hive%20%26%20SQL/SQL%20%E5%88%B7%E9%A2%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SQL 刷题
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hive%20%26%20SQL/SQL%20%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SQL 相关知识
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Java
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Java
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Java/Java%20SE/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Java SE
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Java/Java%20%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Java 并发编程
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Java/Java%20%E9%9B%86%E5%90%88/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Java 集合
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Scala
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Scala
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Scala/Scala%20%E7%B2%BE%E7%AE%80%E7%AC%94%E8%AE%B0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Scala 精简笔记
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Scala/Scala/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Scala 语言入门
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Spark
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Spark
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Spark/1.Spark%20Core/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark Core
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Spark/2.Spark%20SQL/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark SQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Spark/PySpark/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PySpark
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Spark/RDD%20%E7%AE%97%E5%AD%90%20API/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RDD 算子 API
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Spark/Spark%20%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark 性能优化
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Spark/Spark%20%E9%9D%A2%E8%AF%95%E9%A2%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark 面试题
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    ZooKeeper
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            ZooKeeper
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ZooKeeper/1.%20ZooKeeper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ZooKeeper
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ZooKeeper/2.%20ZooKeeper%20%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ZooKeeper 如何实现分布式锁
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Blog
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            Blog
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Blog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    归档
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    数据仓库
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            数据仓库
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/%E6%95%B0%E4%BB%93%E7%90%86%E8%AE%BA/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    数仓理论
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/%E6%95%B0%E4%BB%93%E9%9D%A2%E8%AF%95%E9%A2%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    数仓面试题
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    数据结构与算法
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            数据结构与算法
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/0.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    数据结构复习
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/1.%E7%AE%97%E6%B3%95%E5%A4%8D%E4%B9%A0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    算法复习
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2.数据结构与算法笔记
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E7%BA%BF%E6%80%A7%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    线性动态规划
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    背包问题
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_12_6" id="__nav_12_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    好题分类
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_12_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12_6">
+            <span class="md-nav__icon md-icon"></span>
+            好题分类
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E4%BA%8C%E5%8F%89%E6%A0%91/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    二叉树
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E5%89%8D%E7%BC%80%E5%92%8C/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    前缀和
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E5%93%88%E5%B8%8C%E8%A1%A8/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    哈希表
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E5%A4%9A%E7%A7%8D%E8%A7%A3%E6%B3%95/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    多种解法
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    滑动窗口
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E9%93%BE%E8%A1%A8/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    链表
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      时间语义
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      水位线
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      有序流中的水位线
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      乱序流中的水位线
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      水位线的特性
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      水位线的传递
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      窗口
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      窗口类型
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      窗口的计算机制
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api" class="md-nav__link">
+    <span class="md-ellipsis">
+      窗口 API 调用总结
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      迟到数据的处理
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="_1">时间和窗口</h1>
+<h2 id="_2">时间语义</h2>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202410030238713.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202410030238713.png" /></a></p>
+<p>Flink 是一个分布式处理系统。分布式架构最大的特点，就是节点彼此独立、互不影响，这带来了更高的吞吐量和容错性，但想要拥有一个全局统一的时钟，在分布式系统里是做不到的。</p>
+<ul>
+<li><strong>处理时间（Processing Time）</strong>：指执行处理操作的机器的系统时间</li>
+<li><strong>事件事件（Event Time）</strong>：数据生成的时间，数据一旦产生，这个时间自然就确定了，它通常作为时间戳属性嵌入到数据中</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">事件时间与水位线</p>
+<p>由于流处理中数据是源源不断产生的，一般来说，先产生的数据也会先被处理，所以当任务不停地接到数据时，它们的时间戳也基本上是不断增长的，就可以<strong>代表时间的推进</strong>。但是，这里有个前提，就是「<strong>先产生的数据先被处理</strong>」，这要求我们可以保证数据到达的顺序。</p>
+<p>但是<strong>由于分布式系统中网络传输延迟的不确定性，实际应用中的数据流往往是乱序的</strong>。在这种情况下，就不能简单地把数据自带的时间戳当作时钟了，而需要用另外的标志来表示事件时间进展，在 Flink 中把它叫作事件时间的「<strong>水位线</strong>」（Watermark）。</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">两种时间语义的对比</p>
+<p>通常来说，<strong>处理时间是我们计算效率的衡量标准，而事件时间会更符合我们的业务计算逻辑</strong>。</p>
+<p>对于处理时间而言，由于没有任何附加考虑，数据一来就直接处理，因此这种方式可以让我们的流处理延迟降到最低，效率达到最高。所以处理时间语义，一般用在对实时性要求极高、而对计算准确性要求不太高的场景。</p>
+<p>而在事件时间语义下，水位线成为了时钟，可以统一控制时间的进度。这就保证了我们总可以将数据划分到正确的窗口中。所以整体上看，事件时间语义是以一定延迟为代价，换来了处理结果的正确性。</p>
+</div>
+<hr />
+<h2 id="_3">水位线</h2>
+<p>在事件时间语义下，我们不依赖系统时间，而是基于数据自带的时间戳去定义了一个时钟，用来表示当前时间的进展。于是<strong>每个并行子任务都会有一个自己的逻辑时钟，它的前进是靠数据的时间戳来驱动的</strong>。</p>
+<p>但在分布式系统中，这种驱动方式又会有一些问题。因为数据本身在处理转换的过程中会变化，如果遇到窗口聚合这样的操作，其实是要攒一批数据才会输出一个结果，那么下游的数据就会变少，时间进度的控制就不够精细了。另外，数据向下游任务传递时，一般只能传输给一个子任务（除广播外），这样其他的并行子任务的时钟就无法推进了。例如一个时间戳为 9 点整的数据到来，当前任务的时钟就已经是 9 点了；处理完当前数据要发送到下游，如果下游任务是一个窗口计算，并行度为 3，那么接收到这个数据的子任务，时钟也会进展到 9 点，9 点结束的窗口就可以关闭进行计算了；而另外两个并行子任务则时间没有变化，不能进行窗口计算。</p>
+<p>所以我们应该把时钟也以数据的形式传递出去，告诉下游任务当前时间的进展；而且这个时钟的传递不会因为窗口聚合之类的运算而停滞。一种简单的想法是，在数据流中加入一个时钟标记，记录当前的事件时间；这个标记可以直接广播到下游，当下游任务收到这个标记，就可以更新自己的时钟了。由于类似于水流中用来做标志的记号，在 Flink 中，这种用来<strong>衡量事件时间（Event Time）进展的标记</strong>，就被称作<strong>「水位线」（Watermark）</strong>。</p>
+<p>具体实现上，水位线可以看作一条特殊的数据记录，它是插入到数据流中的一个标记点，主要内容就是一个时间戳，用来指示当前的事件时间。而它插入流中的位置，就应该是在某个数据到来之后；这样就可以从这个数据中提取时间戳，作为当前水位线的时间戳了。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202410030257698.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202410030257698.png" /></a></p>
+<hr />
+<h2 id="_4">有序流中的水位线</h2>
+<p>在理想状态下，数据应该按照它们生成的先后顺序、排好队进入流中；也就是说，它们处理的过程会保持原先的顺序不变，遵守先来后到的原则。这样的话我们从每个数据中提取时间戳，就可以保证总是从小到大增长的，从而插入的水位线也会不断增长、事件时钟不断向前推进。</p>
+<p>实际应用中，如果当前数据量非常大，可能会有很多数据的时间戳是相同的，这时每来一条数据就提取时间戳、插入水位线就做了大量的无用功。而且即使时间戳不同，同时涌来的数据时间差会非常小（比如几毫秒），往往对处理计算也没什么影响。所以<strong>为了提高效率，一般会每隔一段时间生成一个水位线</strong>，这个水位线的时间戳，就是当前最新数据的时间戳。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202410030258334.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202410030258334.png" /></a></p>
+<hr />
+<h2 id="_5">乱序流中的水位线</h2>
+<p>在分布式系统中，数据在节点间传输，会因为网络传输延迟的不确定性，导致顺序发生改变，这就是所谓的「乱序数据」。</p>
+<p>最直观的想法自然是跟之前一样，我们还是靠数据来驱动，每来一个数据就提取它的时间戳、插入一个水位线。不过现在的情况是数据乱序，所以有可能新的时间戳比之前的还小，如果直接将这个时间的水位线再插入，我们的“时钟”就回退了——水位线就代表了时钟，时光不能倒流，所以水位线的时间戳也不能减小。</p>
+<p>解决思路也很简单：我们插入新的水位线时，要<strong>先判断一下时间戳是否比之前的大，否则就不再生成新的水位线</strong>。也就是说，只有数据的时间戳比当前时钟大，才能推动时钟前进，这时才插入水位线。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202410030301829.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202410030301829.png" /></a></p>
+<p>这样做尽管可以定义出一个事件时钟，却也会带来一个非常大的问题：<strong>我们无法正确处理「迟到」的数据</strong>。</p>
+<p><strong>解决方案</strong>：我们可以更改一下时钟推进的逻辑：当一个商品到达时，不要直接用它的生产时间作为当前时间，而是减上两秒。即用当前已有数据的最大时间戳减去 2 秒，就是要插入的水位线的时间戳。</p>
+<blockquote>
+<p>水位线的默认计算公式：<code>水位线 = 观察到的最大事件时间 - 最大延迟时间 - 1ms</code></p>
+</blockquote>
+<hr />
+<h2 id="_6">水位线的特性</h2>
+<blockquote>
+<p>水位线就代表了当前的事件时间时钟，而且可以在数据的时间戳基础上加一些延迟来保证不丢数据，这一点对于乱序流的正确处理非常重要</p>
+</blockquote>
+<ul>
+<li>水位线是插入到数据流中的一个标记，可以认为是一个特殊的数据</li>
+<li>水位线主要的内容是一个时间戳，用来表示当前事件时间的进展</li>
+<li>水位线是基于数据的时间戳生成的</li>
+<li>水位线的时间戳必须单调递增，以确保任务的事件时间时钟一直向前推进</li>
+<li>水位线可以通过设置延迟，来保证正确处理乱序数据</li>
+<li>一个水位线 Watermark(t)，表示在当前流中事件时间已经达到了时间戳 t, 这代表 t 之前的所有数据都到齐了，之后流中不会出现时间戳 t' ≤ t 的数据</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">水位线的权衡取舍</p>
+<p>如果我们希望计算结果能更加准确，那可以将水位线的延迟设置得更高一些，等待的时间越长，自然也就越不容易漏掉数据。不过这样做的代价是处理的实时性降低了，我们可能为极少数的迟到数据增加了很多不必要的延迟。</p>
+<p>如果我们希望处理得更快、实时性更强，那么可以将水位线延迟设得低一些。这种情况下，可能很多迟到数据会在水位线之后才到达，就会导致窗口遗漏数据，计算结果不准确。</p>
+<p>所以 <strong>Flink 中的水位线，其实是流处理中对低延迟和结果正确性的一个权衡机制</strong>。</p>
+</div>
+<hr />
+<h2 id="_7">水位线的传递</h2>
+<p>实际应用中往往上下游都有多个并行子任务，为了统一推进事件时间的进展，我们要求上游任务处理完水位线、时钟改变之后，要把当前的水位线再次发出，广播给所有的下游子任务。</p>
+<p>可是还有另外一个问题，那就是在“重分区”（redistributing）的传输模式下，一个任务有可能会收到来自不同分区上游子任务的数据。而不同分区的子任务时钟并不同步，所以同一时刻发给下游任务的水位线可能并不相同。这时下游任务又该听谁的呢？</p>
+<p>这就要回到<strong>水位线定义的本质</strong>了：它表示的是「<strong>当前时间之前的数据，都已经到齐了</strong>」。这是一种保证，告诉下游任务，只要你接到这个水位线，就代表之后我不会再给你发更早的数据了，你可以放心做统计计算而不会遗漏数据。</p>
+<p>所以如果一个任务收到了来自上游并行任务的不同的水位线，说明上游各个分区处理得有快有慢，进度各不相同的上游并行子任务都发来了水位线，<strong>应该以慢的那个为准</strong>。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202410030315960.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202410030315960.png" /></a></p>
+<p>如上图所示，当前任务的上游，有四个并行子任务，所以会接收到来自四个分区的水位线。而下游有三个并行子任务，所以会向三个分区发出水位线。具体过程如下：</p>
+<ol>
+<li>上游并行子任务发来不同的水位线，当前任务会为每一个分区设置一个“<strong>分区水位线</strong>”（Partition Watermark），这是一个分区时钟；而当前任务自己的时钟，就是所有分区时钟里最小的那个。</li>
+<li>当有一个新的水位线（第一分区的 4）从上游传来时，当前任务会首先更新对应的分区时钟；然后再次判断所有分区时钟中的最小值，如果比之前大，说明事件时间有了进展，当前任务的时钟也就可以更新了。这里要注意，更新后的任务时钟，并不一定是新来的那个分区水位线，比如这里改变的是第一分区的时钟，但最小的分区时钟是第三分区的 3，于是当前任务时钟就推进到了 3。<strong>当时钟有进展时，当前任务就会将自己的时钟以水位线的形式，广播给下游所有子任务</strong>。</li>
+<li>再次收到新的水位线（第二分区的 7）后，执行同样的处理流程。首先将第二个分区时钟更新为 7，然后比较所有分区时钟；发现最小值没有变化，那么当前任务的时钟也不变，也不会向下游任务发出水位线。</li>
+<li>同样道理，当又一次收到新的水位线（第三分区的 6）之后，第三个分区时钟更新为 6，同时所有分区时钟最小值变成了第一分区的 4，所以当前任务的时钟推进到 4，并发出时间戳为 4 的水位线，广播到下游各个分区任务。</li>
+</ol>
+<p>水位线在上下游任务之间的传递，非常巧妙地避免了分布式系统中没有统一时钟的问题，每个任务都以“处理完之前所有数据”为标准来确定自己的时钟，就可以保证窗口处理的结果总是正确的。</p>
+<hr />
+<h2 id="_8">窗口</h2>
+<p>把无界流进行切分，每一段数据分别进行聚合，结果只输出一次。这就相当于<strong>将无界流的聚合转化为了有界数据集的聚合</strong>，这就是所谓的「窗口」（Window）聚合操作。</p>
+<p><strong>窗口聚合其实是对实时性和处理效率的一个权衡。</strong></p>
+<p>在 Flink 中, 窗口就是用来处理无界流的核心。我们很容易把窗口想象成一个固定位置的“框”，数据源源不断地流过来，到某个时间点窗口该关闭了，就停止收集数据、触发计算并输出结果。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202410030326242.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202410030326242.png" /></a></p>
+<p>对于处理时间下的窗口而言，这样理解似乎没什么问题。然而如果我们采用事件时间语义，由于数据乱序问题，这样理解就有些问题了。由于有乱序数据，我们需要设置一个延迟时间来等所有数据到齐。比如上面的例子中，我们可以设置延迟时间为 2 秒，这样 0~10 秒的窗口会在时间戳为 12 的数据到来之后，才真正关闭计算输出结果，这样就可以正常包含迟到的 9 秒数据了。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202410030327561.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202410030327561.png" /></a></p>
+<p>但是这样一来，0~10 秒的窗口不光包含了迟到的 9 秒数据，连 11 秒和 12 秒的数据也包含进去了。我们为了正确处理迟到数据，结果把早到的数据划分到了错误的窗口——最终结果都是错误的。</p>
+<p>所以<strong>在 Flink 中，窗口其实并不是一个「框」，相比之下，我们应该把窗口理解成一个「桶」</strong>，如下图所示。在 Flink 中，窗口可以把流切割成有限大小的多个「存储桶」，每个数据都会分发到对应的桶中，当到达窗口结束时间时，就对每个桶中收集的数据进行计算处理。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202410030329414.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202410030329414.png" /></a></p>
+<p>我们可以梳理一下事件时间语义下，之前例子中窗口的处理过程：</p>
+<ol>
+<li>第一个数据时间戳为 2，判断之后创建第一个窗口 <code>[0, 10)</code>，并将 2 秒数据保存进去</li>
+<li>后续数据依次到来，时间戳均在 <code>[0, 10)</code>范围内，所以全部保存进第一个窗口</li>
+<li>11 秒数据到来，判断它不属于<code>[0, 10)</code> 窗口，所以创建第二个窗口 <code>[10, 20)</code>，并将 11 秒的数据保存进去。由于水位线设置延迟时间为 2 秒，所以现在的时钟是 9 秒，第一个窗口也没有到关闭时间</li>
+<li>之后又有 9 秒数据到来，同样进入<code>[0, 10)</code> 窗口中</li>
+<li>12 秒数据到来，判断属于 <code>[10, 20)</code> 窗口，保存进去。这时产生的水位线推进到了 10 秒，所以 <code>[0, 10)</code> 窗口应该关闭了。第一个窗口收集到了所有的 7 个数据，进行处理计算后输出结果，并将窗口关闭销毁</li>
+<li>同样的，之后的数据依次进入第二个窗口，遇到 20 秒的数据时会创建第三个窗口 <code>[20, 30)</code> 并将数据保存进去；遇到 22 秒数据时，水位线达到了 20 秒，第二个窗口触发计算，输出结果并关闭</li>
+</ol>
+<p>需要注意的是，<strong>Flink 中窗口并不是静态准备好的，而是动态创建的：当有落在这个窗口区间范围的数据达到时，才创建对应的窗口</strong>。</p>
+<hr />
+<h2 id="_9">窗口类型</h2>
+<p>窗口的具体实现可以分为 4 类：</p>
+<ul>
+<li>滚动窗口（Tumbling Window）</li>
+<li>滑动窗口（Sliding Window）</li>
+<li>会话窗口（Session Window）</li>
+<li>全局窗口（Global Window）</li>
+</ul>
+<dl>
+<dt><ins>滚动窗口（Tumbling Window）</ins></dt>
+<dd>
+<p>滚动窗口有固定的大小，是一种对数据进行<strong>均匀切片</strong>的划分方式。<strong>窗口之间没有重叠，也不会有间隔</strong>，是首尾相接的状态。</p>
+</dd>
+</dl>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202410031547217.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202410031547217.png" /></a></p>
+<dl>
+<dt><ins>滑动窗口（Sliding Window）</ins></dt>
+<dd>
+<p>与滚动窗口类似，滑动窗口的大小也是固定的。区别在于，窗口之间并不是首尾相接的，而是可以「错开」一定的位置。定义滑动窗口的参数有两
+个：<strong>窗口大小</strong>和<strong>滑动步长</strong>。</p>
+</dd>
+</dl>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202410031552946.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202410031552946.png" /></a></p>
+<dl>
+<dt><ins>会话窗口（Session Window）</ins></dt>
+<dd>
+<p>会话窗口是基于「会话」（session）来对数据进行分组的，并借用会话超时失效的机制来描述窗口。如果一段时间一直没收到数据，那就认为会话超时失效，窗口自动关闭。</p>
+</dd>
+</dl>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202410031553378.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202410031553378.png" /></a></p>
+<dl>
+<dt><ins>全局窗口（Global Window）</ins></dt>
+<dd>
+<p>全局窗口全局有效，会把相同 key 的所有数据都分配到同一个窗口中，就跟没分窗口一样。无界流的数据永无止尽，所以这种窗口也没有结束的时候，默认是不会做触发计算的。如果希望它能对数据进行计算处理，还需要自定义「触发器」（Trigger）。</p>
+</dd>
+</dl>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202410031555130.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202410031555130.png" /></a></p>
+<hr />
+<h2 id="_10">窗口的计算机制</h2>
+<dl>
+<dt><ins>I. 窗口的创建</ins></dt>
+<dd>
+<p>窗口的类型和基本信息由<strong>窗口分配器（Window Assigner）</strong>指定，窗口分配器会根据每一条输入数据的时间（处理时间或事件时间）、窗口大小等参数来决定将这条数据分配到哪个时间范围的窗口中。</p>
+</dd>
+<dd>
+<p>需要注意的是，窗口不会预先创建好，而是由数据驱动创建。当第一个应该属于这个窗口的数据元素到达时，就会创建对应的窗口。</p>
+</dd>
+<dt><ins>II. 窗口计算的触发</ins></dt>
+<dd>
+<p>除了窗口分配器，每个窗口还会有自己的窗口函数（Window Function）和触发器（Trigger）。窗口函数可以分为增量聚合函数和全窗口函数，主要定义了窗口中计算的逻辑；而触发器是通过定时器来触发窗口计算的，大多数情况下窗口触发计算的时间都是窗口结束的时间。</p>
+</dd>
+<dd>
+<p>对于不同的窗口类型，触发计算的条件也会不同。例如，一个滚动事件时间窗口，应该在水位线到达窗口结束时间的时候触发计算。而一个计数窗口，会在窗口中元素数量达到定义大小时触发计算。所有 Flink 预定义的窗口类型都有对应内置的触发器。</p>
+</dd>
+<dd>
+<p>当我们设置了允许延迟，那么如果水位线超过了窗口结束时间、但还没有到达设定的最大延迟时间，这期间内到达的迟到数据也会触发窗口计算。</p>
+</dd>
+<dt><ins>III. 窗口的销毁</ins></dt>
+<dd>
+<p>一般情况下，当时间达到了结束点，就会直接触发计算输出结果、进而清除状态销毁窗口。这时窗口的销毁可以认为和触发计算是同一时刻。这里需要注意，<strong>Flink 中只对时间窗口有销毁机制</strong>。由于计数窗口是基于全局窗口实现的，而全局窗口不会清除状态，所以就不会被销毁。</p>
+</dd>
+<dd>
+<p>在特殊的场景下，窗口的销毁和触发计算会有所不同。事件时间语义下，如果设置了允许延迟，那么在水位线到达窗口结束时间时，仍然不会销毁窗口；<strong>窗口真正被完全删除的时间点，是窗口的结束时间加上用户指定的允许延迟时间</strong>。</p>
+</dd>
+</dl>
+<hr />
+<h2 id="api">窗口 API 调用总结</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Keyed Windows</label><label for="__tabbed_1_2">Non-Keyed Windows</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">stream</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="p">.</span><span class="na">keyBy</span><span class="p">(...)</span><span class="w">               </span><span class="o">&lt;-</span><span class="w">  </span><span class="n">keyed</span><span class="w"> </span><span class="n">versus</span><span class="w"> </span><span class="n">non</span><span class="o">-</span><span class="n">keyed</span><span class="w"> </span><span class="n">windows</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="p">.</span><span class="na">window</span><span class="p">(...)</span><span class="w">              </span><span class="o">&lt;-</span><span class="w">  </span><span class="n">required</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;assigner&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="o">[</span><span class="p">.</span><span class="na">trigger</span><span class="p">(...)</span><span class="o">]</span><span class="w">            </span><span class="o">&lt;-</span><span class="w">  </span><span class="n">optional</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;trigger&quot;</span><span class="w"> </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="n">trigger</span><span class="p">)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="o">[</span><span class="p">.</span><span class="na">evictor</span><span class="p">(...)</span><span class="o">]</span><span class="w">            </span><span class="o">&lt;-</span><span class="w">  </span><span class="n">optional</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;evictor&quot;</span><span class="w"> </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="n">no</span><span class="w"> </span><span class="n">evictor</span><span class="p">)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="o">[</span><span class="p">.</span><span class="na">allowedLateness</span><span class="p">(...)</span><span class="o">]</span><span class="w">    </span><span class="o">&lt;-</span><span class="w">  </span><span class="n">optional</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;lateness&quot;</span><span class="w"> </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="n">zero</span><span class="p">)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="o">[</span><span class="p">.</span><span class="na">sideOutputLateData</span><span class="p">(...)</span><span class="o">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w">  </span><span class="n">optional</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;output tag&quot;</span><span class="w"> </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="n">no</span><span class="w"> </span><span class="n">side</span><span class="w"> </span><span class="n">output</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">late</span><span class="w"> </span><span class="n">data</span><span class="p">)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="p">.</span><span class="na">reduce</span><span class="o">/</span><span class="n">aggregate</span><span class="o">/</span><span class="n">apply</span><span class="o">/</span><span class="n">process</span><span class="p">()</span><span class="w">      </span><span class="o">&lt;-</span><span class="w">  </span><span class="n">required</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;function&quot;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="o">[</span><span class="p">.</span><span class="na">getSideOutput</span><span class="p">(...)</span><span class="o">]</span><span class="w">      </span><span class="o">&lt;-</span><span class="w">  </span><span class="n">optional</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;output tag&quot;</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">stream</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="p">.</span><span class="na">windowAll</span><span class="p">(...)</span><span class="w">           </span><span class="o">&lt;-</span><span class="w">  </span><span class="n">required</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;assigner&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="o">[</span><span class="p">.</span><span class="na">trigger</span><span class="p">(...)</span><span class="o">]</span><span class="w">            </span><span class="o">&lt;-</span><span class="w">  </span><span class="n">optional</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;trigger&quot;</span><span class="w"> </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="n">trigger</span><span class="p">)</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="o">[</span><span class="p">.</span><span class="na">evictor</span><span class="p">(...)</span><span class="o">]</span><span class="w">            </span><span class="o">&lt;-</span><span class="w">  </span><span class="n">optional</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;evictor&quot;</span><span class="w"> </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="n">no</span><span class="w"> </span><span class="n">evictor</span><span class="p">)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="o">[</span><span class="p">.</span><span class="na">allowedLateness</span><span class="p">(...)</span><span class="o">]</span><span class="w">    </span><span class="o">&lt;-</span><span class="w">  </span><span class="n">optional</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;lateness&quot;</span><span class="w"> </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="n">zero</span><span class="p">)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="o">[</span><span class="p">.</span><span class="na">sideOutputLateData</span><span class="p">(...)</span><span class="o">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w">  </span><span class="n">optional</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;output tag&quot;</span><span class="w"> </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="n">no</span><span class="w"> </span><span class="n">side</span><span class="w"> </span><span class="n">output</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">late</span><span class="w"> </span><span class="n">data</span><span class="p">)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="p">.</span><span class="na">reduce</span><span class="o">/</span><span class="n">aggregate</span><span class="o">/</span><span class="n">apply</span><span class="o">/</span><span class="n">process</span><span class="p">()</span><span class="w">      </span><span class="o">&lt;-</span><span class="w">  </span><span class="n">required</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;function&quot;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="o">[</span><span class="p">.</span><span class="na">getSideOutput</span><span class="p">(...)</span><span class="o">]</span><span class="w">      </span><span class="o">&lt;-</span><span class="w">  </span><span class="n">optional</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;output tag&quot;</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>Window API 首先按照时候按键分区分成两类：</p>
+<ul>
+<li>keyBy 之后的 KeyedStream，可以调用 <code>.window()</code> 方法声明按键分区窗口（Keyed Windows）</li>
+<li>如果不做 keyBy，DataStream 也可以直接调用 <code>.windowAll()</code> 声明非按键分区窗口，之后的方法调用就完全一样了</li>
+</ul>
+<p>接下来通过各类转换方法（reduce/aggregate/apply/process）给出窗口函数(ReduceFunction/AggregateFunction/ProcessWindowFunction)，定义窗口的具体计算处理逻辑，转换之后重新得到 DataStream。这两者必不可少，是窗口算子（WindowOperator）最重要的组成部分。</p>
+<p>此外，在这两者之间，还可以基于 WindowedStream 调用 <code>.trigger()</code> 自定义触发器、调用 <code>.evictor()</code> 定义移除器、调用 <code>.allowedLateness()</code> 指定允许延迟时间、调用 <code>.sideOutputLateData()</code> 将迟到数据写入侧输出流，这些都是可选的 API，一般不需要实现。而如果定义了侧输出流，可以基于窗口聚合之后的 DataStream 调用 <code>.getSideOutput()</code> 获取侧输出流。</p>
+<hr />
+<h2 id="_11">迟到数据的处理</h2>
+<p>所谓的「迟到数据」，是指某个水位线之后到来的数据，但它的时间戳其实是在水位线之前的。<strong>只有在事件时间语义下，讨论迟到数据的处理才是有意义的</strong>。</p>
+<p><strong>处理迟到数据的方法：</strong></p>
+<ul>
+<li><ins>对于乱序流，水位线可以设置一个延迟时间</ins></li>
+</ul>
+<dl>
+<dd>水位线其实是所有事件时间定时器触发的判断标准。<strong>水位线的延迟，相当于全局时钟的滞后</strong>。一般情况不应该把水位线的延迟设置得太大，否则流处理的实时性就会大大降低。</dd>
+</dl>
+<ul>
+<li><ins>做窗口计算时，我们可以设置窗口的允许延迟时间</ins></li>
+</ul>
+<dl>
+<dd>由于大部分乱序数据可以被水位线的延迟等到，所以往往迟到的数据不会太多。这样，我们会在水位线到达窗口结束时间时，先快速地输出一个近似正确的计算结果，然后<strong>保持窗口继续等到延迟数据</strong>，每来一条数据，窗口就会再次计算，并将更新后的结果输出。这样就可以逐步修正计算结果，最终得到准确的统计值了。</dd>
+</dl>
+<ul>
+<li><ins>窗口可以将迟到数据输出到测输出流</ins></li>
+</ul>
+<dl>
+<dd>用窗口的侧输出流来收集关窗以后的迟到数据。这种方式是<strong>最后兜底的方法</strong>，只能保证数据不丢失。因为窗口已经真正关闭，所以是无法基于之前窗口的结果直接做更新的。我们只能将之前的窗口计算结果保存下来，然后获取侧输出流中的迟到数据，判断数据所属的窗口，手动对结果进行合并更新。</dd>
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "search.suggest", "search.highlight", "content.code.copy", "navigation.top", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.83f73b43.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
+</html>
