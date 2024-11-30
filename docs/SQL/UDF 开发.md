@@ -471,3 +471,9 @@ public class SimpleGenericUDF extends GenericUDF {
 ## UDTF 开发手册
 
 [UDF 开发手册 - UDTF](https://juejin.cn/post/6929326803748126733)
+
+## hive-bitmap-udf
+
+可以参考学习这个项目里面对 Bitmap 相关 UDF 的实现。
+
+[GitHub - hive-bitmap-udf](https://github.com/lihuigang/hive-bitmap-udf/tree/master)
