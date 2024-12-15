@@ -27,7 +27,7 @@ theme:
         name: Switch to light mode
   font:
     text: Lato
-    code: JetBrains Mono
+    code: Consolas
   icon:
     logo: material/math-integral-box
 
