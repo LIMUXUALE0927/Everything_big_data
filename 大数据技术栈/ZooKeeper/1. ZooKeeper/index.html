@@ -1,0 +1,3791 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../Scala/Scala/">
+      
+      
+        <link rel="next" href="../2.%20ZooKeeper%20%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.4">
+    
+    
+      
+        <title>ZooKeeper - Everything Big Data</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.8608ea7d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i%7CConsolas:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Lato";--md-code-font:"Consolas"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+   <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../../assets/javascripts/glightbox.min.js"></script></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#zookeeper" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../../.." title="Everything Big Data" class="md-header__button md-logo" aria-label="Everything Big Data" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m-3.1 3.9s-.7-.3-1-.3c-.6-.1-1 .1-1.2 1.1L12 16.8c-.2.8-.5 1.4-1 1.8-.4.3-.8.4-1.3.4-.8 0-2-.5-2-.5l.5-1.4s.8.3 1 .3c.3.1.5 0 .7-.1s.3-.4.4-.7l1.6-9.2c.1-.8.5-1.4 1-1.9.6-.4 1.3-.5 2.1-.4.7.1 1.5.5 1.5.5z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Everything Big Data
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ZooKeeper
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+    
+  
+  Welcome
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../Flink/1.Flink%20%E5%9F%BA%E7%A1%80/" class="md-tabs__link">
+          
+  
+  Flink
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../Hadoop/1.%20Hadoop/" class="md-tabs__link">
+          
+  
+  Hadoop
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../Hive/1.%20Hive/" class="md-tabs__link">
+          
+  
+  Hive
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../SQL/SQL%20%E5%88%B7%E9%A2%98/" class="md-tabs__link">
+          
+  
+  SQL
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../Spark/1.Spark%20Core/" class="md-tabs__link">
+          
+  
+  Spark
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../blog/" class="md-tabs__link">
+          
+  
+  Blog
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../Linux/" class="md-tabs__link">
+          
+  
+  大数据技术栈
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E7%90%86%E8%AE%BA/" class="md-tabs__link">
+          
+  
+  数据仓库
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/0.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/" class="md-tabs__link">
+          
+  
+  数据结构与算法
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Everything Big Data" class="md-nav__button md-logo" aria-label="Everything Big Data" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m-3.1 3.9s-.7-.3-1-.3c-.6-.1-1 .1-1.2 1.1L12 16.8c-.2.8-.5 1.4-1 1.8-.4.3-.8.4-1.3.4-.8 0-2-.5-2-.5l.5-1.4s.8.3 1 .3c.3.1.5 0 .7-.1s.3-.4.4-.7l1.6-9.2c.1-.8.5-1.4 1-1.9.6-.4 1.3-.5 2.1-.4.7.1 1.5.5 1.5.5z"/></svg>
+
+    </a>
+    Everything Big Data
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Welcome
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Flink
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Flink
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Flink/1.Flink%20%E5%9F%BA%E7%A1%80/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flink 基础
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Flink/2.DataStream%20API/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DataStream API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Flink/3.%E6%97%B6%E9%97%B4%E5%92%8C%E7%AA%97%E5%8F%A3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    时间和窗口
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Flink/4.%E5%A4%9A%E6%B5%81%E8%BD%AC%E6%8D%A2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    多流转换
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Flink/5.%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    状态管理
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Flink/6.%E5%AE%B9%E9%94%99%E6%9C%BA%E5%88%B6/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    容错机制
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Flink/7.Process%20Function/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Process Function
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Flink/8.%E5%BC%82%E6%AD%A5%20IO/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    异步 I/O
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Flink/Flink%20CDC/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flink CDC
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_10" id="__nav_2_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Flink SQL
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_10">
+            <span class="md-nav__icon md-icon"></span>
+            Flink SQL
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Flink/Flink%20SQL/Examples/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Examples
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Flink/Flink%20SQL/Joins/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Joins
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Flink/Flink%20SQL/Top-N/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Top-N 与 窗口 Top-N
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Flink/Flink%20SQL/%E6%A8%A1%E5%BC%8F%E6%A3%80%E6%B5%8B/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    模式检测
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Flink/Flink%20SQL/%E6%B5%81%E5%BC%8F%E6%A6%82%E5%BF%B5/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    流式概念
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Flink/Flink%20SQL/%E7%AA%97%E5%8F%A3%E5%87%BD%E6%95%B0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    窗口函数
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_11" id="__nav_2_11_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    论文 & FLIP
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_11">
+            <span class="md-nav__icon md-icon"></span>
+            论文 & FLIP
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Flink/%E8%AE%BA%E6%96%87%20%26%20FLIP/98.Flink%20%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flink 论文精读
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Flink/%E8%AE%BA%E6%96%87%20%26%20FLIP/99.Dataflow%20%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dataflow 论文精读
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Flink/%E8%AE%BA%E6%96%87%20%26%20FLIP/FLIP/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FLIP
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Hadoop
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Hadoop
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Hadoop/1.%20Hadoop/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hadoop
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Hadoop/2.%20HDFS/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HDFS
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Hadoop/3.%20MapReduce/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MapReduce
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Hadoop/4.%20Yarn/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Yarn
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Hive
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Hive
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Hive/1.%20Hive/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Hive/2.%20Hive%20%E9%9D%A2%E8%AF%95%E9%A2%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive 面试题
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Hive/Hive%20%E5%87%BD%E6%95%B0%E7%9B%B8%E5%85%B3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive 函数相关
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Hive/Hive%20%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive 性能调优
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    SQL
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            SQL
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../SQL/SQL%20%E5%88%B7%E9%A2%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SQL 刷题
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../SQL/SQL%20%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive/Spark SQL 相关知识
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../SQL/Spark%20SQL%20%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0%E6%95%B4%E7%90%86/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark SQL 常用函数整理
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../SQL/UDF%20%E5%BC%80%E5%8F%91/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    UDF 开发
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Spark
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Spark
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Spark/1.Spark%20Core/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark Core
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Spark/2.Spark%20SQL/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark SQL
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Spark/PySpark/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PySpark
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Spark/RDD%20%E7%AE%97%E5%AD%90%20API/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RDD 算子 API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Spark/Spark%20%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark 性能优化
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Spark/Spark%20%E9%9D%A2%E8%AF%95%E9%A2%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark 面试题
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Blog
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Blog
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../blog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Blog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    归档
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    大数据技术栈
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            大数据技术栈
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Linux/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Linux
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_2" id="__nav_8_2_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    HBase
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_2">
+            <span class="md-nav__icon md-icon"></span>
+            HBase
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../HBase/1.HBase/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HBase
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../HBase/99.inbox/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Inbox
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_3" id="__nav_8_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Kafka
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_3">
+            <span class="md-nav__icon md-icon"></span>
+            Kafka
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Kafka/1.Kafka/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Kafka
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_4" id="__nav_8_4_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Scala
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_4">
+            <span class="md-nav__icon md-icon"></span>
+            Scala
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Scala/Scala/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Scala
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_8_5" id="__nav_8_5_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    ZooKeeper
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8_5">
+            <span class="md-nav__icon md-icon"></span>
+            ZooKeeper
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    ZooKeeper
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    ZooKeeper
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      集群和分布式的概念
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zookeeper_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      ZooKeeper 是什么
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zookeeper_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      ZooKeeper 如何实现分布式协调服务
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zookeeper_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      ZooKeeper 有哪些特点
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zookeeper-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      ZooKeeper 会话 Session
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zookeeper_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      ZooKeeper 的事务
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zookeeper_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      ZooKeeper 的数据模型/简版文件系统
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zookeeper_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      ZooKeeper 集群的架构/角色
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zookeeper-watcher" class="md-nav__link">
+    <span class="md-ellipsis">
+      ZooKeeper 的 Watcher 监听机制
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zookeeper_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      ZooKeeper 的读写流程
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zookeeper-leader" class="md-nav__link">
+    <span class="md-ellipsis">
+      ZooKeeper 的 Leader 选举
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ZooKeeper 的 Leader 选举">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#leader" class="md-nav__link">
+    <span class="md-ellipsis">
+      集群启动时的 Leader 选举
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#leader_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      运行中 Leader 崩溃时的选举
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zookeeper_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      ZooKeeper 主从状态同步
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ZooKeeper 主从状态同步">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      消息广播模式下的状态同步
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      崩溃恢复模式下的状态同步
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zab" class="md-nav__link">
+    <span class="md-ellipsis">
+      ZAB 协议
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ZAB 协议">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      消息广播
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      崩溃恢复
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zookeeper_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      ZooKeeper 崩溃恢复模式下的状态同步
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ZooKeeper 崩溃恢复模式下的状态同步">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#diff" class="md-nav__link">
+    <span class="md-ellipsis">
+      差异化同步 DIFF
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trunc" class="md-nav__link">
+    <span class="md-ellipsis">
+      仅回滚同步 TRUNC
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trunc-diff" class="md-nav__link">
+    <span class="md-ellipsis">
+      先回滚再差异化同步 TRUNC + DIFF
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#snap" class="md-nav__link">
+    <span class="md-ellipsis">
+      全量同步 SNAP
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      数据不一致的情况
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#paxos" class="md-nav__link">
+    <span class="md-ellipsis">
+      Paxos 算法
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#paxos-vs-zab" class="md-nav__link">
+    <span class="md-ellipsis">
+      Paxos VS ZAB
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acl" class="md-nav__link">
+    <span class="md-ellipsis">
+      ACL 权限控制
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      观察者设计模式
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      参考资料
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2.%20ZooKeeper%20%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ZooKeeper 如何实现分布式锁
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    数据仓库
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            数据仓库
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E7%90%86%E8%AE%BA/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    数据仓库理论
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    数据结构与算法
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            数据结构与算法
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/0.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    数据结构复习
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/1.%E7%AE%97%E6%B3%95%E5%A4%8D%E4%B9%A0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    算法复习
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    数据结构与算法笔记
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E7%BA%BF%E6%80%A7%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    线性动态规划
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    背包问题
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_10_6" id="__nav_10_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    好题分类
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_6">
+            <span class="md-nav__icon md-icon"></span>
+            好题分类
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E4%BA%8C%E5%8F%89%E6%A0%91/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    二叉树
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E5%89%8D%E7%BC%80%E5%92%8C/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    前缀和
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E5%93%88%E5%B8%8C%E8%A1%A8/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    哈希表
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E5%A4%9A%E7%A7%8D%E8%A7%A3%E6%B3%95/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    多种解法
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    滑动窗口
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E9%93%BE%E8%A1%A8/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    链表
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      集群和分布式的概念
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zookeeper_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      ZooKeeper 是什么
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zookeeper_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      ZooKeeper 如何实现分布式协调服务
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zookeeper_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      ZooKeeper 有哪些特点
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zookeeper-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      ZooKeeper 会话 Session
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zookeeper_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      ZooKeeper 的事务
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zookeeper_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      ZooKeeper 的数据模型/简版文件系统
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zookeeper_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      ZooKeeper 集群的架构/角色
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zookeeper-watcher" class="md-nav__link">
+    <span class="md-ellipsis">
+      ZooKeeper 的 Watcher 监听机制
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zookeeper_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      ZooKeeper 的读写流程
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zookeeper-leader" class="md-nav__link">
+    <span class="md-ellipsis">
+      ZooKeeper 的 Leader 选举
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ZooKeeper 的 Leader 选举">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#leader" class="md-nav__link">
+    <span class="md-ellipsis">
+      集群启动时的 Leader 选举
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#leader_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      运行中 Leader 崩溃时的选举
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zookeeper_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      ZooKeeper 主从状态同步
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ZooKeeper 主从状态同步">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      消息广播模式下的状态同步
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      崩溃恢复模式下的状态同步
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zab" class="md-nav__link">
+    <span class="md-ellipsis">
+      ZAB 协议
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ZAB 协议">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      消息广播
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      崩溃恢复
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zookeeper_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      ZooKeeper 崩溃恢复模式下的状态同步
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ZooKeeper 崩溃恢复模式下的状态同步">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#diff" class="md-nav__link">
+    <span class="md-ellipsis">
+      差异化同步 DIFF
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trunc" class="md-nav__link">
+    <span class="md-ellipsis">
+      仅回滚同步 TRUNC
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trunc-diff" class="md-nav__link">
+    <span class="md-ellipsis">
+      先回滚再差异化同步 TRUNC + DIFF
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#snap" class="md-nav__link">
+    <span class="md-ellipsis">
+      全量同步 SNAP
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      数据不一致的情况
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#paxos" class="md-nav__link">
+    <span class="md-ellipsis">
+      Paxos 算法
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#paxos-vs-zab" class="md-nav__link">
+    <span class="md-ellipsis">
+      Paxos VS ZAB
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acl" class="md-nav__link">
+    <span class="md-ellipsis">
+      ACL 权限控制
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      观察者设计模式
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      参考资料
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="zookeeper">ZooKeeper</h1>
+<h2 id="_1">集群和分布式的概念</h2>
+<p>集群：多台机器，每台机器上部署相同组件</p>
+<p>分布式：多台机器，每台机器上部署不同组件</p>
+<div class="admonition note">
+<p class="admonition-title"> 集群 </p>
+<p>利用多台廉价、普通的机器完成单个计算机无法完成的存储、计算任务，是对机器存储、计算能力的水平方向的扩展。（垂直方向的扩展指的是提高单台机器的存储、计算能力）</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title"> 分布式 </p>
+<p>集群常用于构建分布式系统，分布式系统的设计目标是将任务分解为多个子任务，并将这些子任务分配给不同的节点并行执行，从而提高计算的效率和可靠性。</p>
+</div>
+<hr />
+<h2 id="zookeeper_1">ZooKeeper 是什么</h2>
+<p>ZooKeeper 是一个分布式协调框架，主要用于解决分布式系统的一致性问题。</p>
+<p>通过 ZooKeeper 可以方便地实现数据订阅/发布、分布式锁、Master 选举、负载均衡等功能。</p>
+<hr />
+<h2 id="zookeeper_2">ZooKeeper 如何实现分布式协调服务</h2>
+<blockquote>
+<p>文件系统 + 注册监听机制</p>
+</blockquote>
+<ul>
+<li>ZooKeeper 维护一个类似于 Unix 文件系统的树形层次结构，每个节点叫一个 <code>znode</code>，它既可以是目录，也可以存放少量数据</li>
+<li>ZooKeeper 提供了注册监听机制，用于实现分布式系统中的事件通知和协调功能</li>
+</ul>
+<hr />
+<h2 id="zookeeper_3">ZooKeeper 有哪些特点</h2>
+<ul>
+<li>顺序一致性：从同一个客户端发起的事务请求，最终会严格地按照发起顺序被应用到 ZooKeeper 中去，通过 ZXID 保证</li>
+<li>原子性：所有事务请求的处理结果在整个集群中所有机器上的应用情况是一致的（只能成功/失败，没有中间状态）</li>
+<li>单一视图：无论客户端连接的是哪个 ZooKeeper 服务器，看到的服务器数据模型都是一致的</li>
+</ul>
+<hr />
+<h2 id="zookeeper-session">ZooKeeper 会话 Session</h2>
+<p>客户端要对 ZooKeeper 集群进行读写操作，得先与某一 ZooKeeper 服务器建立 <strong>TCP 长连接</strong>，通过这个连接，客户端可以通过<strong>心跳检测的机制</strong>与 ZooKeeper 服务器保持会话，也能够向 ZooKeeper 服务器发送请求并接受响应，同时还能够通过该 TCP 连接接收来自服务器的 Watcher 事件通知。</p>
+<p>此 TCP 长连接称为建立一个会话 Session。</p>
+<p>每个会话有超时时间：SessionTimeout，</p>
+<p>当客户端与集群建立会话后，如果超过 SessionTimeout 时间，两者间没有通信，会话超时。</p>
+<p>特点:</p>
+<ul>
+<li>客户端打开一个 Session 中的请求以 FIFO（先进先出）的顺序执行；</li>
+<li>如客户端 client01 与集群建立会话后，先发出一个 create 请求，再发出一个 get 请求；</li>
+<li>那么在执行时，会先执行 create，再执行 get</li>
+<li>若打开两个 Session，无法保证 Session 间，请求 FIFO 执行；只能保证一个 session 中请求的 FIFO</li>
+</ul>
+<p>会话的生命周期有：</p>
+<ul>
+<li>未建立连接</li>
+<li>正在连接</li>
+<li>已连接</li>
+<li>关闭连接</li>
+</ul>
+<hr />
+<h2 id="zookeeper_4">ZooKeeper 的事务</h2>
+<p>Zookeeper 的事务是客户端的写请求，会对 ZooKeeper 中的数据做出更改，如增删改的操作。</p>
+<p>每次写请求，会生成一次事务，并且每个事务有一个全局唯一的事务 ID，用 ZXID 表示，全局自增。</p>
+<p>ZXID 结构：</p>
+<ul>
+<li>通常是一个 64 位的数字。由 epoch + counter 组成</li>
+<li>epoch、counter 各 32 位</li>
+</ul>
+<hr />
+<h2 id="zookeeper_5">ZooKeeper 的数据模型/简版文件系统</h2>
+<p>ZooKeeper 维护一个类似于 Unix 文件系统的树形层次结构，每个节点叫一个 <code>znode</code>，它既可以是目录，也可以存放少量数据。</p>
+<p>ZooKeeper 中的 <code>znode</code> 有 4 种：</p>
+<ul>
+<li><code>PERSISTENT</code></li>
+<li><code>PERSISTENT_SEQUENTIAL</code></li>
+<li><code>EPHEMERAL</code></li>
+<li><code>EPHEMERAL_SEQUENTIAL</code></li>
+</ul>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310081547909.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310081547909.png" /></a></p>
+<p>持久节点和临时节点的区别是：持久节点创建后在客户端断开连接后不会被删除，而临时节点创建后在客户端断开连接后会被自动删除。</p>
+<p>顺序节点指的是 ZooKeeper 会自动为创建的节点名称后加上数字编号，维持其创建时的顺序。</p>
+<div class="admonition question">
+<p class="admonition-title">那这些节点类型有什么用呢？</p>
+</div>
+<p>首先来看持久节点。这个我觉得如果是做元数据存储，那持久节点就是首选。比如 Kafka 创建了一个 topic，用 ZooKeeper 来管理元数据，topic 也是其中之一，那如果不用持久节点，用临时节点的话，客户端断开连接后 topic 就消失了，所以如果是做元数据存储那一定是持久节点。</p>
+<p>其次来看临时节点。如果是做<strong>分布式协调和通知，那用临时节点的比较多</strong>。比如：创建一个临时节点，然后客户端来监听这个临时节点的变化，如果我断开连接了，那么这时候临时节点会消失，此时监听这个临时节点的客户端会通过 Watcher 机制感知到变化。</p>
+<p>最后看下<strong>临时顺序节点，主要应用于在分布式锁的领域</strong>， 在加锁的时候，会创建一个临时顺序节点，比如：lock0000000000，这时候其他客户端在尝试加锁的时候会继续自增编号，比如 lock0000000001，且会注册 Watcher 监听上一个临时顺序节点，然后如果你客户端断开连接了，由于是临时节点，所以会自动销毁你加的这把锁，那么下一个编号为 lock0000000001 的客户端会收到通知，然后去尝试持有锁。</p>
+<div class="admonition question">
+<p class="admonition-title">ZooKeeper 为什么设置临时节点和临时有序节点？</p>
+</div>
+<ul>
+<li>
+<p>临时节点的生命周期与创建它的客户端会话相关联，当客户端断开连接时，临时节点会被自动删除。而顺序节点可以通过编号来确定其节点的创建顺序。这两个特点可以用来实现一些分布式的特性。</p>
+</li>
+<li>
+<p>设计临时节点可以方便地实现分布式锁中独占锁的机制。同时有来自多个客户端的事务请求，ZooKeeper 要求多个客户端同时创建相同的节点，而 ZK 不允许节点重名，导致只有一个客户端，即最终创建好节点的那个客户端就相当于获取到了这把锁。同时临时节点能保证客户端断开连接时节点会自动被删除，就相当于释放了锁。</p>
+</li>
+<li>
+<p>设计临时有序节点主要是为了保证事务的有序性。多个客户端通过在某个节点下创建临时有序节点，ZooKeeper 每次让序号最小的节点获取锁，这样可以保证事务的全局时序。</p>
+</li>
+</ul>
+<hr />
+<h2 id="zookeeper_6">ZooKeeper 集群的架构/角色</h2>
+<p>ZooKeeper 是经典的主从架构：</p>
+<p>Leader：</p>
+<ul>
+<li>处理事务请求（写操作）：Leader 负责处理所有的写操作请求，包括创建、更新和删除节点等。当客户端发送写请求时，Leader 接受请求并将其转化为事务，然后将事务广播给 Followers。</li>
+<li>保持集群状态一致：Leader 负责保持集群的状态一致性。它通过内部的一致性协议（如 ZAB 协议）来确保写操作的顺序一致性和线性化。</li>
+</ul>
+<p>Follower：</p>
+<ul>
+<li>提供读操作服务：Follower 主要提供读操作服务。当客户端发送读取请求时，Follower 可以直接返回数据，而不需要进行复杂的一致性协议。</li>
+<li>转发写请求给 Leader。</li>
+<li>参与选举过程：如果当前的 Leader 失败，Follower 可以参与新的 Leader 选举过程。</li>
+</ul>
+<p>Observer：</p>
+<ul>
+<li>职责与 Follower 相同，主要是为了提高集群的并发读能力，但不参与选举过程。</li>
+</ul>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310081444707.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310081444707.png" /></a></p>
+<p>客户端使用 Zookeeper 时会连接到集群中的任意节点，所有的节点都能够直接对外提供读操作，但是写操作都会被从节点路由到主节点，由主节点进行处理。</p>
+<p>Zookeeper 在设计上提供了以下的两个基本的顺序保证，线性写和先进先出的客户端顺序：</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310081445222.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310081445222.png" /></a></p>
+<ul>
+<li>线性写是指所有更新 Zookeeper 状态的请求都应该按照既定的顺序串行执行（顺序一致性）</li>
+<li>先进先出的客户端顺序是指，所有客户端发出的请求会按照发出的顺序执行</li>
+</ul>
+<hr />
+<h2 id="zookeeper-watcher">ZooKeeper 的 Watcher 监听机制</h2>
+<p>客户端注册监听它关心的 <code>znode</code> 节点，当节点状态发生变化（<code>NodeCreated</code>, <code>NodeDeleted</code>, <code>NodeDataChanged</code>, <code>NodeChildChanged</code>）时（节点的增删改、子节点变化），ZooKeeper 会主动通知客户端。</p>
+<div class="admonition note">
+<p class="admonition-title">Watcher 监听的流程</p>
+</div>
+<ul>
+<li>客户端向服务端注册 Watcher 监听</li>
+<li>客户端保存 Watcher 对象到本地的 WatchManager 中</li>
+<li>服务端 Watcher 事件触发后，客户端收到服务端通知，从 WatchManager 中取出对应 Watcher 对象执行回调逻辑</li>
+</ul>
+<div class="admonition question">
+<p class="admonition-title">为什么要使用 Watcher 机制？</p>
+</div>
+<p><strong>保证实时性，避免轮询开销。</strong></p>
+<p>常见的 2 种通知机制模式：</p>
+<ul>
+<li>Pull 模式：客户端主动从服务端拉取最新的状态，这种方式需要客户端不断地通过<strong>轮询</strong>的方式获取服务端最新的状态</li>
+<li>Push 模式：服务端主动向客户端推送最新的状态，相比于 pull 模式，<strong>push 模式能够保证客户端数据的实时性，同时避免轮询的开销</strong></li>
+</ul>
+<div class="admonition question">
+<p class="admonition-title">Watcher 具体是如何实现的？</p>
+</div>
+<p><strong>ZooKeeper 的注册监听机制是通过向 ZooKeeper 服务器发送请求时附加一个 Watcher 对象来实现的</strong>（命令行是加 -w）。当节点的状态发生变化时，ZooKeeper 会通知与该节点关联的 Watcher，从而触发相应的回调逻辑。</p>
+<p>以下是在 ZooKeeper 中注册 Watcher 的步骤：</p>
+<ol>
+<li>
+<p>创建 ZooKeeper 连接：首先，创建与 ZooKeeper 服务器的连接。</p>
+</li>
+<li>
+<p>注册 Watcher：一旦与 ZooKeeper 服务器建立连接，可以使用 <code>exists()</code>, <code>getData()</code>, <code>getChildren()</code> 等方法来创建节点或获取节点数据，并在这些方法的参数中传递一个 Watcher 对象。这样，当节点的状态发生变化时，ZooKeeper 服务器会发送通知给该节点上注册的 Watcher。</p>
+</li>
+<li>
+<p>处理 Watcher 事件：在 Watcher 对象中，实现 <code>process()</code> 方法来处理 Watcher 事件。当节点的状态发生变化时，ZooKeeper 服务器会调用注册的 Watcher 的 <code>process()</code> 方法，并传递相应的事件类型（例如节点创建、数据更新、节点删除等）。</p>
+</li>
+<li>
+<p>重新注册 Watcher：一旦 Watcher 事件被触发并处理完毕，可以选择重新注册 Watcher 来继续监听节点的变化。这可以通过在 <code>process()</code> 方法中再次调用相应的节点操作方法并传递相同的 Watcher 对象来实现。</p>
+</li>
+</ol>
+<p>需要注意的是，<strong>ZooKeeper 中的 Watcher 是一次性的</strong>，即在节点状态变化后，Watcher 只会触发一次，并且必须在每次事件触发后重新注册才能继续监听。因此，如果要持续监听节点状态的变化，需要在每次处理 Watcher 事件后重新注册 Watcher。</p>
+<hr />
+<p>不管是注册监听器还是回调通知，都需要一个管理组件，也就是专门管理 Watcher 的类，我们称之为 WatchManager。</p>
+<p>这个 WatchManager 需要做的事情也很简单，就两件事：<strong>设计数据结构来存储节点和每一个 Watcher 之间的对应关系</strong>，以及<strong>触发 Watcher</strong>。</p>
+<p>看到这种结构，脑子里应该立马条件反射出 Map ，很典型的 key-value 存储结构，由于我们一个节点对应多个 Watcher ，因此我们的结构应该是 <code>Map&lt;String, List&lt;Watcher&gt;&gt;</code>，看起来恰似完美，但有瑕疵，因为 List 数据结构可以重复，但是每个 Watcher 应该是唯一的，所以我们应该换成 Set，最终的结构如下：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">WatchManager</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="cm">/*</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="cm">     * key：数据节点路径，value：客户端连接的集合</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="cm">     * 有了这个结构，当节点有变动的时候我们可以直接从map里get出所有监听此节点的Watcher集合，然后for循环遍历逐个通知</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="cm">     */</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Watcher</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">watchTable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Watcher</span><span class="o">&gt;&gt;</span><span class="p">();</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="cm">/*</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="cm">     * 添加Watcher</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="cm">     */</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">synchronized</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">addWatch</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">path</span><span class="p">,</span><span class="w"> </span><span class="n">Watcher</span><span class="w"> </span><span class="n">watcher</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">        </span><span class="n">Set</span><span class="w"> </span><span class="n">set</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashSet</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">        </span><span class="c1">// path是节点，set的是watcher</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">        </span><span class="n">watchTable</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">path</span><span class="p">,</span><span class="w"> </span><span class="n">list</span><span class="p">);</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">    </span><span class="cm">/*</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="cm">     * 移除Watcher</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="cm">     */</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">synchronized</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">removeWatcher</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">path</span><span class="p">,</span><span class="w"> </span><span class="n">Watcher</span><span class="w"> </span><span class="n">watcher</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">        </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">Watcher</span><span class="o">&gt;</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">watchTable</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">list</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">            </span><span class="n">list</span><span class="p">.</span><span class="na">remove</span><span class="p">(</span><span class="n">watcher</span><span class="p">)</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">    </span><span class="cm">/*</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="cm">     * 触发Watcher</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="cm">     */</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">WatcherOrBitSet</span><span class="w"> </span><span class="nf">triggerWatch</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">path</span><span class="p">,</span><span class="w"> </span><span class="n">EventType</span><span class="w"> </span><span class="n">type</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Watcher</span><span class="w"> </span><span class="n">watcher</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">watchTable</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">path</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="w">            </span><span class="n">watcher</span><span class="p">.</span><span class="na">process</span><span class="p">(</span><span class="n">type</span><span class="p">);</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="zookeeper_7">ZooKeeper 的读写流程</h2>
+<p>读流程：</p>
+<ul>
+<li>客户端先与某个 ZooKeeper 服务器建立 Session</li>
+<li>直接从该服务器读取数据，返回客户端即可（ZooKeeper 的单一视图特点）</li>
+<li>关闭 Session</li>
+</ul>
+<p>写流程：</p>
+<p>ZooKeeper 写数据的流程类似于 2PC。</p>
+<p>首先，如果接收客户端请求的节点不是 Leader，那么该节点会将写请求转发到 Leader。</p>
+<ul>
+<li>Leader 将写请求转换为一个 proposal，并添加一个全局唯一且递增事务 ID（ZXID）</li>
+<li>Leader 把 proposal 放入一个 FIFO 队列，发送给 Follower</li>
+<li>收到 proposal 的 Follower 将 proposal 写入本地文件，并返回一个 ack 给 Leader</li>
+<li>当 Leader 发现收到的 ack 过半后，会 commit 本地的 proposal，同时开始广播 commit 请求给所有的 Follower，Follower 收到 commit 请求后，会完成各自的事务提交</li>
+</ul>
+<hr />
+<h2 id="zookeeper-leader">ZooKeeper 的 Leader 选举</h2>
+<p>ZooKeeper 在什么时候会进行 Leader 选举？</p>
+<ul>
+<li>集群启动时</li>
+<li>运行中 Leader 崩溃时</li>
+</ul>
+<p>从 3.4.0 版本开始，只保留了  <strong>TCP 版本的 FastLeaderElection</strong>。</p>
+<h3 id="leader">集群启动时的 Leader 选举</h3>
+<p><strong>步骤一：每个 Server 会发出一个投票</strong></p>
+<p>初始情况，每个节点都会将自己作为 Leader 来进行投票。每次投票包含的最基本的元素包括：所推举的服务器的 <code>myid</code> 和 <code>ZXID</code> ，以 <code>(myid, ZXID)</code> 的形式表示。</p>
+<p><strong>步骤二：接收来自各个服务器的投票</strong></p>
+<p>每个服务器都会广播自己的投票并接收来自其他服务器的投票，对于接收到的投票，判断该投票的有效性，包括是否是本轮投票，是否来自 LOOKING 状态的服务器。</p>
+<p><strong>步骤三：处理投票</strong></p>
+<p>接收到投票后，需要将别人的投票和自己的投票进行比较。</p>
+<ul>
+<li>优先检查 <code>ZXID</code> ，<code>ZXID</code> 较大的服务器优先作为 Leader（因为 ZXID 越大，数据越新，越能够保证数据的恢复）</li>
+<li>如果 <code>ZXID</code> 相同，那么 <code>myid</code> 较大的服务器作为 Leader</li>
+<li>重新将更新后的投票发出去</li>
+</ul>
+<p>注：ZXID = Epoch + Counter</p>
+<p><strong>步骤四：统计投票</strong></p>
+<p>每次投票后，服务器都会统计所有投票，判断是否已经有过半的机器接收到相同的投票信息。</p>
+<p><strong>步骤五：改变服务器状态</strong></p>
+<p>一旦确定了 Leader，每个服务器更新自己的状态：如果是 Follower 就变更为 FOLLOWING，如果是 Leader 就变更为 LEADING。</p>
+<div class="admonition note">
+<p class="admonition-title">3 个节点<strong>同时启动</strong></p>
+</div>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310081704269.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310081704269.png" /></a></p>
+<table>
+<thead>
+<tr>
+<th>服务</th>
+<th>票箱</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Zookeeper1</td>
+<td>(1,1)、(2,2)、(3,3)，相当于每人都只有 1 票，持平</td>
+</tr>
+<tr>
+<td>Zookeeper2</td>
+<td>(1,1)、(2,2)、(3,3)，相当于每人都只有 1 票，持平</td>
+</tr>
+<tr>
+<td>Zookeeper3</td>
+<td>(1,1)、(2,2)、(3,3)，相当于每人都只有 1 票，持平</td>
+</tr>
+</tbody>
+</table>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310081704153.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310081704153.png" /></a></p>
+<table>
+<thead>
+<tr>
+<th>服务</th>
+<th>票箱</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Zookeeper1</td>
+<td>(1,3)、(2,3)、(3,3)，三个节点都投递给了 Zookeeper3</td>
+</tr>
+<tr>
+<td>Zookeeper2</td>
+<td>(1,3)、(2,3)、(3,3)，三个节点都投递给了 Zookeeper3</td>
+</tr>
+<tr>
+<td>Zookeeper3</td>
+<td>(1,3)、(2,3)、(3,3)，三个节点都投递给了 Zookeeper3</td>
+</tr>
+</tbody>
+</table>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310081705976.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310081705976.png" /></a></p>
+<div class="admonition note">
+<p class="admonition-title">如果 3 个节点<strong>按顺序启动</strong></p>
+</div>
+<p>按顺序启动，也就是先启动 Zookeeper1，然后 Zookeeper1 开始寻主，发现只有自己，不能构成集群，所以不能升级为 Leader；这时候 Zookeeper2 启动了，也开始寻主、投票。开始都会投给自己，但是第二轮的时候 Zookeeper1 发现 Zookeeper2 的 myid 最大，会把票投给 Zookeeper2，那这时候的结果就是 Zookeeper1 零票、Zookeeper2 两票。按照过半原则，已经符合升级为 Leader 的条件，所以这时候 Zookeeper2 就已经被选为 Leader 了。</p>
+<h3 id="leader_1">运行中 Leader 崩溃时的选举</h3>
+<ul>
+<li>
+<p>状态变更。Leader 故障后，余下的非 Observer  服务器都会将自己的服务器状态变更为 LOOKING，然后开始进入 Leader 选举过程。</p>
+</li>
+<li>
+<p>每个 Server 会发出投票。</p>
+</li>
+<li>
+<p>接收来自各个服务器的投票，如果其他服务器的数据比自己的新会改投票。</p>
+</li>
+<li>
+<p>处理和统计投票，每一轮投票结束后都会统计投票，超过半数即可当选。</p>
+</li>
+<li>
+<p>改变服务器的状态，宣布当选。</p>
+</li>
+</ul>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310081711848.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310081711848.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310081711172.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310081711172.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310081712787.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310081712787.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310081712871.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310081712871.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310081712298.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310081712298.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310081712979.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310081712979.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310081713256.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310081713256.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310081841109.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310081841109.png" /></a></p>
+<hr />
+<h2 id="zookeeper_8">ZooKeeper 主从状态同步</h2>
+<p>ZooKeeper 是通过 ZAB 协议实现主从状态同步的：</p>
+<ul>
+<li>Leader 正常工作时，主从同步使用消息广播模式</li>
+<li>Leader 崩溃时，主从同步使用崩溃恢复模式：先选新 Leader，再进行同步</li>
+</ul>
+<h3 id="_2">消息广播模式下的状态同步</h3>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310081845419.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310081845419.png" /></a></p>
+<p>类似于 2PC。</p>
+<p>首先，如果接收客户端请求的节点不是 Leader，那么该节点会将写请求转发到 Leader。</p>
+<ul>
+<li>Leader 将写请求转换为一个 proposal，并添加一个全局唯一且递增事务 ID（ZXID）</li>
+<li>Leader 把 proposal 放入一个 FIFO 队列，发送给 Follower</li>
+<li>收到 proposal 的 Follower 将 proposal 写入本地文件，并返回一个 ack 给 Leader</li>
+<li>当 Leader 发现收到的 ack 过半后，会 commit 本地的 proposal，同时开始广播 commit 请求给所有的 Follower，Follower 收到 commit 请求后，会完成各自的事务提交</li>
+</ul>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310081850566.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310081850566.png" /></a></p>
+<h3 id="_3">崩溃恢复模式下的状态同步</h3>
+<p>详见下面的 崩溃恢复模式下的状态同步</p>
+<ul>
+<li>差异化同步 DIFF</li>
+<li>仅回滚同步 TRUNC</li>
+<li>先回滚再差异化同步 TRUNC + DIFF</li>
+<li>全量同步 SNAP</li>
+</ul>
+<hr />
+<h2 id="zab">ZAB 协议</h2>
+<p>ZAB 协议，即 Zookeeper 原子广播协议，一言以蔽之就是为 ZooKeeper 专门设计的一种支持崩溃恢复和消息广播的协议。基于该协议，ZooKeeper 实现了主从之间的数据一致性。</p>
+<p>ZAB 协议包含两种基本模式，分别是<strong>崩溃恢复</strong>和<strong>消息广播</strong>。</p>
+<p><strong>当整个集群在启动时，或者当 leader 节点出现网络中断、 崩溃等情况时，ZAB 协议就会进入恢复模式并选举产生新的 leader</strong>，当 leader 服务器选举出来后，并且集群中有过半的机器和该 leader 节点完成数据同步后(同步指的是数据同步，用来保证集群中过半的机器能够和 leader 服务器的数据状态保持一致)，ZAB 协议就会退出恢复模式。</p>
+<p><strong>当集群中已经有过半的 follower 节点完成了和 leader 状态同步以后，那么整个集群就进入了消息广播模式</strong>。这个时候，在 leader 节点正常工作时，启动一台新的服务器加入到集群，那这个服务器会直接进入数据恢复模式，和 leader 节点进行数据同步。同步完成后即可正常对外提供非事务请求的处理。</p>
+<h3 id="_4">消息广播</h3>
+<p>消息广播是一个类似 2PC 两阶段提交的过程。主要流程如下：</p>
+<ul>
+<li>Leader 将写请求转换为一个 proposal，并添加一个全局唯一且递增事务 ID（ZXID）</li>
+<li>Leader 把 proposal 放入一个 FIFO 队列，发送给 Follower</li>
+<li>收到 proposal 的 Follower 将 proposal 写入本地文件，并返回一个 ack 给 Leader</li>
+<li>当 Leader 发现收到的 ack 过半后，会 commit 本地的 proposal，同时开始广播 commit 请求给所有的 Follower，Follower 收到 commit 请求后，会完成各自的事务提交</li>
+</ul>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310100321385.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310100321385.png" /></a></p>
+<h3 id="_5">崩溃恢复</h3>
+<p>由于 ZAB 协议的消息广播机制只需要集群中过半的节点响应即可，因此无法保证 Leader 崩溃之后集群数据的一致性，因此需要使用崩溃恢复机制解决这一问题。</p>
+<p>在崩溃恢复状态下 ZAB 协议需要做两件事，<strong>选举新 Leader</strong> 和<strong>数据同步</strong>。</p>
+<ul>
+<li>
+<p>Leader 选举：前面已经提到过了。</p>
+</li>
+<li>
+<p>数据同步：看下面的 ZooKeeper 崩溃恢复模式下的状态同步</p>
+</li>
+</ul>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310100523480.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310100523480.png" /></a></p>
+<hr />
+<h2 id="zookeeper_9">ZooKeeper 崩溃恢复模式下的状态同步</h2>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/348753812">Zookeeper 夺命连环 9 问 - 艾小仙的文章 - 知乎</a></li>
+</ul>
+<p>Zookeeper 在选举之后，Follower 和 Observer（统称为 Learner）就会去向 Leader 注册，然后就会开始数据同步的过程。数据同步包含 3 个主要值和 4 种形式。</p>
+<ul>
+<li><code>PeerLastZxid</code>：Learner 服务器最后处理的 ZXID</li>
+<li><code>minCommittedLog</code>：Leader proposal 缓存队列中最小的 ZXID</li>
+<li><code>maxCommittedLog</code>：Leader proposal 缓存队列中最大的 ZXID</li>
+</ul>
+<h3 id="diff">差异化同步 DIFF</h3>
+<p><strong>差异化同步适用于非 Leader 节点数据不全，需要从 Leader 处获取数据补全的情况。</strong></p>
+<p>如果 <code>PeerLastZxid</code> 在 <code>minCommittedLog</code> 和 <code>maxCommittedLog</code> 之间，那么则说明 Learner 服务器还没有完全同步最新的数据。</p>
+<ul>
+<li>首先 Leader 向 Learner 发送 DIFF 指令，代表开始差异化同步，然后把差异数据（从 PeerLastZxid 到 maxCommittedLog 之间的数据）提议 proposal 发送给 Learner</li>
+<li>发送完成之后发送一个 NEWLEADER 命令给 Learner，同时 Learner 返回 ACK 表示已经完成了同步</li>
+<li>接着等待集群中过半的 Learner 响应了 ACK 之后，就发送一个 UPTODATE 命令，Learner 返回 ACK，同步流程结束</li>
+</ul>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310100510638.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310100510638.png" /></a></p>
+<h3 id="trunc">仅回滚同步 TRUNC</h3>
+<p>针对 <code>PeerLastZxid</code> 大于 <code>maxCommittedLog</code> 的场景，在这种情况下，事务将会被回滚到 <code>maxCommittedLog</code> 的记录。</p>
+<h3 id="trunc-diff">先回滚再差异化同步 TRUNC + DIFF</h3>
+<p>这个设置针对的是一个异常的场景。</p>
+<p>如果 Leader 刚生成一个 proposal，还没有来得及发送出去，此时 Leader 宕机，重新选举之后作为 Follower，但是新的 Leader 没有这个 proposal 数据。</p>
+<p>举个栗子：</p>
+<ul>
+<li>假设现在的 Leader 是 A，<code>minCommittedLog</code> = 1，<code>maxCommittedLog</code> = 3，刚好生成的一个 proposal 的 ZXID = 4，然后挂了。</li>
+<li>重新选举出来的 Leader 是 B，B 之后又处理了 2 个 proposal，然后 <code>minCommittedLog</code> = 1，<code>maxCommittedLog</code> = 5。</li>
+<li>假设此时 A 恢复了，需要与 B 进行同步，但此时 A 的 <code>PeerLastZxid</code> = 4，在(1,5)之间。</li>
+<li><strong>那么这一条只存在于 A 的提议怎么处理？</strong></li>
+<li>A 要进行事务回滚，相当于抛弃这条数据，并且回滚到最接近于 <code>PeerLastZxid</code> 的事务，对于 A 来说，也就是 <code>PeerLastZxid</code> = 3。然后再执行差异化 DIFF 同步。</li>
+<li>流程和 DIFF 一致，只是会先发送一个 TRUNC 命令，然后再执行差异化 DIFF 同步。</li>
+</ul>
+<h3 id="snap">全量同步 SNAP</h3>
+<p>适用于两个场景：</p>
+<ul>
+<li><code>PeerLastZxid</code> 小于 <code>minCommittedLog</code></li>
+<li>新加入的节点</li>
+</ul>
+<p>这两种场景下，Leader 将会发送 SNAP 命令，把全量的数据都发送给 Learner 进行同步。</p>
+<h3 id="_6">数据不一致的情况</h3>
+<p>ZooKeeper 的同步机制有可能会出现数据不一致的问题吗？</p>
+<p>还是会存在的，我们可以分成 3 个场景来描述这个问题。</p>
+<ul>
+<li>查询不一致</li>
+</ul>
+<p>因为 Zookeeper 是过半成功即代表成功，假设我们有 5 个节点，如果 123 节点写入成功，如果这时候请求访问到 4 或者 5 节点，那么有可能读取不到数据，因为可能数据还没有同步到 4、5 节点中，也可以认为这算是数据不一致的问题。</p>
+<p>解决方案可以在读取前使用 sync 命令。</p>
+<ul>
+<li>Leader 未发送 proposal 宕机</li>
+</ul>
+<p>Leader 刚生成一个 proposal，还没有来得及发送出去，此时 leader 宕机，重新选举之后作为 follower，但是新的 leader 没有这个 proposal。这种场景下的日志将会被丢弃。</p>
+<ul>
+<li>leader 发送 proposal 成功，发送 commit 前宕机</li>
+</ul>
+<p>如果发送 proposal 成功了，但是在将要发送 commit 命令前宕机了，如果重新进行选举，还是会选择 zxid 最大的节点作为 leader，因此，这个日志并不会被丢弃，会在选举出 leader 之后重新同步到其他节点当中。</p>
+<hr />
+<h2 id="paxos">Paxos 算法</h2>
+<p><a href="https://zhuanlan.zhihu.com/p/130332285">分布式一致性算法-Paxos、Raft、ZAB、Gossip - 无知影的文章 - 知乎</a></p>
+<p><a href="https://www.zhihu.com/topic/19773822/top-answers">Paxos - 知乎</a></p>
+<p>Paxos 算法：一种基于消息传递且具有高度容错特性的一致性算法。</p>
+<p>Paxos 算法解决的问题：如何快速正确地在一个分布式系统中对某个数据达成一致，并且保证不论发生任何异常（如机器宕机、网络异常），都不会破坏整个系统的一致性。</p>
+<p>在 Paxos 中，存在三种角色，分别为：</p>
+<ul>
+<li>Proposer(提议者，用来发出提案 proposal),</li>
+<li>Acceptor(接受者，可以接受或拒绝提案),</li>
+<li>Learner(学习者，学习被选定的提案，当提案被超过半数的 Acceptor 接受后为被批准)。</li>
+</ul>
+<p>对应 ZooKeeper 集群：</p>
+<ul>
+<li>leader: 发起提案</li>
+<li>follower: 参与投票</li>
+<li>observer: 被动接受</li>
+</ul>
+<hr />
+<h2 id="paxos-vs-zab">Paxos VS ZAB</h2>
+<p>ZAB 协议是对 Paxos 算法的一种实现，但是二者存在一些区别：</p>
+<ul>
+<li>ZAB 协议中只能有一个 proposer，即 leader，而 Paxos 可以有多个</li>
+<li>ZAB 协议的设计目的主要是为了实现一个高可用的分布式系统，即每当 leader fail 的时候，马上就可以选举出一个新的 leader，保证服务的高可用</li>
+<li>Paxos 则是更追求分布式系统的一致性</li>
+</ul>
+<hr />
+<h2 id="acl">ACL 权限控制</h2>
+<p>Zookeeper 使用 ACL 来进行权限的控制，包含以下 5 种：</p>
+<ul>
+<li>CREATE，创建子节点权限</li>
+<li>DELETE，删除子节点权限</li>
+<li>READ，获取节点数据和子节点列表权限</li>
+<li>WRITE，更新节点权限</li>
+<li>ADMIN，设置节点 ACL 权限</li>
+</ul>
+<hr />
+<h2 id="_7">观察者设计模式</h2>
+<p>观察者模式类似发布订阅模式，订阅者首先订阅一个主题，其次主题有变更后会主动通知订阅者。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310100314665.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310100314665.png" /></a></p>
+<p>温度、湿度电子仪器会近实时根据空气的温度、湿度来动态显示到电子屏上，这其实就可以理解成观察者模式，我们可以这样想：</p>
+<p>这个仪器有几部分组成，内置了一个接口实时获取空气中的温度、湿度，然后谁需要这份数据就向我注册一下，比如电子屏幕这个角色就向接口注册了说：我需要这份数据，接着接口发现获取到新数据了，那么就立即回调监听者（注册者），告诉它们我获取到了新数据，我现在发给你。</p>
+<p>首先我们要有一个接口 Observer，代表观察者，也就是上面案例中的电子屏，当我们温度、湿度有变化后需要通知到各个观察者（电子屏）。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">Observer</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">show</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">msg</span><span class="p">);</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="p">}</span>
+</code></pre></div>
+<p>Observer 只是一个接口，我们需要具体的实现，在上述案例中我们的具体实现只有一个，就是显示屏：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">DisplayScreen</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">Observer</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="nd">@Override</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">show</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">msg</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;DisplayScreen: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">msg</span><span class="p">);</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">}</span>
+</code></pre></div>
+<p>现在观察者角色已经有了，那我们观察者监听哪个主题呢？也就是我们上述案例中的温度、湿度变化事件，所以我们还需要有个主题/事件角色：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">Topic</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="c1">// 增加观察者</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">register</span><span class="p">(</span><span class="n">Observer</span><span class="w"> </span><span class="n">observer</span><span class="p">);</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="c1">// 获取数据，通知观察者</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">getAndNotify</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">msg</span><span class="p">);</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="p">}</span>
+</code></pre></div>
+<p>我们的温度、湿度这两个角色就是 Topic 接口的两个具体实现，如下：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Temperature</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">Topic</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="c1">//用于保存订阅了温度的观察者</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Observer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">observerList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="nd">@Override</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">register</span><span class="p">(</span><span class="n">Observer</span><span class="w"> </span><span class="n">observer</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">        </span><span class="n">observerList</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">observer</span><span class="p">);</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span><span class="nd">@Override</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">getAndNotify</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">msg</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">        </span><span class="c1">// 获取数据后，逐个通知观察者</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Observer</span><span class="w"> </span><span class="n">observer</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">observerList</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">            </span><span class="n">observer</span><span class="p">.</span><span class="na">show</span><span class="p">(</span><span class="n">msg</span><span class="p">);</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="p">}</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Humidity</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">Topic</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Observer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">observerList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">    </span><span class="nd">@Override</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">register</span><span class="p">(</span><span class="n">Observer</span><span class="w"> </span><span class="n">observer</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="w">        </span><span class="n">observerList</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">observer</span><span class="p">);</span>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="w">    </span><span class="nd">@Override</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">getAndNotify</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">msg</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="w">        </span><span class="c1">// 获取数据后，逐个通知观察者</span>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Observer</span><span class="w"> </span><span class="n">observer</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">observerList</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="w">            </span><span class="n">observer</span><span class="p">.</span><span class="na">show</span><span class="p">(</span><span class="n">msg</span><span class="p">);</span>
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a><span class="p">}</span>
+</code></pre></div>
+<p>测试代码：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ObserverTest</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">        </span><span class="c1">// 创建主题</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">        </span><span class="n">Topic</span><span class="w"> </span><span class="n">topic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Temperature</span><span class="p">();</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">        </span><span class="c1">// 创建观察者</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">        </span><span class="n">Observer</span><span class="w"> </span><span class="n">observer1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DisplayScreen</span><span class="p">();</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">        </span><span class="n">Observer</span><span class="w"> </span><span class="n">observer2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DisplayScreen</span><span class="p">();</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">        </span><span class="c1">// 注册观察者</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">        </span><span class="n">topic</span><span class="p">.</span><span class="na">register</span><span class="p">(</span><span class="n">observer1</span><span class="p">);</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">        </span><span class="n">topic</span><span class="p">.</span><span class="na">register</span><span class="p">(</span><span class="n">observer2</span><span class="p">);</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">        </span><span class="c1">// 获取数据，通知观察者</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">        </span><span class="n">topic</span><span class="p">.</span><span class="na">getAndNotify</span><span class="p">(</span><span class="s">&quot;温度：30&quot;</span><span class="p">);</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="p">}</span>
+</code></pre></div>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310100313257.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310100313257.png" /></a></p>
+<hr />
+<h2 id="_8">参考资料</h2>
+<ul>
+<li><a href="https://juejin.cn/book/7128579738355892254?enter_from=course_center&amp;utm_source=course_center">深度剖析 ZooKeeper 核心原理 - 掘金小册 (juejin.cn)</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/348753812">Zookeeper 夺命连环 9 问 - 艾小仙的文章 - 知乎</a></li>
+<li><a href="https://maimai.cn/article/detail?fid=1479765581&amp;efid=pUdLojRIzLVDP9874_eR7w">面试阿里，腾讯 90%会被问到的 zookeeper，把这篇文章看完就够了。</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "search.suggest", "search.highlight", "content.code.copy", "navigation.top", "content.code.annotate"], "search": "../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.f1b6f286.min.js"></script>
+      
+        <script src="../../../javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
+</html>

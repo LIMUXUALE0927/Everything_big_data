@@ -1,0 +1,4206 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../Hive%20%E5%87%BD%E6%95%B0%E7%9B%B8%E5%85%B3/">
+      
+      
+        <link rel="next" href="../../SQL/SQL%20%E5%88%B7%E9%A2%98/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.4">
+    
+    
+      
+        <title>Hive 性能调优 - Everything Big Data</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8608ea7d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i%7CConsolas:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Lato";--md-code-font:"Consolas"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+   <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../assets/javascripts/glightbox.min.js"></script></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#hive" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="Everything Big Data" class="md-header__button md-logo" aria-label="Everything Big Data" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m-3.1 3.9s-.7-.3-1-.3c-.6-.1-1 .1-1.2 1.1L12 16.8c-.2.8-.5 1.4-1 1.8-.4.3-.8.4-1.3.4-.8 0-2-.5-2-.5l.5-1.4s.8.3 1 .3c.3.1.5 0 .7-.1s.3-.4.4-.7l1.6-9.2c.1-.8.5-1.4 1-1.9.6-.4 1.3-.5 2.1-.4.7.1 1.5.5 1.5.5z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Everything Big Data
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Hive 性能调优
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+    
+  
+  Welcome
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Flink/1.Flink%20%E5%9F%BA%E7%A1%80/" class="md-tabs__link">
+          
+  
+  Flink
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Hadoop/1.%20Hadoop/" class="md-tabs__link">
+          
+  
+  Hadoop
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../1.%20Hive/" class="md-tabs__link">
+          
+  
+  Hive
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../SQL/SQL%20%E5%88%B7%E9%A2%98/" class="md-tabs__link">
+          
+  
+  SQL
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Spark/1.Spark%20Core/" class="md-tabs__link">
+          
+  
+  Spark
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../blog/" class="md-tabs__link">
+          
+  
+  Blog
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/Linux/" class="md-tabs__link">
+          
+  
+  大数据技术栈
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E7%90%86%E8%AE%BA/" class="md-tabs__link">
+          
+  
+  数据仓库
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/0.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/" class="md-tabs__link">
+          
+  
+  数据结构与算法
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Everything Big Data" class="md-nav__button md-logo" aria-label="Everything Big Data" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m-3.1 3.9s-.7-.3-1-.3c-.6-.1-1 .1-1.2 1.1L12 16.8c-.2.8-.5 1.4-1 1.8-.4.3-.8.4-1.3.4-.8 0-2-.5-2-.5l.5-1.4s.8.3 1 .3c.3.1.5 0 .7-.1s.3-.4.4-.7l1.6-9.2c.1-.8.5-1.4 1-1.9.6-.4 1.3-.5 2.1-.4.7.1 1.5.5 1.5.5z"/></svg>
+
+    </a>
+    Everything Big Data
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Welcome
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Flink
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Flink
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/1.Flink%20%E5%9F%BA%E7%A1%80/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flink 基础
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/2.DataStream%20API/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DataStream API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/3.%E6%97%B6%E9%97%B4%E5%92%8C%E7%AA%97%E5%8F%A3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    时间和窗口
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/4.%E5%A4%9A%E6%B5%81%E8%BD%AC%E6%8D%A2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    多流转换
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/5.%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    状态管理
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/6.%E5%AE%B9%E9%94%99%E6%9C%BA%E5%88%B6/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    容错机制
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/7.Process%20Function/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Process Function
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/8.%E5%BC%82%E6%AD%A5%20IO/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    异步 I/O
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20CDC/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flink CDC
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_10" id="__nav_2_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Flink SQL
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_10">
+            <span class="md-nav__icon md-icon"></span>
+            Flink SQL
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/Examples/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Examples
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/Joins/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Joins
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/Top-N/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Top-N 与 窗口 Top-N
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/%E6%A8%A1%E5%BC%8F%E6%A3%80%E6%B5%8B/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    模式检测
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/%E6%B5%81%E5%BC%8F%E6%A6%82%E5%BF%B5/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    流式概念
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/%E7%AA%97%E5%8F%A3%E5%87%BD%E6%95%B0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    窗口函数
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_11" id="__nav_2_11_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    论文 & FLIP
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_11">
+            <span class="md-nav__icon md-icon"></span>
+            论文 & FLIP
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/%E8%AE%BA%E6%96%87%20%26%20FLIP/98.Flink%20%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flink 论文精读
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/%E8%AE%BA%E6%96%87%20%26%20FLIP/99.Dataflow%20%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dataflow 论文精读
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/%E8%AE%BA%E6%96%87%20%26%20FLIP/FLIP/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FLIP
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Hadoop
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Hadoop
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hadoop/1.%20Hadoop/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hadoop
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hadoop/2.%20HDFS/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HDFS
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hadoop/3.%20MapReduce/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MapReduce
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hadoop/4.%20Yarn/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Yarn
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Hive
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Hive
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1.%20Hive/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2.%20Hive%20%E9%9D%A2%E8%AF%95%E9%A2%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive 面试题
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Hive%20%E5%87%BD%E6%95%B0%E7%9B%B8%E5%85%B3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive 函数相关
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Hive 性能调优
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Hive 性能调优
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#mapreduce" class="md-nav__link">
+    <span class="md-ellipsis">
+      MapReduce
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MapReduce">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mr" class="md-nav__link">
+    <span class="md-ellipsis">
+      MR 流程回顾
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mr_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      MR 参数调优
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#yarn" class="md-nav__link">
+    <span class="md-ellipsis">
+      Yarn 回顾
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#yarn_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Yarn 日志
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      参数调优
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="参数调优">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mapperreducer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mapper/Reducer 内存与核数
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#map" class="md-nav__link">
+    <span class="md-ellipsis">
+      如何控制 Map 个数与性能调优
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reduce" class="md-nav__link">
+    <span class="md-ellipsis">
+      如何控制 Reduce 个数与性能调优
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hive-task" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hive Task 任务容错机制
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hive-failedkilled" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hive 任务实例 failed/killed 的场景
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hive_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hive 任务推测执行
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      小文件问题
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      并行执行
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jvm" class="md-nav__link">
+    <span class="md-ellipsis">
+      JVM 重用
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fetch" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fetch 抓取
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      本地模式
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      严格模式
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      向量化模式
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      动态分区
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#join" class="md-nav__link">
+    <span class="md-ellipsis">
+      Join 的优化
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Join 的优化">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hive-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hive 原生支持的 Join 类型
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Join
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#map-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      Map Join
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bucket-map-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bucket Map Join
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sort-merge-bucket-map-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sort Merge Bucket Map Join
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skewed-map-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      Skewed Map Join
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#group-by" class="md-nav__link">
+    <span class="md-ellipsis">
+      Group By 优化
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Group By 优化">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#group-by_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Group By 的四种执行计划模式
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#countdistinct" class="md-nav__link">
+    <span class="md-ellipsis">
+      count(distinct) 优化
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hive-sql" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hive SQL 优化
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hive SQL 优化">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hive-sql_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hive SQL 执行顺序
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hive-sql_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hive SQL 优化思路
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      分区裁剪
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      谓词下推
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#order-by" class="md-nav__link">
+    <span class="md-ellipsis">
+      Order By 优化
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      数据倾斜问题
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="数据倾斜问题">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#group-by_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Group By 产生数据倾斜
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#countdistinct_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      count(distinct) 产生数据倾斜
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#join_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Join 产生数据倾斜
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      空值产生数据倾斜
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hive-sql_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hive SQL 优化思路总结
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    SQL
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            SQL
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SQL/SQL%20%E5%88%B7%E9%A2%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SQL 刷题
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SQL/SQL%20%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive/Spark SQL 相关知识
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SQL/Spark%20SQL%20%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0%E6%95%B4%E7%90%86/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark SQL 常用函数整理
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SQL/UDF%20%E5%BC%80%E5%8F%91/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    UDF 开发
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Spark
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Spark
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Spark/1.Spark%20Core/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark Core
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Spark/2.Spark%20SQL/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark SQL
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Spark/PySpark/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PySpark
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Spark/RDD%20%E7%AE%97%E5%AD%90%20API/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RDD 算子 API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Spark/Spark%20%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark 性能优化
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Spark/Spark%20%E9%9D%A2%E8%AF%95%E9%A2%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark 面试题
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Blog
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Blog
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Blog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    归档
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    大数据技术栈
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            大数据技术栈
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/Linux/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Linux
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_2" id="__nav_8_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    HBase
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_2">
+            <span class="md-nav__icon md-icon"></span>
+            HBase
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/HBase/1.HBase/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HBase
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/HBase/99.inbox/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Inbox
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_3" id="__nav_8_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Kafka
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_3">
+            <span class="md-nav__icon md-icon"></span>
+            Kafka
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/Kafka/1.Kafka/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Kafka
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_4" id="__nav_8_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Scala
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_4">
+            <span class="md-nav__icon md-icon"></span>
+            Scala
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/Scala/Scala/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Scala
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_5" id="__nav_8_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    ZooKeeper
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_5">
+            <span class="md-nav__icon md-icon"></span>
+            ZooKeeper
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/ZooKeeper/1.%20ZooKeeper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ZooKeeper
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/ZooKeeper/2.%20ZooKeeper%20%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ZooKeeper 如何实现分布式锁
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    数据仓库
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            数据仓库
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E7%90%86%E8%AE%BA/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    数据仓库理论
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    数据结构与算法
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            数据结构与算法
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/0.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    数据结构复习
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/1.%E7%AE%97%E6%B3%95%E5%A4%8D%E4%B9%A0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    算法复习
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    数据结构与算法笔记
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E7%BA%BF%E6%80%A7%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    线性动态规划
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    背包问题
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_10_6" id="__nav_10_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    好题分类
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_6">
+            <span class="md-nav__icon md-icon"></span>
+            好题分类
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E4%BA%8C%E5%8F%89%E6%A0%91/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    二叉树
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E5%89%8D%E7%BC%80%E5%92%8C/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    前缀和
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E5%93%88%E5%B8%8C%E8%A1%A8/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    哈希表
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E5%A4%9A%E7%A7%8D%E8%A7%A3%E6%B3%95/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    多种解法
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    滑动窗口
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E9%93%BE%E8%A1%A8/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    链表
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#mapreduce" class="md-nav__link">
+    <span class="md-ellipsis">
+      MapReduce
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MapReduce">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mr" class="md-nav__link">
+    <span class="md-ellipsis">
+      MR 流程回顾
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mr_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      MR 参数调优
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#yarn" class="md-nav__link">
+    <span class="md-ellipsis">
+      Yarn 回顾
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#yarn_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Yarn 日志
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      参数调优
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="参数调优">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mapperreducer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mapper/Reducer 内存与核数
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#map" class="md-nav__link">
+    <span class="md-ellipsis">
+      如何控制 Map 个数与性能调优
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reduce" class="md-nav__link">
+    <span class="md-ellipsis">
+      如何控制 Reduce 个数与性能调优
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hive-task" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hive Task 任务容错机制
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hive-failedkilled" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hive 任务实例 failed/killed 的场景
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hive_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hive 任务推测执行
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      小文件问题
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      并行执行
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jvm" class="md-nav__link">
+    <span class="md-ellipsis">
+      JVM 重用
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fetch" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fetch 抓取
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      本地模式
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      严格模式
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      向量化模式
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      动态分区
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#join" class="md-nav__link">
+    <span class="md-ellipsis">
+      Join 的优化
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Join 的优化">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hive-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hive 原生支持的 Join 类型
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Join
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#map-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      Map Join
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bucket-map-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bucket Map Join
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sort-merge-bucket-map-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sort Merge Bucket Map Join
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skewed-map-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      Skewed Map Join
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#group-by" class="md-nav__link">
+    <span class="md-ellipsis">
+      Group By 优化
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Group By 优化">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#group-by_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Group By 的四种执行计划模式
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#countdistinct" class="md-nav__link">
+    <span class="md-ellipsis">
+      count(distinct) 优化
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hive-sql" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hive SQL 优化
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hive SQL 优化">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hive-sql_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hive SQL 执行顺序
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hive-sql_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hive SQL 优化思路
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      分区裁剪
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      谓词下推
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#order-by" class="md-nav__link">
+    <span class="md-ellipsis">
+      Order By 优化
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      数据倾斜问题
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="数据倾斜问题">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#group-by_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Group By 产生数据倾斜
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#countdistinct_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      count(distinct) 产生数据倾斜
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#join_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Join 产生数据倾斜
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      空值产生数据倾斜
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hive-sql_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hive SQL 优化思路总结
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="hive">Hive 性能调优</h1>
+<hr />
+<h2 id="mapreduce">MapReduce</h2>
+<h3 id="mr">MR 流程回顾</h3>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310021836664.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310021836664.png" /></a></p>
+<hr />
+<h3 id="mr_1">MR 参数调优</h3>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>默认值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mapreduce.task.io.sort.mb</code></td>
+<td>100（单位 MB）</td>
+<td>Map 端内存缓冲区大小，建议 512MB+</td>
+</tr>
+<tr>
+<td><code>mapreduce.task.io.sort.factor</code></td>
+<td>10</td>
+<td>排序文件时，一次最多启动合并的文件流的个数。这个属性也在 reduce 中使用。将此值增加到 100 是很常见的。并行合并更多文件可减少合并排序迭代次数并通过消除磁盘 I/O 提高运行时间，但也会使用更多的内存。</td>
+</tr>
+<tr>
+<td><code>mapreduce.map.output.compress</code></td>
+<td>false</td>
+<td>是否压缩 map 的输出</td>
+</tr>
+<tr>
+<td><code>mapreduce.reduce.shuffle.parallelcopies</code></td>
+<td>5</td>
+<td>用于把 map 输出复制到 reducer 的线程数</td>
+</tr>
+<tr>
+<td><code>mapreduce.job.reduce.slowstart.completedmaps</code></td>
+<td>0.05</td>
+<td>表示在开始执行 reduce 任务之前，需要完成的 map 任务的比例。默认值为 0.05，即 map 任务完成 5% 时，就可以开始执行 reduce 任务了（开始 copy 数据）。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="yarn">Yarn 回顾</h3>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202402011704309.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202402011704309.png" /></a></p>
+<p>Yarn 是经典的主从（master/slave）架构。主要由 ResourceManager、NodeManager、ApplicationMaster 和 Container 等组件构成。</p>
+<p>YARN 可以看出一个大的云操作系统，它负责为应用程序启动 ApplicationMaster（相当于主线程），然后再由 ApplicationMaster 负责数据切分、任务分配、 启动和监控等工作，而由 ApplicationMaster 启动的各个 Task（相当于子线程）仅负责自己的计算任务。当所有任务计算完成后，ApplicationMaster 认为应用程序运行完成，然后退出。</p>
+<hr />
+<h3 id="yarn_1">Yarn 日志</h3>
+<p>Yarn 提供了两种日志查看方式：</p>
+<ul>
+<li><strong>ResourceManager Web UI</strong>：可以查看当前正在运行的任务以及部分历史任务</li>
+<li>Job history UI：可以查看一定周期的历史任务（只有 MR 任务，Spark 任务要去 Spark History UI 看）</li>
+</ul>
+<hr />
+<h2 id="_1">参数调优</h2>
+<h3 id="mapperreducer">Mapper/Reducer 内存与核数</h3>
+<p><strong>参数一：设置每个 map 的内存和核数</strong></p>
+<ul>
+<li><code>set mapreduce.map.memory.mb=2048;</code> 默认为 1024</li>
+<li><code>set mapreduce.map.cpu.vcores=1;</code> 默认为 1</li>
+</ul>
+<p><strong>参数二：设置每个 reduce 的内存大小</strong></p>
+<ul>
+<li><code>set mapreduce.reduce.memory.mb=6144;</code> 默认为 1024</li>
+<li><code>set mapreduce.reduce.cpu.vcores=2;</code> 默认为 1</li>
+</ul>
+<p>有些时候报 OOM、堆内存溢出等错误时，可以适调大这几个参数，通过增加内存 cpu 的方式提高 task 运行速度，但是坏处是可能造成资源的浪费。以上关于 map/reduce 的参数都可以通过客户端直接设置生效，会覆盖集群层面的参数。</p>
+<p>常见对应报错：</p>
+<ul>
+<li>第一种报错："java.lang.OutOfMemoryError: GC overhead limit exceeded"</li>
+<li>第二种报错："java.lang.OutOfMemoryError: Java heap space"</li>
+<li>第三种报错："running beyondphysical memory limits. Current usage: 4.3 GB of 4.3 GB physical memory used; 7.4 GB of 13.2 GB virtual memory used. Killing container"</li>
+</ul>
+<p>以上常见的三种报错，一般都是由于 map task 或 reduce task 在 container 中运行时处理数据需要的内存资源与申请分配到的资源不匹配造成。这个时候我们可以通过人为增加资源进行尝试。</p>
+<hr />
+<h3 id="map">如何控制 Map 个数与性能调优</h3>
+<p>虽然在 Hive 中可以配置 <code>set mapred.map.tasks=2</code>，但是这个参数是不生效的，因为 Hive 会根据 <code>输入数据的大小/split-size</code> 自动决定 map 个数。精髓是调整 split-size。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>defaultNum=totalSize/blockSize
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>expNum=mapred.map.tasks(2)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>expMaxNum=max(expNum, defaultNum)//期望大小只有大于默认大小才会生效；
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>realSplitNum=totalSize/max(mapred.min.split.size, blockSize)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>实际的map个数=min(realSplitNum, expMaxNum)
+</code></pre></div>
+<p><strong>增加切片大小，减少 map 个数。</strong></p>
+<p>案例：一个分区中有 2000 个小文件（1.+MB），原先 79 个 Map，现在 19 个。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="k">input</span><span class="p">.</span><span class="n">format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">org</span><span class="p">.</span><span class="n">apache</span><span class="p">.</span><span class="n">hadoop</span><span class="p">.</span><span class="n">hive</span><span class="p">.</span><span class="n">ql</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">CombineHiveInputFormat</span><span class="p">;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">set</span><span class="w"> </span><span class="n">mapred</span><span class="p">.</span><span class="k">max</span><span class="p">.</span><span class="n">split</span><span class="p">.</span><span class="k">size</span><span class="o">=</span><span class="mi">256000000</span><span class="p">;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">set</span><span class="w"> </span><span class="n">mapred</span><span class="p">.</span><span class="k">min</span><span class="p">.</span><span class="n">split</span><span class="p">.</span><span class="k">size</span><span class="o">=</span><span class="mi">128000000</span><span class="p">;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">set</span><span class="w"> </span><span class="n">mapred</span><span class="p">.</span><span class="k">min</span><span class="p">.</span><span class="n">split</span><span class="p">.</span><span class="k">size</span><span class="p">.</span><span class="n">per</span><span class="p">.</span><span class="n">node</span><span class="o">=</span><span class="mi">128000000</span><span class="p">;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">set</span><span class="w"> </span><span class="n">mapred</span><span class="p">.</span><span class="k">min</span><span class="p">.</span><span class="n">split</span><span class="p">.</span><span class="k">size</span><span class="p">.</span><span class="n">per</span><span class="p">.</span><span class="n">rack</span><span class="o">=</span><span class="mi">128000000</span><span class="p">;</span>
+</code></pre></div>
+<p>一般我们设置 <code>max.split.size</code> &gt;= <code>min.split.size</code> &gt; <code>min.size.per.rack</code> = <code>min.size.per.node</code></p>
+<hr />
+<h3 id="reduce">如何控制 Reduce 个数与性能调优</h3>
+<p><strong>参数一：直接指定 reduce 个数</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>set mapred.reduce.tasks/mapreduce.job.reduces=10;
+</code></pre></div>
+<p><strong>参数二：通过 reduce 处理的数据量，推断 reduce 个数</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>set hive.exec.reducers.bytes.per.reducer=1000000000;
+</code></pre></div>
+<p>设置每个 Reducer 所能处理的数据量，在 Hive0.14 版本以前默认是 <strong>1GB</strong>，Hive0.14 及之后的版本默认是 <strong>256MB</strong>。</p>
+<p>reduce 计算方式：计算 reducer 数的公式很简单：<code>num=min(hive.exec.reducers.max, (map 输出数据大小)/hive.exec.reducers.bytes.per.reducer)</code></p>
+<p><strong>参数三：单个 job 可以使用的最大 reduce 数量</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>set hive.exec.reducers.max=2999;
+</code></pre></div>
+<hr />
+<h3 id="hive-task">Hive Task 任务容错机制</h3>
+<p><strong>Map/Reduce Task 容错与重试机制：</strong></p>
+<p>如下任务 yarn 界面很常见，比如 reduce 出现了 2 个 failed，17 killed。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202402022153991.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202402022153991.png" /></a></p>
+<p>Task 指的是具体的 map/reduce task。而实际一个 task 允许尝试多次运行，<strong>每次运行尝试的实例</strong>就被称 Task <strong>Attempt</strong>，也就是 Yarn 任务日志界面 Attempt Type 里统计的数据。</p>
+<p>实际生产中，map/reduce task 会因为多方面原因如机器老化，资源不足，进程崩溃，带宽限制等出现部分 map/reduce task 实例失败的情况，这是极其正常且容易发生的事。如果这个时候整个任务就直接报错了，那么代价就太大了。所以 Hadoop 就引入了 task 容错机制（其实也就是 task 重试机制） 。map/reduce 实例失败后，在退出之前向 APPMaster 发送错误报告，错误报告会被记录进用户日志，APPMaster 然后将这个任务实例标为 failed，将其 containner 资源释放给其他任务使用。</p>
+<p>通过如下两个参数控制 map/reduce 的 task 一旦失败了 map/reduce 实例可以重试的次数：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>// 控制 Map Task 失败最大尝试次数，默认值 4
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>set mapreduce.map.maxattempts=4;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>//控制 Reduce Task 失败最大尝试次数，默认值 4
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>set mapreduce.reduce.maxattempts =4;
+</code></pre></div>
+<hr />
+<p><strong>AppMaster 容错与重试机制：</strong></p>
+<p>AppMaster 也提供了重试机制，YARN 中的应用程序失败之后，最多尝试次数由 <code>mapred-site.xml</code> 文件中的 <code>mapreduce.am.max-attempts</code> 属性配置：尝试次数默认值为 2，即当 AppMaster 失败 2 次之后，运行的任务将会失败。</p>
+<p><strong>APPMaster 的重试次数还受 YARN 的参数限制</strong>，在 MapReduce 内部，YARN 框架对 AppMaster 的最大尝试次数做了限制。其中，每个在 YARN 中运行的应用程序不能超过这个数量限制，具体限制由 <code>yarn-site.xml</code> 文件中的 <code>yarn.resourcemanager.am.max-attempts</code> 属性控制（默认为 2）。</p>
+<hr />
+<h3 id="hive-failedkilled">Hive 任务实例 failed/killed 的场景</h3>
+<p><strong>任务实例出现 failed 的场景：</strong></p>
+<p>任务实例 attempt 长时间没有向 MRAppMaster 报告，后者一直没收到其进度的更新，<strong>一般 attempt 实例与 AppMaster 每 3s 通信一次</strong>，前者像后者报告任务进度和状态；超出阈值（<strong>10 分钟</strong>） ，任务变会被认为“僵死”被标记失败 failed，然后 MRAppMaster 会将其 JVM 杀死，释放资源。然后重新尝试在其他节点启动一个新的任务实例（遵循本地化原则）。</p>
+<p>这种情况生产集群还是比较多的，比如 task 运行的 NM 节点异常，主机宕机，网络通信异常等。</p>
+<hr />
+<p><strong>任务实例出现 killed 的场景：</strong></p>
+<p>一个任务实例 attempt 被 killed 一般就两种情况：</p>
+<ul>
+<li>一是客户端主动请求杀死任务，比如客户端通过 <code>yarn application -kill</code>，或者关闭执行窗口等</li>
+<li>二是框架主动杀死任务，即 AppMaster 发出任务 kill 的指令</li>
+</ul>
+<p>对于后者，一般是由于作业被杀死或者该任务的备任任务（推测执行）已经执行完成，这个任务不需要继续执行了，所以被 killed。比如 NodeManager 节点故障或者失败任务数过多，比如停止等，这时候上面的所有任务实例都会被标记为 killed。</p>
+<p>生产中我们更关注 failed 的 task，这个有时候直接影响我们任务的成功与否。killed 一般不影响任务的失败和成功，但是过多的 killed 我们也需要关注，因为 killed 浪费资源。</p>
+<hr />
+<h3 id="hive_1">Hive 任务推测执行</h3>
+<p>实际开发中查看 yarn 日志可能会遇到，显示有 257 个 reduce 没跑完，但是下面 attempt 里却有 261 个 reduce 处于 running 状态的情况。</p>
+<p><strong>任务推测执行（speculative execution）：</strong></p>
+<p>MRAppMaster 当监控到一个任务实例的运行速度慢于其他任务实例时，会为该任务启动一个备份任务实例，让这个两个任务同时处理一份数据，如
+map/reduce。谁先处理完，成功提交给 MRappMaster 就采用谁的，另一个则会被 killed，这种方式可以有效防止那些长尾任务拖后腿。</p>
+<p>任务推测执行的好处就是空间换时间，防止长尾任务拖后腿。<strong>任务推测的坏处就是两个重复任务，浪费资源，降低集群的效率，尤其 reduce 任务的推测执行，拉取 map 数据加大网络 I/O，而且推测任务可能会相互竞争。</strong></p>
+<p>注意：默认集群开启推测执行，可以基于集群计算框架，也可以基于任务类型单独开启，默认 map/reduce 等推测执行都是开启的。map 任务建议开启，reduce 可以结合实际谨慎开启。</p>
+<p>推测执行本质是通过提高个别慢 task 的速度进而提高整体的运行效率。但推测执行的使用不好建议是否开启，比如运行的 map/reduce 任务输入数据量很大或者本身执行时间很长的时候，如果你再开启推测执行会造成大量的资源浪费。</p>
+<hr />
+<h3 id="_2">小文件问题</h3>
+<p><strong>大量小文件问题的危害：</strong></p>
+<ul>
+<li>占用大量 <strong>NameNode 内存</strong></li>
+<li>导致 DataNode 的磁盘<strong>寻址效率</strong>低下</li>
+<li>Block 是最小粒度的数据处理单元，大量小文件，大量的块，意味着更多任务调度、任务创建开销，以及更多的任务管理开销</li>
+</ul>
+<p>注：虽然可以开启 map 前文件合并，但是这也需要不停地从不同节点建立连接，数据读取，网络传输，然后进行合并，同样会增加消耗资源和增加计算时间，成本也很高。</p>
+<hr />
+<p><strong>小文件产生的途径：</strong></p>
+<ul>
+<li>流式数据，如 Kafka, SparkStreaming, flink 等，流式增量文件，小窗口文件，如几分钟一次等。</li>
+<li>MapReduce 引擎任务：如果纯 map 任务，大量的 map；如果 mapreduce 任务，大量的 reduce；两者都会造成大量的文件。出现这种情况的原因很多，比如分区表的过度分区，动态分区，输入大量的小文件，参数设置的不合理等，输出没有文件合并等。</li>
+<li>Spark 任务过度并行化，Spark 分区越多，写入的文件就越多。</li>
+</ul>
+<hr />
+<p><strong>小文件问题参数优化：</strong></p>
+<p><strong>参数一：开启 map 前小文件合并，默认开启</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="k">input</span><span class="p">.</span><span class="n">format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">org</span><span class="p">.</span><span class="n">apache</span><span class="p">.</span><span class="n">hadoop</span><span class="p">.</span><span class="n">hive</span><span class="p">.</span><span class="n">ql</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">CombineHiveInputFormat</span><span class="p">;</span>
+</code></pre></div>
+<p><strong>参数二：合并 MR 输出文件</strong></p>
+<p>这个参数表示当一个 MR 作业的平均输出文件大小小于这个数字时，Hive 将启动一个额外的 Map 任务(敲重点，这里有个坑)，将输出文件合并为更大的文件。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">-- 当输出文件小于 32Mb 时我们进行合并。</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="n">merge</span><span class="p">.</span><span class="n">smallfiles</span><span class="p">.</span><span class="n">avgsize</span><span class="o">=</span><span class="mi">32000000</span><span class="p">;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1">-- 集群层面默认开启 map-only 任务的小文件合并</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="n">merge</span><span class="p">.</span><span class="n">mapfiles</span><span class="o">=</span><span class="k">true</span><span class="p">;</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1">-- 注意集群层面默认不开启 map-reduce 任务的小文件合并,如果需要合并需要手动开启；</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="n">merge</span><span class="p">.</span><span class="n">mapredfiles</span><span class="o">=</span><span class="k">true</span><span class="p">;</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1">-- 作业结束时合并文件的大小，这个一般最好跟生产集群的 block 大小一致合适</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="n">merge</span><span class="p">.</span><span class="k">size</span><span class="p">.</span><span class="n">per</span><span class="p">.</span><span class="n">task</span><span class="o">=</span><span class="mi">25600000</span><span class="p">;</span>
+</code></pre></div>
+<p>案例：一张表某个分区大量小文件，1000 个 kb 级别文件，总存储大小 15.3Mb（单副本）</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="k">input</span><span class="p">.</span><span class="n">format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">org</span><span class="p">.</span><span class="n">apache</span><span class="p">.</span><span class="n">hadoop</span><span class="p">.</span><span class="n">hive</span><span class="p">.</span><span class="n">ql</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">CombineHiveInputFormat</span><span class="p">;</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="n">merge</span><span class="p">.</span><span class="n">mapfiles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="n">merge</span><span class="p">.</span><span class="n">mapredfiles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="n">merge</span><span class="p">.</span><span class="n">smallfiles</span><span class="p">.</span><span class="n">avgsize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">32000000</span><span class="p">;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="n">merge</span><span class="p">.</span><span class="k">size</span><span class="p">.</span><span class="n">per</span><span class="p">.</span><span class="n">task</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">256000000</span><span class="p">;</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="k">create</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="n">test</span><span class="w"> </span><span class="k">as</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="k">select</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="o">*</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="k">from</span><span class="w"> </span><span class="k">table_name</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="k">where</span><span class="w"> </span><span class="n">dt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;20221030&#39;</span>
+</code></pre></div>
+<p>带坑案例：一张表某个分区大量 Mb 级别小文件，总存储大小 6GB（单副本）</p>
+<p>跑完以后合计生成 177 个文件，大小 4.1GB，平均文件大小 4.1GB*1024/177=23Mb，没有达到的预期平均文件大小 32Mb，为什么？</p>
+<p>我们之前说过，map 的个数与切片大小有关：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="k">input</span><span class="p">.</span><span class="n">format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">org</span><span class="p">.</span><span class="n">apache</span><span class="p">.</span><span class="n">hadoop</span><span class="p">.</span><span class="n">hive</span><span class="p">.</span><span class="n">ql</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">CombineHiveInputFormat</span><span class="p">;</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">set</span><span class="w"> </span><span class="n">mapred</span><span class="p">.</span><span class="k">max</span><span class="p">.</span><span class="n">split</span><span class="p">.</span><span class="k">size</span><span class="o">=</span><span class="mi">256000000</span><span class="p">;</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="k">set</span><span class="w"> </span><span class="n">mapred</span><span class="p">.</span><span class="k">min</span><span class="p">.</span><span class="n">split</span><span class="p">.</span><span class="k">size</span><span class="o">=</span><span class="mi">128000000</span><span class="p">;</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="k">set</span><span class="w"> </span><span class="n">mapred</span><span class="p">.</span><span class="k">min</span><span class="p">.</span><span class="n">split</span><span class="p">.</span><span class="k">size</span><span class="p">.</span><span class="n">per</span><span class="p">.</span><span class="n">node</span><span class="o">=</span><span class="mi">128000000</span><span class="p">;</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="k">set</span><span class="w"> </span><span class="n">mapred</span><span class="p">.</span><span class="k">min</span><span class="p">.</span><span class="n">split</span><span class="p">.</span><span class="k">size</span><span class="p">.</span><span class="n">per</span><span class="p">.</span><span class="n">rack</span><span class="o">=</span><span class="mi">128000000</span><span class="p">;</span>
+</code></pre></div>
+<p>因此，如果要在 MR 之后另起一个 Map Task 合并输出文件，<code>mapred.min.split.size.per.rack</code> 和 <code>mapred.min.split.size.per.node</code>，以及 <code>mapred.min.split.size</code> 参数的最小值要大于等于 <code>hive.merge.smallfiles.avgsize</code> 才会实际生效。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="k">input</span><span class="p">.</span><span class="n">format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">org</span><span class="p">.</span><span class="n">apache</span><span class="p">.</span><span class="n">hadoop</span><span class="p">.</span><span class="n">hive</span><span class="p">.</span><span class="n">ql</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">CombineHiveInputFormat</span><span class="p">;</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1">--开启小文件合并，以及小文件大小</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="n">merge</span><span class="p">.</span><span class="n">mapfiles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="n">merge</span><span class="p">.</span><span class="n">mapredfiles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="n">merge</span><span class="p">.</span><span class="n">smallfiles</span><span class="p">.</span><span class="n">avgsize</span><span class="o">=</span><span class="mi">32000000</span><span class="p">;</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="n">merge</span><span class="p">.</span><span class="k">size</span><span class="p">.</span><span class="n">per</span><span class="p">.</span><span class="n">task</span><span class="o">=</span><span class="mi">25600000</span><span class="p">;</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1">--控制 map 的输入大小，实现真正的小文件合并</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="k">set</span><span class="w"> </span><span class="n">mapred</span><span class="p">.</span><span class="k">max</span><span class="p">.</span><span class="n">split</span><span class="p">.</span><span class="k">size</span><span class="o">=</span><span class="mi">256000000</span><span class="p">;</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="k">set</span><span class="w"> </span><span class="n">mapred</span><span class="p">.</span><span class="k">min</span><span class="p">.</span><span class="n">split</span><span class="p">.</span><span class="k">size</span><span class="o">=</span><span class="mi">32000000</span><span class="p">;</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="k">set</span><span class="w"> </span><span class="n">mapred</span><span class="p">.</span><span class="k">min</span><span class="p">.</span><span class="n">split</span><span class="p">.</span><span class="k">size</span><span class="p">.</span><span class="n">per</span><span class="p">.</span><span class="n">node</span><span class="o">=</span><span class="mi">32000000</span><span class="p">;</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="k">set</span><span class="w"> </span><span class="n">mapred</span><span class="p">.</span><span class="k">min</span><span class="p">.</span><span class="n">split</span><span class="p">.</span><span class="k">size</span><span class="p">.</span><span class="n">per</span><span class="p">.</span><span class="n">rack</span><span class="o">=</span><span class="mi">32000000</span><span class="p">;</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="k">drop</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="k">exists</span><span class="w"> </span><span class="n">paas_test</span><span class="p">.</span><span class="n">tmp_map_split_files_test_06</span><span class="p">;</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="k">create</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="n">ds_test</span><span class="p">.</span><span class="n">tmp_map_split_files_test_06</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="k">as</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="k">select</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="o">*</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="k">from</span><span class="w"> </span><span class="n">ds_master</span><span class="p">.</span><span class="n">dwd_device_app_runtimes_sec_di</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="k">where</span><span class="w"> </span><span class="k">day</span><span class="o">=</span><span class="s1">&#39;20201211&#39;</span><span class="p">;</span>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="c1">-- 数据文件 4.1GB,文件数 65个，平均文件大小 4.1*1024/65=65Mb，满足要求；</span>
+</code></pre></div>
+<hr />
+<p><strong>总结：</strong></p>
+<ul>
+<li>合并小文件不仅可以减少对 NameNode 的影响，减少计算资源等，还可以降低表的总存储，尤其列式存储表，合并小文件，变成一个大文件后可以提高文件的压缩率，进而降低存储。</li>
+<li>Map-only 任务，map 数决定了输出文件数。Map-reduce 任务，reduce 个数决定了输出的文件个数。</li>
+</ul>
+<hr />
+<h3 id="_3">并行执行</h3>
+<p>一段 HQL 会分成多个 job/stage 执行。默认情况下，Hive 一次只会执行一个阶段。不过，某个特定的 job 可能包含众多的阶段，而这些阶段可能并非完全互相依赖的，也就是说有些阶段是可以并行执行的，这样可能使得整个 job 的执行时间缩短。如果有更多的阶段可以并行执行，那么 job 可能就越快完成。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1">-- 默认不开启</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="k">exec</span><span class="p">.</span><span class="n">parallel</span><span class="o">=</span><span class="k">true</span><span class="p">;</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1">-- how many jobs at most can be executed in parallel</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="k">exec</span><span class="p">.</span><span class="n">parallel</span><span class="p">.</span><span class="n">thread</span><span class="p">.</span><span class="nb">number</span><span class="o">=</span><span class="mi">8</span><span class="p">;</span>
+</code></pre></div>
+<p><strong>场景一：union all</strong></p>
+<p><strong>场景二：multi-insert</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">FROM</span><span class="w"> </span><span class="n">staged_employees</span><span class="w"> </span><span class="n">se</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">us_employees</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span><span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">se</span><span class="p">.</span><span class="n">cnty</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;US&#39;</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">ca_employees</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">    </span><span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">se</span><span class="p">.</span><span class="n">cnty</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;CA&#39;</span>
+</code></pre></div>
+<p><strong>场景三：不同子查询的 join</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">t1</span><span class="p">.</span><span class="n">column1</span><span class="p">,</span><span class="w"> </span><span class="n">t2</span><span class="p">.</span><span class="n">column2</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">FROM</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">column1</span><span class="p">,</span><span class="w"> </span><span class="n">column2</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">table1</span><span class="p">)</span><span class="w"> </span><span class="n">t1</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="k">JOIN</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">  </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">column1</span><span class="p">,</span><span class="w"> </span><span class="n">column2</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">table2</span><span class="p">)</span><span class="w"> </span><span class="n">t2</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="k">ON</span><span class="w"> </span><span class="p">(</span><span class="n">t1</span><span class="p">.</span><span class="n">column1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t2</span><span class="p">.</span><span class="n">column1</span><span class="p">);</span>
+</code></pre></div>
+<p>注意：如果 job 因为依赖的问题，只能顺序执行，那么开启这个参数也没用。同时，集群如果繁忙的时候会加剧集群资源争抢，可能是影响别人任务，不过如果集群空闲的话可以增加资源利用率。</p>
+<hr />
+<h3 id="jvm">JVM 重用</h3>
+<p><strong>Hadoop 1.x 版本中的 JVM 重用：</strong></p>
+<p>正常情况下，MapReduce 启动的 JVM 在完成一个 task 之后就退出了，但是如果任务花费时间很短，又要多次启动 JVM 的情况下（比如对很大数据量进行计数操作），JVM 的启动时间就会变成一个比较大的 overhead。在这种情况下，可以使用 jvm 重用的参数：他的作用是让一个 JVM 运行多次任务之后再退出，这样一来也能节约不少 JVM 启动时间。</p>
+<p><strong>Hadoop 2.x 版本中的 JVM 重用：UberTask</strong></p>
+<p>With "Uber" mode enabled, you'll run everything within the container of the AppMaster itself. 这样 AppMaster 不会再为每一个 task 向 RM 申请单独的 container，而是直接在自己的 container 中运行 task，最终达到 JVM 重用的目的。</p>
+<p>注意：UberTask 适用于小数据量的任务，大数据量的任务不适合使用 UberTask。</p>
+<hr />
+<h3 id="fetch">Fetch 抓取</h3>
+<p>Fetch 抓取是指，Hive 中对某些情况的查询可以不必使用 MapReduce 计算。 例如：<code>select * from user_base_info;</code> 在这种情况下，Hive 可以简单地读取 user_base_info 对应的存储目录下的文件， 然后输出查询结果到控制台。Hive 默认启用。</p>
+<hr />
+<h3 id="_4">本地模式</h3>
+<p>有时 Hive 的输入数据量是非常小的。在这种情况下，为查询触发执行 MR 任务时消耗可能会比实际 job 的执行时间要多的多。对于大多数这种情况，Hive 可以通过<strong>本地模式在单台机器上处理所有的任务</strong>。对于小数据集，执行时间可以明显被缩短。 用户可以通过设置 <code>hive.exec.mode.local.auto</code> 的值为 true，来让 Hive 在适当的时候自动启动这个优化。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1">--开启本地 mr</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="k">exec</span><span class="p">.</span><span class="k">mode</span><span class="p">.</span><span class="k">local</span><span class="p">.</span><span class="n">auto</span><span class="o">=</span><span class="k">true</span><span class="p">;</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c1">--设置 local mr 的最大输入数据量，当输入数据量小于这个值时采用 local mr 的方式， 默认为 134217728，即 128M</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="k">exec</span><span class="p">.</span><span class="k">mode</span><span class="p">.</span><span class="k">local</span><span class="p">.</span><span class="n">auto</span><span class="p">.</span><span class="n">inputbytes</span><span class="p">.</span><span class="k">max</span><span class="o">=</span><span class="mi">50000000</span><span class="p">;</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1">--设置 local mr 的最大输入文件个数，当输入文件个数小于这个值时采用 local mr 的方式， 默认为 4</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="k">exec</span><span class="p">.</span><span class="k">mode</span><span class="p">.</span><span class="k">local</span><span class="p">.</span><span class="n">auto</span><span class="p">.</span><span class="k">input</span><span class="p">.</span><span class="n">files</span><span class="p">.</span><span class="k">max</span><span class="o">=</span><span class="mi">8</span><span class="p">;</span>
+</code></pre></div>
+<hr />
+<h3 id="_5">严格模式</h3>
+<p>默认开启。</p>
+<ul>
+<li>分区表查询：开启严格模式后，在查询一个分区表时，如果查询条件中没有包含分区字段，Hive 会直接报错。</li>
+<li>order by：开启严格模式后，如果查询中包含 order by 子句，但是没有包含 limit 子句，Hive 会直接报错。</li>
+<li>笛卡尔积：开启严格模式后，如果查询中包含笛卡尔积，Hive 会直接报错。</li>
+</ul>
+<hr />
+<h3 id="_6">向量化模式</h3>
+<p>Hive 的矢量化是一次处理一批次行，而不是一次处理一行。与基于行的执行相比，向量化执行避免了大量的虚函数调用，从而提高了指令和数据缓存的命中率它们一起处理一批行，而不是一次处理一行。<strong>与基于行的执行相比，向量化执行避免了大量的虚函数调用，从而提高了指令和数据缓存的命中率。</strong></p>
+<p>但是矢量化的使用是有限制的，不是对所有的语法都是支持，使用不当会适得其反，这也就是为啥矢量化默认是关闭的，需要手动开启。</p>
+<p>总结：</p>
+<ul>
+<li>目前 MapReduce 计算引擎只支持 Map 端的向量化执行模式，Tez 和 Spark 计算引擎可以支持 Map 和 Reduce 端的向量化执行模式。这个参数因为有坑，建议大数据集群层面关闭，大数据开发可以结合实际任务进行开启使用这个功能，提高运行效率，但需注意使用场景；</li>
+<li>若要使用向量化查询执行，必须将数据存储为 <strong>ORC 格式</strong>，本质就是一次读取一行，变成一次读取 1024 行处理。</li>
+<li>在 Hive 中提供的向量模式，并不是重写了 Mapper 中的函数，而是通过实现 Inputformat 接口，创建 VertorizedOrcInputFormat 类，来构造一个批量的输入数组</li>
+<li>向量化查询最好只在简单逻辑时候使用；发现不少向量化查询的坑，包括：group by 不能使用向量化查询，全字段 group by 结果却有重复的（group by, join 等复杂语句不要使用），发现会把空字符串转换为 null。</li>
+</ul>
+<hr />
+<h3 id="_7">动态分区</h3>
+<p>动态分区是指在插入数据时，不需要指定分区字段的值，而是由 Hive 自动基于查询参数的位置去推断分区的名称，从而建立分区。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1">-- 默认 false</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="k">exec</span><span class="p">.</span><span class="k">dynamic</span><span class="p">.</span><span class="n">partition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="c1">-- 默认 strict 模式，表示用户必须指定至少一个静态分区字段，以防用户覆盖所有</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1">-- 分区。Nonstrict 模式表示允许所有分区都可以直接动态分区</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="k">exec</span><span class="p">.</span><span class="k">dynamic</span><span class="p">.</span><span class="n">partition</span><span class="p">.</span><span class="k">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nonstrict</span><span class="p">;</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="c1">-- 默认 100，一般可以设置大一点，比如 1000，表示每个 maper 或 reducer 可</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1">-- 以允许创建的最大动态分区个数</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="k">exec</span><span class="p">.</span><span class="k">max</span><span class="p">.</span><span class="k">dynamic</span><span class="p">.</span><span class="n">partitions</span><span class="p">.</span><span class="n">pernode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">;</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="c1">-- 表示一个动态分区语句可以创建的最大动态分区个数</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="k">exec</span><span class="p">.</span><span class="k">max</span><span class="p">.</span><span class="k">dynamic</span><span class="p">.</span><span class="n">partitions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1000</span><span class="p">;</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="c1">-- (默认) 全局可以创建的最大文件个数，超出报错</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="k">exec</span><span class="p">.</span><span class="k">max</span><span class="p">.</span><span class="n">created</span><span class="p">.</span><span class="n">files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10000</span><span class="p">;</span>
+</code></pre></div>
+<p>注意：</p>
+<ul>
+<li>
+<p>动态分区是基于查询字段的（个数）位置去推断分区的名称，所以动态分区的字段需要放到业务数据的后面。查询的字段个数必须和目标的字段个数相同，不能多，也不能少，否则会报错。但是如果字段的类型不一致的话，则会使用 null 值填充，不会报错。</p>
+</li>
+<li>
+<p>合理的分区方案首先应该是分区数不能过多，产生过多的文件数和目录数，比如每个目录下文件的大小总和最起码要是 block 大小的数倍。其次合理的分区要是可预测的，分区的增长要均匀和稳定的。</p>
+</li>
+<li>
+<p>动态分区弊端可能造成大量文件和目录数，大量小文件，增加元数据压力；其次不利于数据压缩合并，整体会增加数据存储。</p>
+</li>
+</ul>
+<hr />
+<h2 id="join">Join 的优化</h2>
+<h3 id="hive-join">Hive 原生支持的 Join 类型</h3>
+<p>Hive 支持的 join 类型有：</p>
+<ul>
+<li>Inner Join</li>
+<li>Left/Right/Full Outer Join</li>
+<li>Left Semi Join</li>
+<li>Cross Join</li>
+</ul>
+<p>Hive 拥有多种 join 算法，包括 Common Join，Map Join，Bucket Map Join，Sort Merge Buckt Map Join 等，下面对每种 join 算法做简要说明：</p>
+<hr />
+<h3 id="common-join">Common Join</h3>
+<p>Common Join 是 Hive 中最稳定的 join 算法，其通过一个 MapReduce Job 完成一个 join 操作。Map 端负责读取 join 操作所需表的数据，并按照关联字段进行分区，通过 Shuffle，将其发送到 Reduce 端，相同 key 的数据在 Reduce 端完成最终的 Join 操作。</p>
+<p>Shuffle 阶段代价非常昂贵，因为它需要排序和合并。减少 Shuffle 和 Reduce 阶段的代价可以提高任务性能。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202402031546970.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202402031546970.png" /></a></p>
+<p>需要注意的是，sql 语句中的 join 操作和执行计划中的 Common Join 任务并非一对一的关系，一个 sql 语句中的相邻的且关联字段相同的多个 join 操作可以合并为一个 Common Join 任务。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">select</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">val</span><span class="p">,</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">       </span><span class="n">b</span><span class="p">.</span><span class="n">val</span><span class="p">,</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">       </span><span class="k">c</span><span class="p">.</span><span class="n">val</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="k">from</span><span class="w"> </span><span class="n">a</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="k">join</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="k">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">key1</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="k">join</span><span class="w"> </span><span class="k">c</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="k">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">key1</span>
+</code></pre></div>
+<p>上述 sql 语句中两个 join 操作的关联字段均为 b 表的 key1 字段，则该语句中的两个 join 操作可由一个 Common Join 任务实现，也就是可通过一个 Map Reduce 任务实现。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">select</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">val</span><span class="p">,</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">       </span><span class="n">b</span><span class="p">.</span><span class="n">val</span><span class="p">,</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">       </span><span class="k">c</span><span class="p">.</span><span class="n">val</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="k">from</span><span class="w"> </span><span class="n">a</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="k">join</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="k">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">key1</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="k">join</span><span class="w"> </span><span class="k">c</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="k">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">key2</span>
+</code></pre></div>
+<p>上述 sql 语句中的两个 join 操作关联字段各不相同，则该语句的两个 join 操作需要各自通过一个 Common Join 任务实现，也就是通过两个 Map Reduce 任务实现。</p>
+<hr />
+<h3 id="map-join">Map Join</h3>
+<p><strong>Map Join 算法可以通过两个只有 map 阶段的 Job 完成一个 join 操作</strong>。其适用场景为大表 join 小表。若某 join 操作满足要求，则第一个 Job 会读取小表数据，将其制作为<strong>哈希表文件</strong>，并上传至 <strong>Hadoop 分布式缓存</strong> (本质上是上传至 HDFS)。第二个 Job 会先把分布式缓存中的哈希表文件发送给各个 Mapper，各个 Mapper 将此文件加载进内存，然后扫描大表数据，这样在 map 端即可完成 join 操作。此外，如果多个 Mapper 在同一台机器上运行，则分布式缓存只需将哈希表文件的一个副本发送到这台机器上。</p>
+<ul>
+<li>
+<p>Job1（本地任务，不会提交 Yarn）：读取小表数据 → 制作哈希表 → 上传至分布式缓存</p>
+</li>
+<li>
+<p>Job2：分布式缓存发送哈希表文件给 Mapper → 加载至内存 → 完成 join</p>
+</li>
+</ul>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202402031556141.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202402031556141.png" /></a></p>
+<p>触发 Map Join：</p>
+<ul>
+<li>
+<p>在 SQL 语句中增加 hint 提示（已过时）</p>
+</li>
+<li>
+<p>Hive 优化器根据表的大小自动推断</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1">-- 开启 mapjoin 自动推断</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="n">auto</span><span class="p">.</span><span class="k">convert</span><span class="p">.</span><span class="k">join</span><span class="o">=</span><span class="k">true</span><span class="p">;</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="c1">-- 设置小表阈值，默认值为 25MB</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="n">mapjoin</span><span class="p">.</span><span class="n">smalltable</span><span class="p">.</span><span class="n">filesize</span><span class="o">=</span><span class="mi">25000000</span><span class="p">;</span>
+</code></pre></div>
+<p><strong>注意：</strong></p>
+<ul>
+<li>Map Join 对 full outer join 不生效</li>
+<li>对于需要保留小表全量的情况不生效，如 <code>smalltable left join bigtable</code>，因为如果每个 maptask 都保留一个全量小表，map 端聚合后直接写文件了，没法对每个 map 都全保留的小表进行去重，这样会造成数据膨胀</li>
+</ul>
+<p><strong>自动推断：</strong></p>
+<p>Hive 在编译 SQL 语句阶段，起初所有的 Join 操作均采用 Common Join 算法实现。</p>
+<p>之后在物理优化阶段，Hive 会根据每个 Common Join 任务所需表的大小判断该 Common Join 任务是否能够转换为 Map Join 任务，若满足要求，便将 Common Join 任务自动转换为 Map Join 任务。判断标准为小表大小与用户设置的阈值（MapTask 内存）比较。</p>
+<p>但<strong>有些 Common Join 任务所需的表大小，在 SQL 的编译阶段是未知的</strong>（比如子查询生成的中间表），所以这种 Common Join 任务是否能转换成 Map Join 任务在编译阶是无法确定的。</p>
+<p>针对这种情况，Hive 会在编译阶段生成一个<strong>条件任务 (Conditional Task)</strong>，其下会包含一个<strong>计划列表</strong>，计划列表中包含<strong>转换后的 Map Join 任务以及原有的 Common Join 任务</strong>。 最终具体采用哪个计划，是在<strong>运行时决定</strong>的。大致思路如下图所示:</p>
+<p>假设我们有 A 和 B 两张表，两张表的大小都未知，那么此时 Map Join 有 2 种情况：</p>
+<ul>
+<li>
+<p>缓存 A 表，扫描 B 表</p>
+</li>
+<li>
+<p>缓存 B 表，扫描 A 表</p>
+</li>
+</ul>
+<p>因此会生成多种执行计划。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310160539533.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310160539533.png" /></a></p>
+<blockquote>
+<p><strong>Hive 如何判断执行计划中的 Common Join Task 能否转换为 Map Join Task？</strong></p>
+</blockquote>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310160542023.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310160542023.png" /></a></p>
+<p>注意：</p>
+<ul>
+<li>
+<p>对于上面的「寻找大表候选人」这一步：<strong>要考虑 SQL 语句中具体使用的是哪种 Join</strong>。例：A left join B，那么大表必须是 A；如果是 A full outer join B，则根本不能做 Map Join。</p>
+</li>
+<li>
+<p>对于上面的「hive.auto.conver.join.noconditionaltask」的 false 分支，考虑这样一种情况：A inner join B inner join C 关联相同的字段，此时有一个 Map Join 计划尝试将 A 作为大表，B 和 C 作为小表缓存，C 的大小未知，B 的大小已知但太大无法缓存（超过小表阈值），则这种 Map Join 计划一定可以排除。即<strong>排除掉一定不可能成功的 Map Join 计划</strong>。</p>
+</li>
+<li>
+<p>对于上面的「hive.auto.conver.join.noconditionaltask」的 true 分支，此时必须要保证大表外的所有表的大小都已知，并且总和小于小表阈值，才能生成<strong>最优</strong>的 Map Join 计划。</p>
+</li>
+<li>
+<p>对于上面的「生成最优 Map Join 计划」的下一步，考虑这样一种情况：A join B join C on 不同字段，理论上需要 2 个 Common Join，先把 A join B 得到临时表 T，再用 T join C。如果 B 和 C 表的大小都非常小，那么可以把 B 和 C 都缓存到 Mapper 内存中，进行两次 Map Join。</p>
+</li>
+</ul>
+<hr />
+<h3 id="bucket-map-join">Bucket Map Join</h3>
+<p>Bucket Map Join 是<strong>对 Map Join 的改进</strong>，其打破了 Map Join 只适用于大表 join 小表的限制，可用于大表 join 大表的场景。<strong>但是现在大表 Join 大表的场景在 Hive 中已经被 SMB Map Join 取代。</strong></p>
+<p><strong>分桶的原理：对分桶字段进行 hash partition，拆分为若干个文件。</strong></p>
+<p>Bucket Map Join 的核心思想是，若能保证：</p>
+<ol>
+<li>参与 join 的表均为分桶表</li>
+<li>其中一张表的分桶数量是另外一张表分桶数量的整数倍</li>
+<li>关联字段为分桶字段，即 join key = cluster by key</li>
+</ol>
+<p>就能保证参与 join 的两张表的分桶之间具有明确的关联关系，所以就可以在两表的分桶间进行 Map Join 操作了。这样一来，第二个 Job 的 Map 端就无需再缓存小表的全表数据了，而只需缓存其所需的分桶即可。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202402041546397.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202402041546397.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202402041549461.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202402041549461.png" /></a></p>
+<p>分桶之后就和 Map Join 的操作一致：</p>
+<ul>
+<li>
+<p>Job1：先由本地 Map 任务将相对小一点的表的每个桶各制作一张哈希表，将所有哈希表上传至分布式缓存</p>
+</li>
+<li>
+<p>Job2：按照 BucketInputFormat 读取大表数据，一个桶一个切片，每一个 Mapper 只需要处理大表中的一个桶即可。同时，根据桶之间的对应关系，每个 Mapper 只需要从分布式缓存中读取自己需要的小表的桶的哈希表即可。例如，Mapper1 被分到了 Bucket A-0，因此，Mapper1 只需要去分布式缓存读取 Bucket B-0 即可。</p>
+</li>
+</ul>
+<hr />
+<h3 id="sort-merge-bucket-map-join">Sort Merge Bucket Map Join</h3>
+<p>SMB Map Join 是桶表的主要使用方式。</p>
+<p>SMB Map Join 要求：</p>
+<ol>
+<li>参与 join 的表均为分桶表，且需保证分桶内的数据是有序的</li>
+<li>其中一张表的分桶数量是另外一张表分桶数量的整数倍</li>
+<li>join key = cluster by key = sort by key</li>
+</ol>
+<p>SMB Map Join 同 Bucket Join 一样，同样是利用两表各分桶之间的关联关系，在分桶之间进行 join 操作，不同的是分桶之间的 join 操作的实现原理。Bucket Map Join，两个分桶之间的 join 实现原理为 <strong>Hash Join 算法</strong>；而 SMB Map Join，两个分桶之间的 join 实现原理为 <strong>Sort Merge Join 算法</strong>。</p>
+<p>Hash Join 和 Sort Merge Join 均为关系型数据库中常见的 Join 实现算法。Hash Join 的原理相对简单，就是对参与 join 的一张表构建 hash table，然后扫描另外一张表， 然后进行逐行匹配。<strong>Sort Merge Join 需要在两张按照关联字段排好序的表中进行</strong>，其原理如图所示：</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310160518467.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310160518467.png" /></a></p>
+<p><strong>SMB Map Join VS Bucket Map Join</strong></p>
+<ul>
+<li>
+<p>不需要制作哈希表</p>
+</li>
+<li>
+<p>不需要在内存中缓存哈希表（一个桶），因此对桶的大小没有要求</p>
+</li>
+</ul>
+<p>Hive 中的 SMB Map Join 就是对两个分桶的数据按照上述思路进行 Join 操作。可以看出，SMB Map Join 与 Bucket Map Join 相比，在进行 Join 操作时，Map 端是无需对整个 Bucket 构建 hash table，也无需在 Map 端缓存整个 Bucket 数据的，每个 Mapper 只需按顺序逐个 key 读取两个分桶的数据进行 join 即可。</p>
+<p>总结：</p>
+<ul>
+<li>SMB Mapjoin 只有 map，没有 reduce，map 个数等于最大分桶数，map 结束直接数写入 hive 表</li>
+<li>SMB Mapjoin 的启动不受 mapjoin 的大小表限制，适合大表 join 大表，前提是需要提前设计好生成好对应的桶排序表</li>
+<li>SMB Mapjoin 弊端也很明显，即不够灵活，比如换个表，换个 join key 则无法生效</li>
+<li>SMB Mapjoin 也有好处：比如对于固定的大表 join 大表一般可以提高 join 效率。同时绝对要比非分桶表具有更快的抽样效率；但是是否比非分桶表一定节省时间，则不一定</li>
+<li>SMB MapJoin 建议使用场景：大表与大表 join 时，如果 key 分布均匀，单纯因为数据量过大，导致任务失败或运行时间过长，可以考虑将大表分桶，来优化任务</li>
+</ul>
+<hr />
+<h3 id="skewed-map-join">Skewed Map Join</h3>
+<p>整体思路是使用独立的作业和 mapjoin 来处理倾斜的键。所以当 Join 操作中某个表中的一些 Key 数量远远大于其他（包含空值 null 值），则处理该 Key 的 Reduce 将成为任务单瓶颈，这个时候我们可以通过开启 Skewed join 来实现在 map 端对倾斜健进行聚合。</p>
+<p>Skew Join 的原理是，为倾斜的大 key 单独启动一个 map join 任务进行计算，其余 key 进行正常的 common join。</p>
+<p>注意：</p>
+<ul>
+<li>Skewed Map join 使用优化使用场景很有限，只有 INNER JOIN 的数据倾斜才可以实现优化。对其他 JOIN 如 LEFT/RIGHT JOIN, FULL OUTER JOIN 则无法使用</li>
+<li>Skewed map join 有个巨坑就是这个参数和 parallel 并行同时开启时会出现丢数据的问题 <a href="https://issues.apache.org/jira/browse/HIVE-25269">issue</a></li>
+</ul>
+<hr />
+<h2 id="group-by">Group By 优化</h2>
+<div class="admonition note">
+<p class="admonition-title">针对 group by 的优化需要重点考虑两方面</p>
+<ol>
+<li><strong>Map 端聚合</strong></li>
+<li><strong>负载均衡（倾斜优化）</strong></li>
+</ol>
+</div>
+<p>Hive 中<strong>未经优化</strong>的分组聚合，是通过一个 MapReduce Job 实现的。Map 端负责读取数据，并按照分组字段分区，通过 Shuffle，将数据发往 Reduce 端，各组数据在 Reduce 端完成最终的聚合运算。</p>
+<p>Hive 对分组聚合的优化主要围绕着<strong>减少 Shuffle 数据量</strong>进行，具体做法是 <strong>map-side 聚合</strong>。所谓 map-side 聚合，就是在 map 端维护一个（内存中的） <strong>hash table</strong>，利用其完成部分的聚合，然后将部分聚合的结果，按照分组字段分区，发送至 reduce 端，完成最终的聚合。<strong>map-side 聚合能有效减少 shuffle 的数据量，提高分组聚合运算的效率</strong>。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1">--是否在 Map 端进行聚合， 默认为 True</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="k">map</span><span class="p">.</span><span class="n">aggr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="c1">--在 Map 端进行聚合操作的条目数目</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="n">groupby</span><span class="p">.</span><span class="n">mapaggr</span><span class="p">.</span><span class="n">checkinterval</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100000</span><span class="p">;</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="c1">--有数据倾斜的时候进行负载均衡（默认是 false）</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="n">groupby</span><span class="p">.</span><span class="n">skewindata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+</code></pre></div>
+<p>上面的 <code>set hive.groupby.skewindata = true;</code> 当选项设定为 true，生成的查询计划会有<strong>两个 MR Job</strong>。第一个 MR Job 中，Map 的输出结果会随机分布到 Reduce 中，每个 Reduce 做部分聚合操作，并输出结果，这样处理的结果是相同的 Group By Key 有可能被分发到不同的 Reduce 中，从而达到负载均衡的目的；第二个 MR Job 再根据预处理的数据结果按照 Group By Key 分布到 Reduce 中（这个过程可以保证相同的 Group By Key 被分布到同一个 Reduce 中），最后完成最终的聚合操作。</p>
+<p>注意：这个场景对 count(distinct) 的场景不适用，因为 count(distinct) 本身就是一个全局聚合操作，无法在 Map 端完成。</p>
+<hr />
+<h3 id="group-by_1">Group By 的四种执行计划模式</h3>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202402031924962.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202402031924962.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202402031925774.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202402031925774.png" /></a></p>
+<p>需要注意的是：<code>hive.map.aggr</code> 和 <code>hive.groupby.skewindata</code> 两个参数同时开启的时候，可能会产生 bug，计算出错误的结果。详见：<a href="https://issues.apache.org/jira/browse/HIVE-18980">issue</a> 和 <a href="https://blog.csdn.net/Dreamy_zsy/article/details/112679598">blog</a></p>
+<p>总结：</p>
+<ul>
+<li><code>count(distinct)</code> 操作比较特殊，无法进行中间的聚合操作，因此该 <code>hive.map.aggr=true</code> 参数对有 <code>count(distinct)</code> 操作的 sql 不适用。</li>
+<li>对于 <code>hive.map.aggr=true</code> 参数建议集群层面保持官方默认值 true 即可。但是对于 <code>hive.groupby.skewindata</code> 建议慎用，可能会有意想不到的结果（建议通过改造 SQL 代码的方式手动实现 <code>hive.groupby.skewindata</code> 的功能）。</li>
+<li>Hive 的 Map 端聚合类似 Combiner 功能，但不同，本质是使用<strong>哈希表</strong>来缓存数据，聚合数据。<strong>使用 Map 聚合往往是为了减少 Map 任务的输出， 减少传输到下游任务的 Shuffle 数据量</strong>，但<strong>如果数据经过聚合后不能明显减少，那无疑就是浪费机器的 I/O 资源，比如对于数据重复率很低的 map 端聚合其实是无效的</strong>。</li>
+</ul>
+<p>手动加盐代码示例：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="k">select</span><span class="w"> </span><span class="nb">date</span><span class="p">,</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">       </span><span class="n">app_id</span><span class="p">,</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="n">uid</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">pv</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="k">from</span><span class="w"> </span><span class="n">source_tb</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="k">group</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="nb">date</span><span class="p">,</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="w">         </span><span class="n">app_id</span><span class="p">;</span>
+</code></pre></div>
+<p>某个 app 流量远超其他 app 就可能倾斜，因此可以改写：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="k">with</span><span class="w"> </span><span class="n">t1</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span><span class="k">select</span><span class="w"> </span><span class="nb">date</span><span class="p">,</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">                   </span><span class="c1">-- 加随机前缀，用 “_” 连接</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">                   </span><span class="n">concat</span><span class="p">(</span><span class="k">cast</span><span class="p">(</span><span class="k">cast</span><span class="p">(</span><span class="n">RAND</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nb">int</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">string</span><span class="p">),</span><span class="w"> </span><span class="ss">&quot;_&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">app_id</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">new_app_id</span><span class="p">,</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">                   </span><span class="n">uid</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="w">            </span><span class="k">from</span><span class="w"> </span><span class="n">source_tb</span><span class="p">),</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="w">     </span><span class="n">t2</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span><span class="k">select</span><span class="w"> </span><span class="nb">date</span><span class="p">,</span>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="w">                   </span><span class="n">new_app_id</span><span class="p">,</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="w">                   </span><span class="k">count</span><span class="p">(</span><span class="n">uid</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">pv</span>
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="w">            </span><span class="k">from</span><span class="w"> </span><span class="n">t1</span>
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="w">            </span><span class="k">group</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="nb">date</span><span class="p">,</span>
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="w">                     </span><span class="n">new_app_id</span><span class="p">)</span>
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a><span class="k">select</span><span class="w"> </span><span class="nb">date</span><span class="p">,</span>
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a><span class="w">       </span><span class="c1">-- 用 “_” 拆分为两个部分，第二个部分为原始的 app_id</span>
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a><span class="w">       </span><span class="n">split</span><span class="p">(</span><span class="n">new_app_id</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">app_id</span><span class="p">,</span>
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a><span class="w">       </span><span class="k">sum</span><span class="p">(</span><span class="n">pv</span><span class="p">)</span><span class="w">                   </span><span class="k">as</span><span class="w"> </span><span class="n">pv</span>
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a><span class="k">from</span><span class="w"> </span><span class="n">t2</span>
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a><span class="k">group</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="nb">date</span><span class="p">,</span>
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a><span class="w">         </span><span class="n">split</span><span class="p">(</span><span class="n">new_app_id</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+</code></pre></div>
+<hr />
+<h2 id="countdistinct">count(distinct) 优化</h2>
+<p>数据量大的情况下，由于 COUNT DISTINCT 操作需要用一个 Reduce Task 来完成，这一个 Reduce 需要处理的数据量太大，就会导致整个 Job 很难完成，一般 COUNT DISTINCT 使用先 GROUP BY 再 COUNT 的方式替换。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1">--直接去重</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="k">select</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">distinct</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">bigtable</span><span class="p">;</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="c1">--改写后去重</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="k">select</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="p">(</span><span class="k">select</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">bigtable</span><span class="w"> </span><span class="k">group</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="p">;</span>
+</code></pre></div>
+<p>虽然会多用一个 Job 来完成，但在数据量大的情况下，group by 依旧是去重的一个优化手段。如果说需要统计的字段有 Null 值，最后只需要 null 值单独处理后 union 即可。</p>
+<hr />
+<h2 id="hive-sql">Hive SQL 优化</h2>
+<h3 id="hive-sql_1">Hive SQL 执行顺序</h3>
+<p>Map 端：</p>
+<ol>
+<li>首先执行 FROM，进行表的 scan 查找与加载;</li>
+<li>然后执行 WHERE 操作，Hive 对语句进行了优化，如果符合谓词下推，则进行谓词下推。这也是指定分区后不会全表扫描的原因。</li>
+<li>然后执行 JOIN 语句，按照 on 里面的 join-key 进行 shuffle 数据，注意只有使用到列才会读取 shuffle 出去，shuffle 的 key 是 join-key(支持组合键)。（注意这里先不考虑 map-join，groupby 的 map 聚合等优化操作）</li>
+</ol>
+<p>Reduce 端：</p>
+<ol>
+<li>如果 on 里有非等值的过滤表达式如 <code>t1.db != 'abc'</code>，注意不是非等值链接。在实际 join 关联前先过滤 on 里面的谓词；</li>
+<li>其他然后才是 group by, having, order by, limit 等。注意实际执行计划需要看 explain，会因为不同版本和执行优化细节上有差异。</li>
+</ol>
+<div class="admonition question">
+<p class="admonition-title">过滤条件放 on 和 where 的区别</p>
+<ul>
+<li>过滤条件放 where 中是表连接之后再过滤，而放在 on 中是在表连接之前过滤。</li>
+<li>对于 inner join 来说，二者完全相同。</li>
+<li>对于 left join 来说，on 条件是在生成临时表时使用的条件，它不管 on 中的条件是否为真，都会返回左边表中的记录。而 where 条件是在临时表生成好后，再对临时表进行过滤的条件。这时已经没有 left join 的含义（必须返回左边表的记录）了，条件不为真的就全部过滤掉。</li>
+</ul>
+</div>
+<p>总结：</p>
+<p>Hive SQL 中 LEFT JOIN 单独针对左表的过滤条件必须放在 WHERE 上，放在 ON 上的效果是不可预期的（放在 on 里的时候在 reduce 阶段执行），单独针对右表的查询条件放在 ON 上是先过滤右表，再和左表联表，放在 WHERE 条件上则是先联表再过滤，语义上存在差别。</p>
+<hr />
+<h3 id="hive-sql_2">Hive SQL 优化思路</h3>
+<p>Hive SQL 本质上可以被分成 3 种模式， 即过滤模式、 聚合模式和连接模式。</p>
+<ol>
+<li>过滤模式：从过滤的粒度来看，主要分为：行过滤、 数据列过滤、文件过滤和目录过滤 4 种方式。具体 SQL 语法上体现在 where，having，distinct 语句上；</li>
+<li>聚合模式：distinct 聚合，count 计数聚合，数值相关的聚合模式，行转列聚合模式。</li>
+<li>Join 模式：有 shuffle 的 join 和无 shuffle 的 join。</li>
+</ol>
+<hr />
+<h3 id="_8">分区裁剪</h3>
+<p>分区裁剪本质是为了减少数据量，避免全表扫描。虽然分区过滤条件我们写在 where 子句里，但是分区过滤是发生在 map 之前，这就是分区表目录结构的优势，相当于直接指定路径读取文件了。</p>
+<p>分区裁剪有时候会有失效的情况，比如使用 udf 函数对其进行处理时，可能存在分区裁剪失效的情况，具体我们可以通过 explain 命令查看。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202402040039873.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202402040039873.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202402040043227.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202402040043227.png" /></a></p>
+<p>总结：</p>
+<ul>
+<li>如果是 left join 分区裁剪条件一般放到 where 里主表生效，放到 on 里从表生效。如果想同时上线列裁剪，那么就把主表的分区裁剪放到 where 子句里，把从表的分区裁剪放到 on 里。同理 right join 反过来即可。</li>
+</ul>
+<hr />
+<h3 id="_9">谓词下推</h3>
+<p>Predicate（谓词）即条件表达式，SQL 中的谓词主要有 LIKE、BETWEEN、IS NULL、IS NOT NULL、IN、EXISTS 其结果为布尔值，即 true 或 false。</p>
+<p>谓词下推对 SQL 代码编写的参考依据：<a href="https://cwiki.apache.org/confluence/display/Hive/OuterJoinBehavior#OuterJoinBehavior-PredicatePushdownRules">wiki</a></p>
+<ol>
+<li>对于 Inner Join、Full Join，条件写在 on 后面，还是 where 后面，性能上面没有区别；</li>
+<li>对于 Left Join ，右侧的表写在 on 后面、左侧的表写在 where 后面，性能上有提高；</li>
+<li>对于 Right Join，左侧的表写在 on 后面、右侧的表写在 where 后面，性能上有提高；</li>
+</ol>
+<hr />
+<h3 id="order-by">Order By 优化</h3>
+<p>Order by 由于全局排序，数据全部发往一个 Reducer，通常会导致性能问题。因此，我们可以通过 distribute by + sort by 的方式来优化。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="k">FROM</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="w">  </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="w">  </span><span class="k">FROM</span><span class="w"> </span><span class="n">your_table</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="w">  </span><span class="n">DISTRIBUTE</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">column_name</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="w">  </span><span class="n">SORT</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">column_name</span><span class="w"> </span><span class="k">ASC</span>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="p">)</span><span class="w"> </span><span class="n">subquery</span>
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">column_name</span><span class="w"> </span><span class="k">ASC</span>
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="k">LIMIT</span><span class="w"> </span><span class="mi">100</span><span class="p">;</span>
+</code></pre></div>
+<hr />
+<hr />
+<h2 id="_10">数据倾斜问题</h2>
+<p>数据倾斜问题，通常是指参与计算的数据分布不均，即某个 key 或者某些 key 的数据量远超其他 key，导致在 shuffle 阶段，大量相同 key 的数据被发往同一个 Reducer，进而导致该 Reducer 所需的时间远超其他 Reducer，成为整个任务的瓶颈。</p>
+<p>Hive 中的数据倾斜常出现在<strong>分组聚合</strong>和 <strong>Join</strong> 操作的场景中。</p>
+<h3 id="group-by_2">Group By 产生数据倾斜</h3>
+<p>使用 Hive 对数据做分组聚合的时候某种类型的数据量特别多，而其他类型数据的数据量特别少。</p>
+<p>Hive 中未经优化的分组聚合，是通过一个 MapReduce Job 实现的。Map 端负责读取数据，并按照分组字段分区，通过 Shuffle，将数据发往 Reduce 端，各组数据在 Reduce 端完成最终的聚合运算。</p>
+<p>如果 group by 分组字段的值分布不均，就可能导致大量相同的 key 进入同一 Reducer， 从而导致数据倾斜问题。</p>
+<p>由分组聚合导致的数据倾斜问题，有以下两种解决思路:</p>
+<ul>
+<li><strong>Map-Side 聚合</strong></li>
+</ul>
+<p>开启 Map-Side 聚合后，数据会现在 Map 端完成部分聚合工作。这样经过 Map 端的初步聚合后，可以缓解发往 Reducer 的数据的倾斜程度。最佳状态下，Map 端聚合能完全屏蔽数据倾斜问题。</p>
+<ul>
+<li><strong>Skew-GroupBy 优化</strong></li>
+</ul>
+<p>Skew-GroupBy 的原理是启动两个 MR 任务，第一个 MR 按照随机数分区，将数据分散发送到 Reducer，完成部分聚合，第二个 MR 按照分组字段分区，完成最终聚合。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1">--启用分组聚合数据倾斜优化</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="n">groupby</span><span class="p">.</span><span class="n">skewindata</span><span class="o">=</span><span class="k">true</span><span class="p">;</span>
+</code></pre></div>
+<ul>
+<li>根据业务，合理调整分组维度</li>
+</ul>
+<p>可以单独将倾斜程度大的字段单拎出来计算，再 union 结果。</p>
+<hr />
+<h3 id="countdistinct_1">count(distinct) 产生数据倾斜</h3>
+<p>如果数据量非常大，执行如 <code>select a, count(distinct b) from t group by a;</code> 类型的 SQL 时，会出现数据倾斜的问题。</p>
+<p>解决方法：</p>
+<ul>
+<li>使用 group by 代替。</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="k">select</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="k">from</span><span class="w"> </span><span class="p">(</span><span class="k">select</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="k">group</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="k">group</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">a</span><span class="p">;</span>
+</code></pre></div>
+<p>详见上文 count(distinct) 优化</p>
+<ul>
+<li>在业务逻辑优化效果的不大情况下，有些时候是可以将倾斜的数据单独拿出来处理，最后 union 回去。</li>
+</ul>
+<hr />
+<h3 id="join_1">Join 产生数据倾斜</h3>
+<p>未经优化的 Join 操作，默认是使用 common join 算法，也就是通过一个 MapReduce Job 完成计算。Map 端负责读取 join 操作所需表的数据，并按照关联字段进行分区，通过 Shuffle，将其发送到 Reduce 端，相同 key 的数据在 Reduce 端完成最终的 Join 操作。</p>
+<p>如果关联字段的值分布不均，就可能导致大量相同的 key 进入同一 Reduce，从而导致数据倾斜问题。</p>
+<p>由 Join 导致的数据倾斜问题，有如下三种解决方案：</p>
+<ul>
+<li><strong>Map Join</strong></li>
+</ul>
+<p>使用 map join 算法，join 操作仅在 map 端就能完成，没有 shuffle 操作，没有 reduce 阶段，自然不会产生 reduce 端的数据倾斜。该方案适用于<strong>大表 join 小表时发生数据倾斜的场景</strong>。</p>
+<ul>
+<li><strong>Skew Join</strong></li>
+</ul>
+<p>Skew Join 的原理是，为倾斜的大 key 单独启动一个 map join 任务进行计算，其余 key 进行正常的 common join。原理图如下：</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310161600880.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310161600880.png" /></a></p>
+<p>注意：在数据倾斜时，如果是<strong>大表 Join 大表</strong>，那么也无法使用 Bucket Map Join，因为分桶（过程为 MR）也是倾斜的。此时需要使用 Skew Join。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1">--启用 skew join 优化</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="n">optimize</span><span class="p">.</span><span class="n">skewjoin</span><span class="o">=</span><span class="k">true</span><span class="p">;</span>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="c1">--触发 skew join 的阈值，若某个 key 的行数超过该参数值，则触发</span>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="k">set</span><span class="w"> </span><span class="n">hive</span><span class="p">.</span><span class="n">skewjoin</span><span class="p">.</span><span class="k">key</span><span class="o">=</span><span class="mi">100000</span><span class="p">;</span>
+</code></pre></div>
+<p>这种方案对参与 join 的源表大小没有要求，但是对两表中倾斜的 key 的数据量有要求， 要求一张表中的倾斜 key 的数据量比较小 (方便走 map join)。</p>
+<ul>
+<li><strong>调整 SQL 语句</strong></li>
+</ul>
+<p>若参与 join 的两表均为大表，其中一张表的数据是倾斜的，此时也可通过以下方式对 SQL 语句进行相应的调整。</p>
+<p>假设原始 SQL 语句如下：A，B 两表均为大表，且其中一张表的数据是倾斜的。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="k">select</span><span class="w"> </span><span class="o">*</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="k">from</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="k">join</span><span class="w"> </span><span class="n">B</span>
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="k">on</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">id</span><span class="o">=</span><span class="n">B</span><span class="p">.</span><span class="n">id</span><span class="p">;</span>
+</code></pre></div>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310161615260.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310161615260.png" /></a></p>
+<p>图中 1001 为倾斜的大 key，可以看到，其被发往了同一个 Reduce 进行处理。</p>
+<p>调整 SQL 语句如下：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="k">select</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="w">    </span><span class="o">*</span>
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="k">from</span><span class="p">(</span>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="w">    </span><span class="k">select</span><span class="w"> </span><span class="c1">--打散操作</span>
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="w">        </span><span class="n">concat</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="s1">&#39;_&#39;</span><span class="p">,</span><span class="k">cast</span><span class="p">(</span><span class="n">rand</span><span class="p">()</span><span class="o">*</span><span class="mi">2</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nb">int</span><span class="p">))</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">value</span>
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="w">    </span><span class="k">from</span><span class="w"> </span><span class="n">A</span>
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="p">)</span><span class="n">ta</span><span class="w"> </span><span class="k">join</span><span class="p">(</span>
+<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a><span class="w">    </span><span class="k">select</span><span class="w"> </span><span class="c1">--扩容操作</span>
+<a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a><span class="w">        </span><span class="n">concat</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="s1">&#39;_&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">value</span>
+<a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a><span class="w">    </span><span class="k">from</span><span class="w"> </span><span class="n">B</span>
+<a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a><span class="w">    </span><span class="k">union</span><span class="w"> </span><span class="k">all</span>
+<a id="__codelineno-28-12" name="__codelineno-28-12" href="#__codelineno-28-12"></a><span class="w">    </span><span class="k">select</span>
+<a id="__codelineno-28-13" name="__codelineno-28-13" href="#__codelineno-28-13"></a><span class="w">        </span><span class="n">concat</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="s1">&#39;_&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">value</span>
+<a id="__codelineno-28-14" name="__codelineno-28-14" href="#__codelineno-28-14"></a><span class="w">    </span><span class="k">from</span><span class="w"> </span><span class="n">B</span>
+<a id="__codelineno-28-15" name="__codelineno-28-15" href="#__codelineno-28-15"></a><span class="p">)</span><span class="n">tb</span>
+<a id="__codelineno-28-16" name="__codelineno-28-16" href="#__codelineno-28-16"></a><span class="k">on</span><span class="w"> </span><span class="n">ta</span><span class="p">.</span><span class="n">id</span><span class="o">=</span><span class="n">tb</span><span class="p">.</span><span class="n">id</span><span class="p">;</span>
+</code></pre></div>
+<p>调整之后的 SQL 语句执行计划如下图所示：</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310161619269.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310161619269.png" /></a></p>
+<hr />
+<h3 id="_11">空值产生数据倾斜</h3>
+<p>如果表中有大量的 null 值，所有的 null 值都会被分配到同一个 reducer 上，这样就会导致数据倾斜。需要注意的是，数据被分发到同一个 reducer 的原因并不是能不能 join 上，而是 Shuffle 阶段的 hash 操作，只要 hash 结果相同，就会被分发到同一个 reducer 上。</p>
+<p>解决方法：</p>
+<ul>
+<li>单独把空值拎出来再 union</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="k">select</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="o">*</span>
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="k">from</span><span class="w"> </span><span class="n">log</span><span class="w"> </span><span class="n">a</span>
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="k">join</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="n">b</span>
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="k">on</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">user_id</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="k">null</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">user_id</span>
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="k">union</span><span class="w"> </span><span class="k">all</span>
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a><span class="k">select</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="o">*</span>
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a><span class="k">from</span><span class="w"> </span><span class="n">log</span><span class="w"> </span><span class="n">a</span>
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a><span class="k">where</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">user_id</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="k">null</span><span class="p">;</span>
+</code></pre></div>
+<ul>
+<li>给空值分配随机的 key 值</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="k">select</span><span class="w"> </span><span class="o">*</span>
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="k">from</span><span class="w"> </span><span class="n">log</span><span class="w"> </span><span class="n">a</span>
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="k">left</span><span class="w"> </span><span class="k">join</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="n">b</span>
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="k">on</span><span class="w"> </span><span class="k">coalesce</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">concat</span><span class="p">(</span><span class="s1">&#39;hive&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">rand</span><span class="p">()))</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">user_id</span><span class="p">;</span>
+</code></pre></div>
+<p>一般分配随机 key 值得方法更好一些。</p>
+<hr />
+<h2 id="hive-sql_3">Hive SQL 优化思路总结</h2>
+<p><strong>核心思想：减少数据量、减少 job 数、避免数据倾斜。</strong></p>
+<ol>
+<li>分区裁剪：尽量使用分区字段进行过滤，避免全表扫描</li>
+<li>列裁剪：不会减少读取的数据量，但是能减少后续处理的数据量</li>
+<li>谓词下推，提前过滤</li>
+<li>Join 的表不宜过多，可以建立中间表</li>
+<li>Join 时将相同连接条件的放在一起，减少 job 数</li>
+<li>避免数据倾斜：大 join key 打散、添加随机数、使用 skew join 等</li>
+<li>sort by + distribute by 代替 order by</li>
+<li>group by 代替 distinct</li>
+<li>避免使用笛卡尔积</li>
+<li>使用 CTE 将一些公共子查询提取出来，避免重复计算</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "search.suggest", "search.highlight", "content.code.copy", "navigation.top", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.f1b6f286.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
+</html>

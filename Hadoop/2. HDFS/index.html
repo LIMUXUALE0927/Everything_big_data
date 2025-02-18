@@ -1,0 +1,3328 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../1.%20Hadoop/">
+      
+      
+        <link rel="next" href="../3.%20MapReduce/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.4">
+    
+    
+      
+        <title>HDFS - Everything Big Data</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8608ea7d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i%7CConsolas:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Lato";--md-code-font:"Consolas"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+   <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../assets/javascripts/glightbox.min.js"></script></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#hdfs" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="Everything Big Data" class="md-header__button md-logo" aria-label="Everything Big Data" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m-3.1 3.9s-.7-.3-1-.3c-.6-.1-1 .1-1.2 1.1L12 16.8c-.2.8-.5 1.4-1 1.8-.4.3-.8.4-1.3.4-.8 0-2-.5-2-.5l.5-1.4s.8.3 1 .3c.3.1.5 0 .7-.1s.3-.4.4-.7l1.6-9.2c.1-.8.5-1.4 1-1.9.6-.4 1.3-.5 2.1-.4.7.1 1.5.5 1.5.5z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Everything Big Data
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              HDFS
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+    
+  
+  Welcome
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Flink/1.Flink%20%E5%9F%BA%E7%A1%80/" class="md-tabs__link">
+          
+  
+  Flink
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../1.%20Hadoop/" class="md-tabs__link">
+          
+  
+  Hadoop
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Hive/1.%20Hive/" class="md-tabs__link">
+          
+  
+  Hive
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../SQL/SQL%20%E5%88%B7%E9%A2%98/" class="md-tabs__link">
+          
+  
+  SQL
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Spark/1.Spark%20Core/" class="md-tabs__link">
+          
+  
+  Spark
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../blog/" class="md-tabs__link">
+          
+  
+  Blog
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/Linux/" class="md-tabs__link">
+          
+  
+  大数据技术栈
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E7%90%86%E8%AE%BA/" class="md-tabs__link">
+          
+  
+  数据仓库
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/0.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/" class="md-tabs__link">
+          
+  
+  数据结构与算法
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Everything Big Data" class="md-nav__button md-logo" aria-label="Everything Big Data" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m-3.1 3.9s-.7-.3-1-.3c-.6-.1-1 .1-1.2 1.1L12 16.8c-.2.8-.5 1.4-1 1.8-.4.3-.8.4-1.3.4-.8 0-2-.5-2-.5l.5-1.4s.8.3 1 .3c.3.1.5 0 .7-.1s.3-.4.4-.7l1.6-9.2c.1-.8.5-1.4 1-1.9.6-.4 1.3-.5 2.1-.4.7.1 1.5.5 1.5.5z"/></svg>
+
+    </a>
+    Everything Big Data
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Welcome
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Flink
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Flink
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/1.Flink%20%E5%9F%BA%E7%A1%80/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flink 基础
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/2.DataStream%20API/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DataStream API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/3.%E6%97%B6%E9%97%B4%E5%92%8C%E7%AA%97%E5%8F%A3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    时间和窗口
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/4.%E5%A4%9A%E6%B5%81%E8%BD%AC%E6%8D%A2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    多流转换
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/5.%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    状态管理
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/6.%E5%AE%B9%E9%94%99%E6%9C%BA%E5%88%B6/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    容错机制
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/7.Process%20Function/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Process Function
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/8.%E5%BC%82%E6%AD%A5%20IO/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    异步 I/O
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20CDC/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flink CDC
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_10" id="__nav_2_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Flink SQL
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_10">
+            <span class="md-nav__icon md-icon"></span>
+            Flink SQL
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/Examples/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Examples
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/Joins/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Joins
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/Top-N/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Top-N 与 窗口 Top-N
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/%E6%A8%A1%E5%BC%8F%E6%A3%80%E6%B5%8B/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    模式检测
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/%E6%B5%81%E5%BC%8F%E6%A6%82%E5%BF%B5/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    流式概念
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/%E7%AA%97%E5%8F%A3%E5%87%BD%E6%95%B0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    窗口函数
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_11" id="__nav_2_11_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    论文 & FLIP
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_11">
+            <span class="md-nav__icon md-icon"></span>
+            论文 & FLIP
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/%E8%AE%BA%E6%96%87%20%26%20FLIP/98.Flink%20%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flink 论文精读
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/%E8%AE%BA%E6%96%87%20%26%20FLIP/99.Dataflow%20%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dataflow 论文精读
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/%E8%AE%BA%E6%96%87%20%26%20FLIP/FLIP/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FLIP
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Hadoop
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Hadoop
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1.%20Hadoop/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hadoop
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    HDFS
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    HDFS
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      模拟一个分布式文件系统
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hdfs_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      HDFS 优缺点
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hdfs_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      HDFS 的组成架构
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hdfs_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      HDFS 元数据
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hdfs_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      HDFS 的常用命令
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hdfs-block" class="md-nav__link">
+    <span class="md-ellipsis">
+      HDFS 文件块/Block
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hdfs_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      HDFS 心跳机制
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hdfs_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      HDFS 安全模式
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hdfs_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      HDFS 写数据流程
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hdfs_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      HDFS 读数据流程
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hdfs_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      HDFS 读写流程中的容错机制
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hdfs_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      HDFS 小文件问题
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#30" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.0 新功能
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.0 新功能">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#disk-balancer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Disk Balancer 磁盘均衡器
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#erasure-coding" class="md-nav__link">
+    <span class="md-ellipsis">
+      Erasure Coding 纠删码
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hdfs-ha" class="md-nav__link">
+    <span class="md-ellipsis">
+      HDFS HA
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hdfs-federation" class="md-nav__link">
+    <span class="md-ellipsis">
+      HDFS Federation 联邦
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3.%20MapReduce/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MapReduce
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../4.%20Yarn/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Yarn
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Hive
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Hive
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hive/1.%20Hive/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hive/2.%20Hive%20%E9%9D%A2%E8%AF%95%E9%A2%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive 面试题
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hive/Hive%20%E5%87%BD%E6%95%B0%E7%9B%B8%E5%85%B3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive 函数相关
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hive/Hive%20%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive 性能调优
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    SQL
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            SQL
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SQL/SQL%20%E5%88%B7%E9%A2%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SQL 刷题
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SQL/SQL%20%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive/Spark SQL 相关知识
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SQL/Spark%20SQL%20%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0%E6%95%B4%E7%90%86/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark SQL 常用函数整理
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SQL/UDF%20%E5%BC%80%E5%8F%91/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    UDF 开发
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Spark
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Spark
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Spark/1.Spark%20Core/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark Core
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Spark/2.Spark%20SQL/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark SQL
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Spark/PySpark/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PySpark
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Spark/RDD%20%E7%AE%97%E5%AD%90%20API/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RDD 算子 API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Spark/Spark%20%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark 性能优化
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Spark/Spark%20%E9%9D%A2%E8%AF%95%E9%A2%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark 面试题
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Blog
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Blog
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Blog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    归档
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    大数据技术栈
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            大数据技术栈
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/Linux/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Linux
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_2" id="__nav_8_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    HBase
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_2">
+            <span class="md-nav__icon md-icon"></span>
+            HBase
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/HBase/1.HBase/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HBase
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/HBase/99.inbox/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Inbox
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_3" id="__nav_8_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Kafka
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_3">
+            <span class="md-nav__icon md-icon"></span>
+            Kafka
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/Kafka/1.Kafka/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Kafka
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_4" id="__nav_8_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Scala
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_4">
+            <span class="md-nav__icon md-icon"></span>
+            Scala
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/Scala/Scala/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Scala
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_5" id="__nav_8_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    ZooKeeper
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_5">
+            <span class="md-nav__icon md-icon"></span>
+            ZooKeeper
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/ZooKeeper/1.%20ZooKeeper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ZooKeeper
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/ZooKeeper/2.%20ZooKeeper%20%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ZooKeeper 如何实现分布式锁
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    数据仓库
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            数据仓库
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E7%90%86%E8%AE%BA/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    数据仓库理论
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    数据结构与算法
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            数据结构与算法
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/0.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    数据结构复习
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/1.%E7%AE%97%E6%B3%95%E5%A4%8D%E4%B9%A0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    算法复习
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    数据结构与算法笔记
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E7%BA%BF%E6%80%A7%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    线性动态规划
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    背包问题
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_10_6" id="__nav_10_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    好题分类
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_6">
+            <span class="md-nav__icon md-icon"></span>
+            好题分类
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E4%BA%8C%E5%8F%89%E6%A0%91/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    二叉树
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E5%89%8D%E7%BC%80%E5%92%8C/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    前缀和
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E5%93%88%E5%B8%8C%E8%A1%A8/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    哈希表
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E5%A4%9A%E7%A7%8D%E8%A7%A3%E6%B3%95/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    多种解法
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    滑动窗口
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E9%93%BE%E8%A1%A8/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    链表
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      模拟一个分布式文件系统
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hdfs_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      HDFS 优缺点
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hdfs_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      HDFS 的组成架构
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hdfs_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      HDFS 元数据
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hdfs_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      HDFS 的常用命令
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hdfs-block" class="md-nav__link">
+    <span class="md-ellipsis">
+      HDFS 文件块/Block
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hdfs_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      HDFS 心跳机制
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hdfs_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      HDFS 安全模式
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hdfs_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      HDFS 写数据流程
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hdfs_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      HDFS 读数据流程
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hdfs_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      HDFS 读写流程中的容错机制
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hdfs_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      HDFS 小文件问题
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#30" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.0 新功能
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.0 新功能">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#disk-balancer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Disk Balancer 磁盘均衡器
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#erasure-coding" class="md-nav__link">
+    <span class="md-ellipsis">
+      Erasure Coding 纠删码
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hdfs-ha" class="md-nav__link">
+    <span class="md-ellipsis">
+      HDFS HA
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hdfs-federation" class="md-nav__link">
+    <span class="md-ellipsis">
+      HDFS Federation 联邦
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="hdfs">HDFS</h1>
+<h2 id="_1">模拟一个分布式文件系统</h2>
+<ul>
+<li>如何解决海量数据存的下的问题？-- 分布式存储</li>
+<li>如何解决大文件传输效率慢的问题？-- 分块存储</li>
+<li>如何解决海量数据文件查询的问题？-- 元数据记录</li>
+<li>如何解决硬件故障数据丢失的问题？-- 副本机制</li>
+<li>如何解决用户查询视角统一的问题？-- 抽象目录树结构（Namespace）</li>
+</ul>
+<hr />
+<h2 id="hdfs_1">HDFS 优缺点</h2>
+<p>HDFS，全称 Hadoop Distributed File System，意为 Hadoop 分布式文件系统。HDFS 是一个<strong>主从架构</strong>，由一个主节点 NameNode 和若干从节点 DataNode 构成。在实际的文件读写过程中，还存在一个客户端，用于在用户与 HDFS 之间进行交互。</p>
+<p>HDFS 的使用场景：适合一次写入，多次读出的场景。</p>
+<p><strong>HDFS 的优点：</strong></p>
+<ul>
+<li>高容错性：数据自动保存多个副本。提高数据可靠性。</li>
+<li>分布式存储 + 分块存储：解决存的下和传输效率的问题</li>
+<li>水平扩展性：可构建在廉价机器上，增加节点提高存储能力。</li>
+</ul>
+<p><strong>HDFS 的缺点：</strong></p>
+<ul>
+<li>不适合低延迟数据访问</li>
+<li>无法高效地对大量小文件进行存储</li>
+<li>存储大量小文件的话，它会占用 NameNode 大量的内存来存储文件目录和块信息</li>
+<li>小文件的寻址时间会超过读取时间，它违反了 HDFS 的设计目标</li>
+<li>不支持并发写入、文件随机修改</li>
+<li>一个文件只能有一个写，不允许多个线程同时写</li>
+<li>仅支持数据 append（追加），不支持文件的随机修改</li>
+</ul>
+<hr />
+<h2 id="hdfs_2">HDFS 的组成架构</h2>
+<p>HDFS 是经典的主从架构。</p>
+<p><strong>NameNode：</strong></p>
+<ul>
+<li>维护 HDFS 的命名空间（记录了 HDFS 中所有文件和目录的层次结构）</li>
+<li>存储文件的元数据信息（文件名、目录、位置信息、副本数量等）</li>
+<li>处理客户端读写请求</li>
+</ul>
+<p><strong>DataNode：</strong></p>
+<ul>
+<li>存储实际的数据块（和一些元数据：数据块长度、校验和、时间戳等）</li>
+<li>执行数据块的读写操作</li>
+</ul>
+<p><strong>SecondaryNameNode：</strong></p>
+<ul>
+<li>用于支持 HDFS 的高可用和数据恢复</li>
+<li>并非 NameNode 的热备，当 NameNode 挂掉的时候，并不能马上替换 NameNode 提供服务</li>
+<li>辅助 NameNode，分担其工作量，如定期合并 Fsimage 和 EditLog，并推送给 NameNode</li>
+<li>在紧急情况下，可辅助恢复 NameNode</li>
+<li>一般生产环境不会使用 2NN，而使用 JournalNode</li>
+</ul>
+<p>注：editlog 即 NameNode 增量编辑日志，记录了客户端对 HDFS 的所有写操作，一旦系统出现故障，NameNode 可以从 editlog 中恢复元数据。但是随着时间推移，editlog 内容会越来越多，恢复时间也会越来越慢，因此 Haoop 引入 Secondary NameNode 辅助 NameNode，定期合并 fsimage 和 editlog。</p>
+<p><strong>Client：</strong></p>
+<ul>
+<li>与 NameNode 交互，获取文件的位置信息</li>
+<li>与 DataNode 交互，读写数据</li>
+<li>通过命令访问 HDFS，进行增删改查</li>
+</ul>
+<p><strong>ZKFC（ZooKeeper Failover Controller）：</strong></p>
+<ul>
+<li>监控 NameNode 节点的状态，在节点失效时自动进行故障转移</li>
+</ul>
+<hr />
+<h2 id="hdfs_3">HDFS 元数据</h2>
+<p>元数据：描述数据的数据。</p>
+<p>HDFS 元数据：</p>
+<ul>
+<li>命名空间：HDFS 中所有文件和目录的层次结构</li>
+<li>文件名称、类型、位置、副本信息、权限等</li>
+<li>每个文件、目录、Block 大约占用 150 字节</li>
+<li>元数据存储在 <strong>NameNode 内存</strong>中，也会通过以 fsimage 和 editlog 持久化的方式保证可靠性。</li>
+</ul>
+<p>存在形式：</p>
+<ul>
+<li>editlog：HDFS 的增量编辑日志文件，保存客户端对 HDFS 的所有更改记录，一旦系统出现故障，可以从 editlog 进行恢复。是一个有序的、追加写入的日志文件。</li>
+<li>fsimage：HDFS 元数据镜像文件，其中包含了文件系统的元数据信息，包括文件和目录的层次结构、权限、所有者等。它周期性地将元数据的快照写入本地磁盘。</li>
+</ul>
+<p>元数据存放路径：</p>
+<ul>
+<li>在 hadoop 根目录下的 <code>/etc/hadoop/hdfs-site.xml</code> 中可以设置 <code>dfs.namenode.name.dir</code></li>
+</ul>
+<p>元数据的生成条件：</p>
+<ul>
+<li>时间：默认 1 小时写入一次 fsimage</li>
+<li>空间：默认 1 百万次事务操作</li>
+<li>人工触发：进入 safemode 主动触发</li>
+</ul>
+<p>在高可用部署模式下，共享存储系统由多个 JournalNode 节点组成。当 Active NameNode 中有事务提交， Active NameNode 会将 editlog 发给 JournalNode 集群。JournalNode 集群通过 Paxos 协议保证数据一致性。Standby NameNode 定期从 JournalNode 读取 editlog，合并到自己的 fsimage 上。</p>
+<p>DataNode 汇报元数据信息（Block Report）：</p>
+<ul>
+<li>全量块汇报（Full Block Report）：将 DN 中存储的 Block 信息都汇报给 NN，默认间隔时间为 6 小时。集群启动时会触发。</li>
+<li>增量块汇报（Incremental Block Report）：一旦触发增量块汇报，就立即发送。和心跳检测一起汇报。</li>
+</ul>
+<hr />
+<h2 id="hdfs_4">HDFS 的常用命令</h2>
+<p>通用格式：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>hdfs<span class="w"> </span>dfs<span class="w"> </span>-command
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>hadoop<span class="w"> </span>fs<span class="w"> </span>-command
+</code></pre></div>
+<p>列出目录中的文件和子目录：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>hdfs<span class="w"> </span>dfs<span class="w"> </span>-ls<span class="w"> </span>&lt;path&gt;
+</code></pre></div>
+<p>创建一个目录：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>hdfs<span class="w"> </span>dfs<span class="w"> </span>-mkdir<span class="w"> </span>&lt;path&gt;
+</code></pre></div>
+<p>复制本地文件到 HDFS：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>hdfs<span class="w"> </span>dfs<span class="w"> </span>-put<span class="w"> </span>&lt;local_path&gt;<span class="w"> </span>&lt;hdfs_path&gt;
+</code></pre></div>
+<p>复制 HDFS 文件到本地：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>hdfs<span class="w"> </span>dfs<span class="w"> </span>-get<span class="w"> </span>&lt;hdfs_path&gt;<span class="w"> </span>&lt;local_path&gt;
+</code></pre></div>
+<p>从 HDFS 中删除文件或目录：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>hdfs<span class="w"> </span>dfs<span class="w"> </span>-rm<span class="w"> </span><span class="o">[</span>-r<span class="o">]</span><span class="w"> </span>&lt;path&gt;
+</code></pre></div>
+<p>从 HDFS 中递归地删除目录：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>hdfs<span class="w"> </span>dfs<span class="w"> </span>-rm<span class="w"> </span>-r<span class="w"> </span>&lt;path&gt;
+</code></pre></div>
+<p>查看文件的内容：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>hdfs<span class="w"> </span>dfs<span class="w"> </span>-cat<span class="w"> </span>&lt;path&gt;
+</code></pre></div>
+<p>将 HDFS 中的文件合并到一个本地文件中：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>hdfs<span class="w"> </span>dfs<span class="w"> </span>-getmerge<span class="w"> </span>&lt;hdfs_path&gt;<span class="w"> </span>&lt;local_file&gt;
+</code></pre></div>
+<p>查看 HDFS 中文件或目录的元数据信息：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>hdfs<span class="w"> </span>dfs<span class="w"> </span>-stat<span class="w"> </span>&lt;path&gt;
+</code></pre></div>
+<hr />
+<h2 id="hdfs-block">HDFS 文件块/Block</h2>
+<p>HDFS 中的文件在物理上是分块存储（Block），块的大小可以通过配置参数 (<code>dfs.blocksize</code>) 来规定，默认大小在 Hadoop2.x/3.x 版本中是 128M/256M。</p>
+<div class="admonition question">
+<p class="admonition-title">为什么要使用块来进行存储？</p>
+</div>
+<ul>
+<li><strong>支持大文件存储：</strong>
+  可以将大文件分成若干块，并存储在不同的节点上，因此一个文件的大小不会受到单个节点的存储容量的限制</li>
+<li><strong>简化系统设计：</strong>
+  因为块大小固定，因此能很方便地计算每个节点能够存储多少文件块；其次，方便了元数据管理，元数据不需要和数据块一起存储</li>
+<li><strong>适合数据备份：</strong>
+  每个文件块都可以冗余存储到多个节点上，大大提高了系统的容错性和可用性</li>
+</ul>
+<div class="admonition question">
+<p class="admonition-title">文件块大小为什么是 128M？增大或减小有什么影响？</p>
+</div>
+<p><strong>最终目的是最小化寻址开销。</strong> 磁盘传输速率普遍在 100MB/s 这个级别，通常来说寻址时间占文件传输时间的 1% 是最佳的，因此如果寻址时间为 10ms，那么传输时间应该在 1s 左右，因此 1s * 100MB/s = 100 MB，取最接近的 2 的次幂 128MB。</p>
+<p>如果文件块的大小太小，会寻址时间占比太大，违背了 HDFS 的设计理念。如果文件块的大小太大，会大大增加文件的传输时间。<strong>因此 HDFS 文件块的大小设置主要取决于磁盘的传输速率。</strong></p>
+<p>总结：文件块越大，寻址时间占比就越小，但传输时间越长；文件块越小，寻址时间占比就越大，但传输时间越短。</p>
+<p>如果块大小设置过大，块的传输时间就会太长，同时 MapReduce 程序中一个 MapTask 通常只处理一个块，如果块太大也会影响运行速度。如果块大小设置过小，一方面存放大量小文件会占用 NameNode 的大量内存存储元数据，另一方面寻址时间占比太高，违背了 HDFS 的设计原则。</p>
+<div class="admonition question">
+<p class="admonition-title">1 个 10MB 的文件，实际占用多少空间？</p>
+</div>
+<p>1 个 10MB 的文件，会占用一整个 Block 块地址，实际磁盘的占用为 10MB * 3 = 30MB。</p>
+<hr />
+<h2 id="hdfs_5">HDFS 心跳机制</h2>
+<ul>
+<li>DataNode 启动后向 NameNode 注册，每隔 <strong>3 秒钟</strong>向 NameNode 发送一个心跳 heartbeat</li>
+<li>心跳返回结果带有 NameNode 给该 DataNode 的命令，如复制块数据到另一 DataNode，或删除某个数据块</li>
+<li>如果超过 <strong>10 分钟</strong> NameNode 没有收到某个 DataNode 的心跳，则认为该 DataNode 节点不可用</li>
+<li>DataNode 周期性（<strong>6 小时</strong>）的向 NameNode 上报当前 DataNode 上的块状态报告 BlockReport。BlockReport 包含了该 Datanode 上所有的 Block 信息。</li>
+</ul>
+<p>心跳的作用：</p>
+<ul>
+<li>可以判断 DataNode 是否存活</li>
+<li>通过周期心跳，NameNode 可以向 DataNode 返回指令</li>
+<li>通过 BlockReport，NameNode 能够知道各 DataNode 的存储情况，如磁盘利用率、块列表</li>
+<li>Hadoop 集群刚开始启动时，99.9%的 block 没有达到最小副本数(<code>dfs.namenode.replication.min</code> 默认值为 1)，集群处于安全模式，涉及 BlockReport</li>
+</ul>
+<hr />
+<h2 id="hdfs_6">HDFS 安全模式</h2>
+<p>安全模式是 HDFS 所处的一种特殊的只读模式状态，在这种状态下，文件系统只接受读数据请求，而不接受删除、修改等变更请求，是一种保护机制，用于保证文件系统的一致性和完整性。</p>
+<p>在 NameNode 主节点启动时，HDFS 首先进入安全模式，集群会开始检查数据块的完整性。DataNode 在启动的时候会向 NameNode 汇报可用的 block 信息，当整个系统达到安全标准时，HDFS 自动离开安全模式。</p>
+<p>安全标准指的是 HDFS 中副本个数达到阈值的文件的比例（99.9%）。</p>
+<hr />
+<h2 id="hdfs_7"><img alt="🔥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f525.svg" title=":fire:" /> HDFS 写数据流程</h2>
+<p>核心概念：<strong>Pipeline</strong></p>
+<p>Pipeline 指 HDFS 在写数据过程中采用的一种数据传输方式。客户端将数据块写入第一个 DataNode，第一个 DataNode 保存数据之后再将块复制到第二个 DataNode，后者保存后再复制给第三个 DataNode。</p>
+<div class="admonition question">
+<p class="admonition-title">为什么采用 Pipeline 传输数据？</p>
+</div>
+<ul>
+<li>最大化网络出口带宽：沿着一个管道传输，客户端不用在多个接受者间分配带宽</li>
+<li>并行传输：Pipeline 允许多个数据包同时在不同的数据节点上进行传输。多个数据包可以同时在不同的节点上进行传输，大大减少了传输延迟，提高了写入性能。</li>
+<li>容错机制：Pipeline 提供了容错机制，确保在某个数据节点发生故障时，数据传输可以切换到其他可用的数据节点。这样可以避免因单点故障而导致的写入中断，保证数据的可靠性和写入的连续性。</li>
+</ul>
+<p>核心概念：<strong>ACK 应答</strong></p>
+<p>在 HDFS Pipeline 管道传输数据的过程中，传输的反方向会进行 ACK 校验，确保数据传输安全。</p>
+<div class="admonition note">
+<p class="admonition-title">HDFS 写数据流程</p>
+</div>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202309181615183.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202309181615183.png" /></a></p>
+<ul>
+<li>客户端创建 Distributed FileSystem 模块向 NameNode 请求上传文件</li>
+<li>NameNode 检查：权限、目录是否存在等</li>
+<li>客户端询问第一个 Block 上传到哪几个 DataNode 服务器上</li>
+<li>NameNode 返回 3 个 DataNode 节点，分别为 dn1、dn2、dn3（机架感知：考虑节点最近和负载均衡）</li>
+<li>客户端通过 FSDataOutputStream 模块请求 dn1 上传数据，dn1 收到请求会继续调用 dn2，然后 dn2 调用 dn3，建立管道</li>
+<li>dn1、dn2、dn3 逐级应答客户端</li>
+<li>客户端开始往 dn1 上传第一个 Block（先从磁盘读取数据放到一个本地内存缓存），以 Packet 为单位，dn1 收到一个 Packet 就会传给 dn2，dn2 传给 dn3；dn1 每传一个 packet 会放入一个应答队列等待应答</li>
+<li>当一个 Block 传输完成之后，客户端再次请求 NameNode 上传第二个 Block 的服务器</li>
+</ul>
+<p><strong>总结：</strong></p>
+<ul>
+<li>文件分块 Block（128M）</li>
+<li>客户端向 NN 发送写请求</li>
+<li>NN 进行检查，记录 Block 信息，返回 3 个 DN</li>
+<li>建立通信管道</li>
+<li>客户端向 DN 发送 Block，以流式写入的方式：</li>
+<li>将 Block 划分为多个 packet</li>
+<li>客户端以 packet 为单位传输数据</li>
+<li>发送数据的同时还会将 packet 放入一个应答队列等待应答</li>
+<li>一个 Block 传输完毕之后，继续下一个 Block</li>
+</ul>
+<div class="admonition question">
+<p class="admonition-title">传输数据的单位是什么？</p>
+</div>
+<p>以 packet（64K）为单位，一个 packet 内包含多个 chunk(512byte) + checksum(4byte)。</p>
+<p>客户端在创建输出流的时候，会先创建一个<strong>缓冲队列</strong>，缓冲队列中存储的是 chunk + checksum = 516 bytes。攒够到 64K 时，形成一个 packet，放入 ack 应答队列，再发送。</p>
+<p>客户端维护一个 ack 应答队列，每次 packet 发送成功，客户端都会收到一个 ack 应答消息，删除 ack 队列中对应的 packet。对于没收到 ack 应答消息的 packet，ack 队列会把这个 packet 再加入发送缓冲队列，再次尝试发送。</p>
+<div class="admonition question">
+<p class="admonition-title">写数据时 NameNode 是如何选择 DataNode 节点的？</p>
+</div>
+<p>基于<strong>副本放置策略/机架感知机制</strong>。第一个副本在客户端所在节点，如果客户端在集群外，随机选择一个。第二个副本在另一个机架的随机一个节点。第三个副本在第二个副本所在机架的随机节点。</p>
+<p>这种策略减少了机架间的数据传输，提高了写操作的效率。同时，由于机架错误的概率远比节点错误的概率低，这种策略也能保证数据的可靠性。</p>
+<div class="admonition question">
+<p class="admonition-title">写数据时 DataNode 突然宕机怎么办？</p>
+</div>
+<p>客户端写数据时与 DN 建立 pipeline 管道，管道正向是客户端向 DN 传输数据，反向是接收 DN 的 ack 确认。</p>
+<ul>
+<li>如果 DN 宕机，客户端接收不到 ack 确认，为了确保数据不会丢失，ack 队列中的所有 packet 会被重新添加到 data queue（缓冲队列） 末尾</li>
+<li>客户端会通知 NameNode 为当前传输的 Block 生成新的版本，在正常的 DataNode 节点上已经保存好的 block 的 ID 版本会升级，这样发生故障的 DataNode 节点上的 Block 在节点恢复后会被删除</li>
+<li>失效节点会从 pipeline 中被删除，剩下的数据写入到 pipeline 中的其他 2 个节点中</li>
+<li>NameNode 分配一个新的 DataNode</li>
+<li>把更新后的 Block 复制一份到新的 DataNode 中</li>
+</ul>
+<hr />
+<h2 id="hdfs_8"><img alt="🔥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f525.svg" title=":fire:" /> HDFS 读数据流程</h2>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202309181726379.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202309181726379.png" /></a></p>
+<ul>
+<li>客户端通过 DistributedFileSystem 向 NameNode 请求读取文件</li>
+<li>NameNode 通过查询元数据，找到文件块所在的 DataNode 地址</li>
+<li>挑选一台 DataNode（先考虑就近原则，然后随机）服务器，请求读取数据</li>
+<li>DataNode 开始传输数据给客户端（从磁盘里面读取数据输入流，以 Packet 为单位来做校验）</li>
+<li>客户端以 Packet 为单位接收，先在本地缓存，然后写入目标文件</li>
+</ul>
+<h2 id="hdfs_9">HDFS 读写流程中的容错机制</h2>
+<p>Case 1：写数据时 DataNode 挂了</p>
+<ul>
+<li>如果 DN 宕机，客户端接收不到 ack 确认，为了确保数据不会丢失，ack 队列中的所有 packet 会被重新添加到 data queue（缓冲队列） 末尾</li>
+<li>客户端会通知 NameNode 为当前传输的 Block 生成新的版本，在正常的 DataNode 节点上已经保存好的 block 的 ID 版本会升级，这样发生故障的 DataNode 节点上的 Block 在节点恢复后会被删除</li>
+<li>失效节点会从 pipeline 中被删除，剩下的数据写入到 pipeline 中的其他 2 个节点中</li>
+<li>NameNode 分配一个新的 DataNode</li>
+<li>把更新后的 Block 复制一份到新的 DataNode 中</li>
+</ul>
+<p>Case 2：读数据时 DataNode 挂了</p>
+<ul>
+<li>Client 会从 NameNode 给的 Block 地址中选择下一个 DataNode 读取数据，并且记录此有问题的 DataNode，不会再从它上面读取数据</li>
+</ul>
+<p>Case 3：读数据时发现 Block 数据出错了</p>
+<ul>
+<li>
+<p>client 读取 block 数据时，同时会读取到 block 的校验和，若 client 针对读取过来的 block 数据，计算检验和，其值与读取过来的校验和不一样，说明 block 数据损坏。</p>
+</li>
+<li>
+<p>然后 client 从存储此 block 副本的其它 DataNode 上读取 block 数据（也会计算校验和）。同时，client 会告知 namenode 此情况</p>
+</li>
+</ul>
+<hr />
+<h2 id="hdfs_10">HDFS 小文件问题</h2>
+<ul>
+<li><strong>对于 NameNode 来说</strong>，NameNode 存储着文件系统的元数据，每个文件、目录、块大概有 <strong>150 字节</strong> 的元数据，因此文件数量的限制也由 NN 内存大小决定，如果小文件过多则会造成 NN 的压力过大</li>
+<li><strong>对于 DataNode 来说</strong>，文件的 block 是存储在 datanode 本地系统上，底层的磁盘上，甚至不同的挂载目录，不同的磁盘上。大量的小文件，意味着数据着寻址需要花费很多时间，尤其对于高负载的集群来说（磁盘使用率 50% 以上的集群），花费在寻址的时间比文件读取写入的时间更多。这种就违背了 blocksize 大小设计的初衷（实践显示最佳效果是：寻址时间仅占传输时间的 1%）。这样会造成磁盘的读写很慢，拥有大量小文件会导致更多的磁盘搜索。</li>
+<li><strong>对于计算来说</strong>，小文件对于计算的影响就是需要大量节点之间频繁建立联系，数据传输等，浪费资源，消耗时间长。其次小文件相关大量的任务初始化时间甚至比计算时间还长，造成计算资源的使用浪费，降低集群的吞吐量。</li>
+</ul>
+<p>基于 HDFS 文件系统的计算，block 是最小粒度的数据处理单元。块的多少往往影响应用程序的吞吐量。更多的文件，意味着更多的块，以及更多的节点分布。</p>
+<p>比如以 MapReduce 任务为例（hive 等），在 MapReduce 中，会为每个读取的块生成一个单独的 Map 任务，如果大量小文件，大量的块，意味着着更多任务调度，任务创建开销，以及更多的任务管理开销（MapReduce 作业的 application master 是一个 Java 应用，它的主类是 MRAppMaster。它通过创建一定数量的 bookkeeping object 跟踪作业进度来初始化作业，该对象接受任务报告的进度和完成情况）。<strong>虽然可以开启 map 前文件合并，但是这也需要不停地从不同节点建立连接，数据读取，网络传输，然后进行合并，同样会增加消耗资源和增加计算时间，成本也很高。</strong></p>
+<div class="admonition note">
+<p class="admonition-title"> 小文件问题解决方案</p>
+</div>
+<p>思路一：合并小文件</p>
+<ul>
+<li>Hadoop Archive 文件归档</li>
+</ul>
+<p>Hadoop 提供了归档工具（如 Hadoop Archives，HAR），可以将多个小文件打包为一个归档文件。归档文件在逻辑上看起来像一个目录，但实际上是一个存档文件，可以减少元数据开销并提高读取性能。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010540458.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010540458.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010543539.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010543539.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010550295.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010550295.png" /></a></p>
+<ul>
+<li>SequenceFile 序列化文件</li>
+</ul>
+<p>对于一些小文件，可以将它们序列化为一个文件或对象，并将其存储为二进制数据。这样可以减少文件数量，节省元数据空间，并提高读取/写入性能。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310021715272.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310021715272.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310021716969.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310021716969.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310021719514.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310021719514.png" /></a></p>
+<p>**sync 同步标记用于数据的定位和切分。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310021720183.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310021720183.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310021720307.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310021720307.png" /></a></p>
+<p>block 压缩比 record 压缩提供更高的压缩率，使用 Sequence File 时，通常首选 block 压缩。</p>
+<ul>
+<li>
+<p>SequenceFile 文件，主要由一条条 record 记录组成；每个 record 是键值对形式的</p>
+</li>
+<li>
+<p>SequenceFile 文件可以作为小文件的存储容器；</p>
+</li>
+<li>
+<p>每条 record 保存一个小文件的内容</p>
+</li>
+<li>小文件名作为当前 record 的键；</li>
+<li>小文件的内容作为当前 record 的值；</li>
+<li>
+<p>如 10000 个 100KB 的小文件，可以编写程序将这些文件放到一个 SequenceFile 文件。</p>
+</li>
+<li>
+<p>一个 SequenceFile 是<strong>可分割</strong>的，所以 MapReduce 可将文件切分成块，每一块独立操作。</p>
+</li>
+</ul>
+<p>我们直接将数据写入一个 SequenceFile 文件，省去小文件作为中间媒介。</p>
+<hr />
+<h2 id="30">3.0 新功能</h2>
+<h3 id="disk-balancer">Disk Balancer 磁盘均衡器</h3>
+<p>相较于个人 PC，服务器一般可以通过挂载多个磁盘来提升单机的存储能力。DataNode 在写入新 Block 的时候，可以根据选择策略（<strong>循环策略</strong>和<strong>可用空间策略</strong>）来选择磁盘。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010348012.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010348012.png" /></a></p>
+<p>循环策略可能导致数据不均匀的情况，可用空间策略可能会将新写入的 Block 全写入新加入的磁盘，其他磁盘都空闲，可能会导致读写的瓶颈。因此，需要一种 Intra DataNode Balancing（DataNode 内部数据块的均匀分布）来解决 Intra-DataNode 偏斜问题。</p>
+<p><strong>这里注意区分 Disk Balancer 和 HDFS Balancer。</strong></p>
+<p>Disk Balancer 是针对一个 DataNode 节点内的多个磁盘而言的，而 HDFS Balancer 是平衡多个 DataNode 节点的数据分布。</p>
+<h3 id="erasure-coding">Erasure Coding 纠删码</h3>
+<p><a href="https://www.bilibili.com/video/BV11N411d7Zh?p=83&amp;vd_source=f3af28d1fd89af1eb80db058885d7130">HDFS Erasure Coding--纠删码架构调整_哔哩哔哩_bilibili</a></p>
+<p>3 副本策略弊端：除原始块外还需要额外保存 2 个副本，有额外的 200% 的额外存储开销。</p>
+<p>纠删码技术（Erasure Coding）是一种编码容错技术，最早用于数据传输中的数据恢复。<strong>它通过对数据进行分块，然后计算出校验数据，使得每个部分的数据产生关联性。</strong> 当一部分数据丢失时，可以通过剩余的数据块和校验块计算出丢失的数据块。</p>
+<p>纠删码技术可以提高 50% 以上的存储利用率，并且保证数据的可靠性。<strong>在保证数据可靠性的基础上，提高了数据的存储利用率。</strong></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010402834.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010402834.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010403301.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010403301.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010407428.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010407428.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010410139.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010410139.png" /></a></p>
+<hr />
+<h2 id="hdfs-ha">HDFS HA</h2>
+<p>高可用是为了解决一个系统的单点故障问题，使得集群在单点故障时仍能正常地向外提供服务，通常是通过<strong>主备切换</strong>的方法实现。</p>
+<p>在 Hadoop 2.0 以前的版本，NameNode 面临<strong>单点故障 (Single Point of Failure, SPOF)</strong> 风险，也就是说，一旦 NameNode 节点挂了，整个集群就不可用了，而且需要借助辅助 NameNode 来手工干预重启集群，这将延长集群的停机时间。</p>
+<p>Hadoop 2.0 版本支持一个备用节点用于自动恢复 NameNode 故障，Hadoop 3.0 则支持多个备用 NameNode 节点，这使得整个集群变得更加可靠。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010416637.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010416637.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010421553.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010421553.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010425444.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010425444.png" /></a></p>
+<p>当系统中其中一项设备失效而无法运作时，另一项设备即可自动接手原失效系统所执行的工作，这就是<strong>故障切换</strong>。</p>
+<p>故障切换：</p>
+<ul>
+<li>手动切换</li>
+<li>自动故障切换：系统自动把集群控制器切换到备用 NameNode，且切换过程不需要人工干预。</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">HDFS HA 解决方案：QJM</p>
+</div>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202309180225901.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202309180225901.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010433529.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010433529.png" /></a></p>
+<p>任何一种 HA 解决方案，都必须考虑如何解决 2 个问题：</p>
+<ul>
+<li>主备数据同步</li>
+<li>故障转移（主备切换）</li>
+<li>防止脑裂问题</li>
+</ul>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010436108.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010436108.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010439438.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010439438.png" /></a></p>
+<p><strong>QJM 主备数据状态同步的问题解决方案：Journal Node。</strong></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010452405.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010452405.png" /></a></p>
+<p>故障转移解释：<strong>通过 ZK 实现分布式锁实现主备切换</strong>。2 个 ZKFC 去 ZK 集群上注册节点（ephemeral 节点），谁注册成功，谁代表的机器上的 NN 就是 Active NN，没注册成功的 ZKFC 对 znode 注册监听，监听这个 znode 是否消失。如果 ZKFC 发现 Active NN 不健康，断开和 ZK 的连接，会话消失，注册的 znode 节点被删除，会触发监听，通知给 Standby NN 的 ZKFC。Standby NN 上的 ZKFC 收到监听通知，注册成功，Standby NN 成为新的 Active NN。</p>
+<p>脑裂问题：如果 ZKFC 谎报军情怎么办？-- 通过 <strong>Fencing（隔离）机制</strong>。通过远程补刀强制杀死进程的方式（或者用户事先定义的 shell 脚本完成隔离）。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010450385.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010450385.png" /></a></p>
+<hr />
+<h2 id="hdfs-federation">HDFS Federation 联邦</h2>
+<p><strong>HDFS 联邦主要是为了解决 NameNode 内存不够和多用户命名空间的隔离问题</strong>。同时由于 NameNode 还是客户端对 HDFS 的唯一入口，因此联邦还能提升 NameNode 的吞吐量。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010455066.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010455066.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010457528.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010457528.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010458828.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010458828.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010503359.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310010503359.png" /></a></p>
+<p>Hadoop 的 HA 结构，解决了单点故障问题，但是 NameNode 本质上还是只有一个工作节点，如果数据量很大的情况下虽然可以增加 DataNode 提高存储能力，但是 <strong>NameNode 可能会成为系统瓶颈</strong>，也就是元数据信息无法存储了，为了解决这个问题，Hadoop 又引入了联邦机制。</p>
+<p>联邦机制的原理也比较容易理解，既然一个 NameNode 资源不足了，那就加机器，使用多个 NameNode，但是 Hadoop 多 NameNode 的设计结构比较特殊。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202309180231053.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202309180231053.png" /></a></p>
+<p>如上图， Hadoop 的联邦机制采用了<strong>横向扩展</strong>的方式，但并不是每个 NameNode 负责独立的部分 DataNode 节点，因为这相当于是多个集群。Hadoop 将 DataNode 节点的资源分为多份，每一份由一个 NameNode 负责维护元数据信息，每个 NameNode 之间是独立的，彼此之间不需要协调，DataNode 向所有的 NameNode 报告心跳信息和 block 信息，同时处理来自 NameNode 的命令，DataNode 通过 NameServiceId 区分不同的 NameNode。一个 NameNode 故障不会影响集群中的其他 NameNode 提供服务。</p>
+<p>联邦机制虽然带来了很多便利，但是也附带了一些新的问题，最典型的就是由于 namespace 被拆分成多个，且互相独立，一个文件路径只允许存在一个 namespace 中，如果应用程序需要访问多个文件路径（跨 namespace），那么不可避免的会产生<strong>交叉访问 namespace 的情况</strong>。此外，启用 Federation 后，<strong>HDFS 很多管理命令都会失效</strong>，比如 hdfs dfsadmin、hdfs fsck、hdfs dfs cp/mv 等。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "search.suggest", "search.highlight", "content.code.copy", "navigation.top", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.f1b6f286.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
+</html>

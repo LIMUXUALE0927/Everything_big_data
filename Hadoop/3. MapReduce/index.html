@@ -1,0 +1,3675 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../2.%20HDFS/">
+      
+      
+        <link rel="next" href="../4.%20Yarn/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.4">
+    
+    
+      
+        <title>MapReduce - Everything Big Data</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8608ea7d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i%7CConsolas:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Lato";--md-code-font:"Consolas"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+   <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../assets/javascripts/glightbox.min.js"></script></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#mapreduce" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="Everything Big Data" class="md-header__button md-logo" aria-label="Everything Big Data" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m-3.1 3.9s-.7-.3-1-.3c-.6-.1-1 .1-1.2 1.1L12 16.8c-.2.8-.5 1.4-1 1.8-.4.3-.8.4-1.3.4-.8 0-2-.5-2-.5l.5-1.4s.8.3 1 .3c.3.1.5 0 .7-.1s.3-.4.4-.7l1.6-9.2c.1-.8.5-1.4 1-1.9.6-.4 1.3-.5 2.1-.4.7.1 1.5.5 1.5.5z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Everything Big Data
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              MapReduce
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+    
+  
+  Welcome
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Flink/1.Flink%20%E5%9F%BA%E7%A1%80/" class="md-tabs__link">
+          
+  
+  Flink
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../1.%20Hadoop/" class="md-tabs__link">
+          
+  
+  Hadoop
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Hive/1.%20Hive/" class="md-tabs__link">
+          
+  
+  Hive
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../SQL/SQL%20%E5%88%B7%E9%A2%98/" class="md-tabs__link">
+          
+  
+  SQL
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Spark/1.Spark%20Core/" class="md-tabs__link">
+          
+  
+  Spark
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../blog/" class="md-tabs__link">
+          
+  
+  Blog
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/Linux/" class="md-tabs__link">
+          
+  
+  大数据技术栈
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E7%90%86%E8%AE%BA/" class="md-tabs__link">
+          
+  
+  数据仓库
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/0.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/" class="md-tabs__link">
+          
+  
+  数据结构与算法
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Everything Big Data" class="md-nav__button md-logo" aria-label="Everything Big Data" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m-3.1 3.9s-.7-.3-1-.3c-.6-.1-1 .1-1.2 1.1L12 16.8c-.2.8-.5 1.4-1 1.8-.4.3-.8.4-1.3.4-.8 0-2-.5-2-.5l.5-1.4s.8.3 1 .3c.3.1.5 0 .7-.1s.3-.4.4-.7l1.6-9.2c.1-.8.5-1.4 1-1.9.6-.4 1.3-.5 2.1-.4.7.1 1.5.5 1.5.5z"/></svg>
+
+    </a>
+    Everything Big Data
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Welcome
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Flink
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Flink
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/1.Flink%20%E5%9F%BA%E7%A1%80/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flink 基础
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/2.DataStream%20API/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DataStream API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/3.%E6%97%B6%E9%97%B4%E5%92%8C%E7%AA%97%E5%8F%A3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    时间和窗口
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/4.%E5%A4%9A%E6%B5%81%E8%BD%AC%E6%8D%A2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    多流转换
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/5.%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    状态管理
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/6.%E5%AE%B9%E9%94%99%E6%9C%BA%E5%88%B6/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    容错机制
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/7.Process%20Function/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Process Function
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/8.%E5%BC%82%E6%AD%A5%20IO/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    异步 I/O
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20CDC/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flink CDC
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_10" id="__nav_2_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Flink SQL
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_10">
+            <span class="md-nav__icon md-icon"></span>
+            Flink SQL
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/Examples/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Examples
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/Joins/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Joins
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/Top-N/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Top-N 与 窗口 Top-N
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/%E6%A8%A1%E5%BC%8F%E6%A3%80%E6%B5%8B/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    模式检测
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/%E6%B5%81%E5%BC%8F%E6%A6%82%E5%BF%B5/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    流式概念
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/%E7%AA%97%E5%8F%A3%E5%87%BD%E6%95%B0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    窗口函数
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_11" id="__nav_2_11_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    论文 & FLIP
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_11">
+            <span class="md-nav__icon md-icon"></span>
+            论文 & FLIP
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/%E8%AE%BA%E6%96%87%20%26%20FLIP/98.Flink%20%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flink 论文精读
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/%E8%AE%BA%E6%96%87%20%26%20FLIP/99.Dataflow%20%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dataflow 论文精读
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/%E8%AE%BA%E6%96%87%20%26%20FLIP/FLIP/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FLIP
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Hadoop
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Hadoop
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1.%20Hadoop/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hadoop
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2.%20HDFS/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HDFS
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    MapReduce
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    MapReduce
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#mapreduce_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      MapReduce 是什么？
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapreduce_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      MapReduce 的优缺点
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapreduce_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      MapReduce 进程
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapreduce_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      MapReduce 序列化
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapreduce_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      MapReduce 核心思想
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MapReduce 核心思想">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#map" class="md-nav__link">
+    <span class="md-ellipsis">
+      Map 阶段
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reduce" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reduce 阶段
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapreduce_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      MapReduce 框架原理详解
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MapReduce 框架原理详解">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inputformat" class="md-nav__link">
+    <span class="md-ellipsis">
+      InputFormat 数据读入
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#partition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Partition 分区
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sort" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sort 排序
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#combiner" class="md-nav__link">
+    <span class="md-ellipsis">
+      Combiner 规约
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#outputformat" class="md-nav__link">
+    <span class="md-ellipsis">
+      OutputFormat 数据输出
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maptask" class="md-nav__link">
+    <span class="md-ellipsis">
+      MapTask 工作机制详解
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reducetask" class="md-nav__link">
+    <span class="md-ellipsis">
+      ReduceTask 工作机制详解
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shuffle" class="md-nav__link">
+    <span class="md-ellipsis">
+      Shuffle 工作机制详解
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapreduce_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      MapReduce 中的排序
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reduce-side-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reduce Side Join
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      分布式缓存
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#map-side-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      Map Side Join
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapreduce_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      MapReduce 优化
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MapReduce 优化">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      文件存储格式优化
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      数据压缩优化
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      小文件优化
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shuffle_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Shuffle 优化
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      参数优化
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapreduce_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      MapReduce 数据倾斜
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../4.%20Yarn/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Yarn
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Hive
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Hive
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hive/1.%20Hive/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hive/2.%20Hive%20%E9%9D%A2%E8%AF%95%E9%A2%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive 面试题
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hive/Hive%20%E5%87%BD%E6%95%B0%E7%9B%B8%E5%85%B3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive 函数相关
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hive/Hive%20%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive 性能调优
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    SQL
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            SQL
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SQL/SQL%20%E5%88%B7%E9%A2%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SQL 刷题
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SQL/SQL%20%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive/Spark SQL 相关知识
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SQL/Spark%20SQL%20%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0%E6%95%B4%E7%90%86/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark SQL 常用函数整理
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SQL/UDF%20%E5%BC%80%E5%8F%91/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    UDF 开发
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Spark
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Spark
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Spark/1.Spark%20Core/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark Core
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Spark/2.Spark%20SQL/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark SQL
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Spark/PySpark/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PySpark
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Spark/RDD%20%E7%AE%97%E5%AD%90%20API/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RDD 算子 API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Spark/Spark%20%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark 性能优化
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Spark/Spark%20%E9%9D%A2%E8%AF%95%E9%A2%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark 面试题
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Blog
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Blog
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Blog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    归档
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    大数据技术栈
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            大数据技术栈
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/Linux/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Linux
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_2" id="__nav_8_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    HBase
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_2">
+            <span class="md-nav__icon md-icon"></span>
+            HBase
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/HBase/1.HBase/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HBase
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/HBase/99.inbox/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Inbox
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_3" id="__nav_8_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Kafka
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_3">
+            <span class="md-nav__icon md-icon"></span>
+            Kafka
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/Kafka/1.Kafka/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Kafka
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_4" id="__nav_8_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Scala
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_4">
+            <span class="md-nav__icon md-icon"></span>
+            Scala
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/Scala/Scala/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Scala
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_5" id="__nav_8_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    ZooKeeper
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_5">
+            <span class="md-nav__icon md-icon"></span>
+            ZooKeeper
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/ZooKeeper/1.%20ZooKeeper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ZooKeeper
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/ZooKeeper/2.%20ZooKeeper%20%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ZooKeeper 如何实现分布式锁
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    数据仓库
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            数据仓库
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E7%90%86%E8%AE%BA/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    数据仓库理论
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    数据结构与算法
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            数据结构与算法
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/0.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    数据结构复习
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/1.%E7%AE%97%E6%B3%95%E5%A4%8D%E4%B9%A0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    算法复习
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    数据结构与算法笔记
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E7%BA%BF%E6%80%A7%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    线性动态规划
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    背包问题
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_10_6" id="__nav_10_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    好题分类
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_6">
+            <span class="md-nav__icon md-icon"></span>
+            好题分类
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E4%BA%8C%E5%8F%89%E6%A0%91/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    二叉树
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E5%89%8D%E7%BC%80%E5%92%8C/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    前缀和
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E5%93%88%E5%B8%8C%E8%A1%A8/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    哈希表
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E5%A4%9A%E7%A7%8D%E8%A7%A3%E6%B3%95/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    多种解法
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    滑动窗口
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E9%93%BE%E8%A1%A8/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    链表
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#mapreduce_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      MapReduce 是什么？
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapreduce_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      MapReduce 的优缺点
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapreduce_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      MapReduce 进程
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapreduce_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      MapReduce 序列化
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapreduce_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      MapReduce 核心思想
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MapReduce 核心思想">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#map" class="md-nav__link">
+    <span class="md-ellipsis">
+      Map 阶段
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reduce" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reduce 阶段
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapreduce_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      MapReduce 框架原理详解
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MapReduce 框架原理详解">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inputformat" class="md-nav__link">
+    <span class="md-ellipsis">
+      InputFormat 数据读入
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#partition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Partition 分区
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sort" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sort 排序
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#combiner" class="md-nav__link">
+    <span class="md-ellipsis">
+      Combiner 规约
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#outputformat" class="md-nav__link">
+    <span class="md-ellipsis">
+      OutputFormat 数据输出
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maptask" class="md-nav__link">
+    <span class="md-ellipsis">
+      MapTask 工作机制详解
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reducetask" class="md-nav__link">
+    <span class="md-ellipsis">
+      ReduceTask 工作机制详解
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shuffle" class="md-nav__link">
+    <span class="md-ellipsis">
+      Shuffle 工作机制详解
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapreduce_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      MapReduce 中的排序
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reduce-side-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reduce Side Join
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      分布式缓存
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#map-side-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      Map Side Join
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapreduce_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      MapReduce 优化
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MapReduce 优化">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      文件存储格式优化
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      数据压缩优化
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      小文件优化
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shuffle_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Shuffle 优化
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      参数优化
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapreduce_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      MapReduce 数据倾斜
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="mapreduce">MapReduce</h1>
+<h2 id="mapreduce_1">MapReduce 是什么？</h2>
+<p>MapReduce 是一个<strong>分布式运算程序的编程框架</strong>，MapReduce 核心功能是将用户编写的业务逻辑代码和自带默认组件整合成一个完整的分布式运算程序，并发运行在一个 Hadoop 集群上。</p>
+<p>MapReduce 基于分治的思想，将一个大的计算任务拆分成多个子任务交给多个节点并行计算，最后合并结果。</p>
+<p>它由两个阶段组成：</p>
+<ul>
+<li>Map 阶段（切分成一个个小的任务）</li>
+<li>Reduce 阶段（汇总小任务的结果）</li>
+</ul>
+<hr />
+<h2 id="mapreduce_2">MapReduce 的优缺点</h2>
+<p><strong>MapReduce 的优点：</strong></p>
+<ul>
+<li>易于编程：</li>
+</ul>
+<p>它简单的实现一些接口，就可以完成一个分布式程序，这个分布式程序可以分布到大量廉价的 PC 机器上运行。也就是说你写一个分布式程序，跟写一个简单的串行程序是一模一样的。</p>
+<ul>
+<li>高可扩展性：</li>
+</ul>
+<p>当你的计算资源不能得到满足的时候，你可以通过简单的增加机器来扩展它的计算能力。</p>
+<ul>
+<li>高容错性：</li>
+</ul>
+<p>MapReduce 设计的初衷就是使程序能够部署在廉价的 PC 机器上，这就要求它具有很高的容错性。比如其中一台机器挂了，它可以把上面的计算任务转移到另外一个节点上运行，不至于这个任务运行失败，而且这个过程不需要人工参与，而完全是由 Hadoop 内部完成的。</p>
+<p><strong>MapReduce 的缺点：</strong></p>
+<ul>
+<li>不擅长实时计算</li>
+</ul>
+<p>MapReduce 无法像 MySQL 一样，在毫秒或者秒级内返回结果。</p>
+<ul>
+<li>不擅长流式计算</li>
+</ul>
+<p>流式计算的输入数据是动态的，而 MapReduce 的输入数据集是静态的，不能动态变化。这是因为 MapReduce 自身的设计特点决定了数据源必须是静态的。</p>
+<ul>
+<li>不擅长需要多轮迭代的计算</li>
+</ul>
+<p>如果多个应用程序存在依赖关系，后一个应用程序的输入为前一个的输出。在这种情况下，每个 MapReduce 作业的中间结果和输出结果都会写入到磁盘，会造成大量的磁盘 I/O 和网络开销，导致性能非常的低下。</p>
+<hr />
+<h2 id="mapreduce_3">MapReduce 进程</h2>
+<p>在运行一个完整的 MapReduce 程序时，在集群中有 3 类实例进程：</p>
+<ul>
+<li>MRAppMaster：负责整个程序过程调度及状态协调</li>
+<li>MapTask：负责 map 阶段整个数据处理流程</li>
+<li>ReduceTask：负责 reduce 阶段整个数据处理流程</li>
+</ul>
+<hr />
+<h2 id="mapreduce_4">MapReduce 序列化</h2>
+<p>Mapper 和 Reducer 使用的数据的类型是 Hadoop 自身封装的序列化类型。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202309182319412.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202309182319412.png" /></a></p>
+<div class="admonition question">
+<p class="admonition-title">为什么不用 Java 的序列化？</p>
+</div>
+<p>Java 的序列化是一个重量级序列化框架（Serializable），一个对象被序列化后，会附带很多额外的信息（各种校验信息，Header，继承体系等），不便于在网络中高效传输。所以，Hadoop 自己开发了一套序列化机制（Writable）。</p>
+<p><strong>Hadoop 序列化特点：</strong></p>
+<ul>
+<li>紧凑 ：高效使用存储空间</li>
+<li>快速：读写数据的额外开销小</li>
+<li>互操作：支持多语言的交互</li>
+</ul>
+<p>如果想要传输 Java Bean，需要实现 Writable 接口，并手动<strong>重写</strong>序列化（<code>write()</code>）和反序列化方法（<code>readFields()</code>），注意反序列化顺序和序列化的顺序要完全一致。同时，如果需要将自定义的 Bean 放在 Key 中传输，还需要<strong>额外实现 Comparable 接口</strong>，因为 MapReduce 中的 Shuffle 过程要求 Key 必须能排序。</p>
+<hr />
+<h2 id="mapreduce_5">MapReduce 核心思想</h2>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310021748839.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310021748839.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310021836664.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310021836664.png" /></a></p>
+<h3 id="map">Map 阶段</h3>
+<p>第一阶段：逻辑切片</p>
+<ul>
+<li>对待处理目录下所有文件逐个遍历，进行<strong>逻辑切片</strong>形成切片规划。</li>
+<li>Split size = Block size，每一个切片由一个 MapTask 处理。（<code>FileInputFormat.getSplits()</code>）</li>
+</ul>
+<p>第二阶段：按行读取</p>
+<ul>
+<li>对切片中的数据<strong>按行读取</strong>，解析返回 <code>&lt;key,value&gt;</code> 对。</li>
+<li>key：每一行的起始位置偏移量</li>
+<li>value：本行的文本内容</li>
+<li><code>TextInputFormat.LineRecordReader</code></li>
+</ul>
+<p>第三阶段：Map 方法</p>
+<ul>
+<li>调用 Mapper 类中的 map() 方法处理数据。</li>
+<li>每读取解析出来的一个 <code>&lt;key,value&gt;</code> ，调用一次 map() 方法处理。（<code>Mapper.map()</code>）</li>
+</ul>
+<p>第四阶段：分区 partition</p>
+<ul>
+<li>对 map() 方法计算输出的结果进行<strong>分区 partition</strong>。</li>
+<li>默认不分区，因为默认只有一个 ReduceTask。</li>
+<li>分区的数量就是 ReduceTask 运行的数量。（HashPartitioner）</li>
+</ul>
+<p>第五阶段：写入内存缓冲区</p>
+<ul>
+<li>map() 输出数据写入<strong>内存缓冲区</strong>。</li>
+<li>达到 80% 比例溢出到磁盘上。</li>
+<li>溢写 spill 的时候根据 key 进行排序 sort。</li>
+<li>默认根据 key 字典序排序。（<code>WritableComparable.compareTo()</code>）</li>
+</ul>
+<p>第六阶段：溢写文件合并</p>
+<ul>
+<li>对所有溢写文件进行最终的 merge 合并，成为一个文件。</li>
+</ul>
+<h3 id="reduce">Reduce 阶段</h3>
+<p>第一阶段：复制</p>
+<ul>
+<li>ReduceTask 会主动从 MapTask 复制拉取其输出的键值对。</li>
+</ul>
+<p>第二阶段：合并</p>
+<ul>
+<li>把 copy 来的数据，进行合并 merge，即把分散的数据合并成一个大的数据，再对合并后的数据排序。</li>
+</ul>
+<p>第三阶段：分组 + reduce</p>
+<ul>
+<li>对于合并、排序后的键值对，将 key 相等的键值对组成一组</li>
+<li>对每一组键值对调用一次 reduce() 方法。</li>
+</ul>
+<hr />
+<h2 id="mapreduce_6">MapReduce 框架原理详解</h2>
+<h3 id="inputformat">InputFormat 数据读入</h3>
+<ul>
+<li>
+<p>读取数据组件 <code>InputFormat</code>（默认 <code>TextInputFormat</code>）会通过 <code>getSplits()</code> 方法对输入目录中文件进行逻辑规划得到 splits，有多少个 split 就对应启动多少个 MapTask。默认情况下 split 与 block 的是一对一关系。</p>
+</li>
+<li>
+<p>逻辑规划后，由 <code>RecordReader</code> 对象（默认 <code>LineRecordReader</code>）进行读取，以回车换行作为分隔符，读取一行数据，返回 <code>&lt;key，value&gt;</code>。key 表示每行首字符偏移量，value 表示这一行文本内容。</p>
+</li>
+<li>
+<p>对于每一个 <code>&lt;key,value&gt;</code>，调用一次 map() 方法处理。</p>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">block VS split</p>
+</div>
+<ul>
+<li>数据块（Block）：HDFS 存储的数据单位</li>
+<li>
+<p>切片（Split）：只是逻辑上对输入进行分片，并不会在磁盘上将其切分存储。<strong>切片是 MapReduce 程序输入数据的单位，一个切片对应启动一个 MapTask。</strong></p>
+</li>
+<li>
+<p>如果 Block 大小为 128M，切片大小为 100M，那么每个 Block 剩下的 28M，会跨节点进行网络通信传输，并且有额外的 IO 开销，浪费资源。</p>
+</li>
+<li>
+<p><strong>切片时，不考虑数据集整体，而是逐个针对每一个文件单独切片。</strong></p>
+</li>
+<li>
+<p>每次切片时，都要判断切完剩下的部分是否大于块的 1.1 倍，不大于 1.1 倍就划分为一个切片。</p>
+</li>
+<li>
+<p>切片规划文件会上传至 Yarn，Yarn 上的 MRAppMaster 就可以根据切片规划文件开启对应数量的 MapTask。</p>
+</li>
+</ul>
+<p><strong>FileInputFormat 实现类</strong></p>
+<p>在运行 MapReduce 程序时，输入的文件格式包括：基于行的日志文件、二进制格式文件、数据库表等。 那么，针对不同的数据类型， MapReduce 是如何读取这些数据的呢？</p>
+<p>FileInputFormat 常见的接口实现类包括：TextInputFormat、KeyValueTextInputFormat、NLineInputFormat、CombineTextInputFormat 和自定义 InputFormat 等。</p>
+<p><strong>TextInputFormat</strong></p>
+<p><strong>TextInputFormat 是默认的 FileInputFormat 实现类</strong>。按行读取每条记录。 键是存储该行在整个文件中的起始字节偏移量， LongWritable 类型。值是这行的内容，不包括任何行终止符（换行符和回车符），Text 类型。</p>
+<p><strong>CombineTextInputFormat</strong></p>
+<p>框架默认的 TextInputFormat 切片机制是对任务按文件规划切片，<strong>不管文件多小，都会是一个单独的切片，都会交给一个 MapTask</strong>，这样如果有大量小文件，就会产生大量的 MapTask，处理效率极其低下。</p>
+<p>CombineTextInputFormat 用于<strong>小文件过多的场景</strong>，它可以将多个小文件从逻辑上规划到一个切片中，这样，多个小文件就可以交给一个 MapTask 处理。</p>
+<p>虚拟存储切片最大值设置</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">CombineTextInputFormat</span><span class="p">.</span><span class="na">setMaxInputSplitSize</span><span class="p">(</span><span class="n">job</span><span class="p">,</span><span class="w"> </span><span class="mi">4194304</span><span class="p">);</span><span class="w"> </span><span class="c1">// 4m</span>
+</code></pre></div>
+<p>注意：虚拟存储切片最大值设置最好根据实际的小文件大小情况来设置具体的值。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202309190126872.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202309190126872.png" /></a></p>
+<hr />
+<h3 id="partition">Partition 分区</h3>
+<ul>
+<li><strong>ReduceTask 个数的改变导致了数据分区的产生，</strong>而不是数据分区导致了 ReduceTask 个数的改变。</li>
+<li>如果我们手动设置了 ReduceTask 的个数 &gt; 1，那么会使用相应的 Partitioner。</li>
+<li>默认 HashPartitioner，按照 key 的 hashCode % numReduceTasks 分区。</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">HashPartitioner</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span><span class="w"> </span><span class="n">V</span><span class="o">&gt;</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">Partitioner</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span><span class="w"> </span><span class="n">V</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">getPartition</span><span class="p">(</span><span class="n">K</span><span class="w"> </span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">V</span><span class="w"> </span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">numReduceTasks</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">key</span><span class="p">.</span><span class="na">hashCode</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">Integer</span><span class="p">.</span><span class="na">MAX_VALUE</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">numReduceTasks</span><span class="p">;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">}</span>
+</code></pre></div>
+<ul>
+<li>具体在 <code>context.write(key, value)</code> 里的 <code>write()</code> 方法里，有一个 <code>collector.collect(key, value, partitioner.getPartition())</code> 方法，里面的 <code>partitioner</code> 就是默认的 HashPartitioner。</li>
+</ul>
+<hr />
+<h3 id="sort">Sort 排序</h3>
+<p>排序是 MapReduce 框架中最重要的操作之一。</p>
+<p>MapTask 和 ReduceTask 均会对数据按照 key 进行排序。该操作属于 Hadoop 的默认行为。任何应用程序中的数据均会被排序，而不管逻辑上是否需要。</p>
+<p>默认排序是按照字典顺序排序，且实现该排序的方法是快速排序。</p>
+<div class="admonition question">
+<p class="admonition-title">为什么强制要求排序？</p>
+<p>为了方便分组。如果不排序，到 reduce 阶段时，为了合并计算所有相同的 key 对应的 value，每个 key 都必须 O(n) 地扫描一次文件。如果排序了，每次只需要比较当前 key 是否和上一个相同即可。</p>
+</div>
+<p>对于 MapTask，它会将处理的结果暂时放到环形缓冲区中，<strong>当环形缓冲区使用率达到一定阈值后，再对缓冲区中的数据进行一次快速排序</strong>，并将这些有序数据溢写到磁盘上，而当数据处理完毕后，它会对磁盘上所有文件按照分区进行归并排序。</p>
+<p>对于 ReduceTask，它从每个 MapTask 上远程拷贝相应的数据文件，如果文件大小超过一定阈值，则溢写磁盘上，否则存储在内存中。如果磁盘上文件数目达到一定阈值，则进行一次归并排序以生成一个更大文件。当所有数据拷贝完毕后，<strong>ReduceTask 统一对内存和磁盘上的所有数据进行一次归并排序。</strong></p>
+<p>自定义的 bean 对象做为 key 传输，<strong>需要实现 WritableComparable 接口，重写 compareTo 方法</strong>，就可以实现排序。</p>
+<hr />
+<h3 id="combiner">Combiner 规约</h3>
+<p><strong>Combiner in one sentence：对 Map 端的输出先做一次局部合并，以减少在 Map 和 Reduce 节点之间的数据传输量。</strong></p>
+<p>通过使用 Combiner，可以在 Map 任务的本地进行一些预先合并的操作，从而减少输出数据量。这样可以降低数据传输到 Reducer 的成本，并减少网络带宽的使用。特别是在 Map 输出数据具有冗余或重复的情况下，Combiner 可以大大减少数据传输量，提高整体性能。</p>
+<ul>
+<li>
+<p>Combiner 是 MR 程序中 Mapper 和 Reducer 之外的一种组件。</p>
+</li>
+<li>
+<p>Combiner 组件的父类就是 Reducer。</p>
+</li>
+<li>
+<p>Combiner 和 Reducer 的区别在于运行的位置：</p>
+</li>
+<li>
+<p><strong>Combiner 是在每一个 MapTask 所在的节点运行，是局部聚合</strong></p>
+</li>
+<li>
+<p><strong>Reducer 是接收全局所有 Mapper 的输出结果，是全局聚合</strong></p>
+</li>
+<li>
+<p><strong>Combiner 的意义就是对每一个 MapTask 的输出进行局部汇总，以减小网络传输量。</strong></p>
+</li>
+<li>
+<p><strong>Combiner 能够应用的前提是不能影响最终的业务逻辑</strong>，而且，Combiner 的输出 kv 应该跟 Reducer 的输入 kv 类型要对应起来。</p>
+</li>
+</ul>
+<p>自定义 combiner：</p>
+<ul>
+<li>自定义一个 Combiner 继承 Reducer，重写 reduce() 方法</li>
+<li>在 Job 驱动类中设置：</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">job</span><span class="p">.</span><span class="na">setCombinerClass</span><span class="p">(</span><span class="n">WordCountCombiner</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+</code></pre></div>
+<p>注意：如果 MR 程序没有 Reduce 阶段（reduceTask 个数为 0），那么整个 shuffle 过程也没有了，combiner 也就不会起作用，只会有 map() 方法的输出。</p>
+<p>小技巧：直接使用驱动中自己实现的 Reducer 代替 Combiner 即可。</p>
+<hr />
+<h3 id="outputformat">OutputFormat 数据输出</h3>
+<p>默认实现类为 TextOutputFormat。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202309210145053.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202309210145053.png" /></a></p>
+<hr />
+<h2 id="maptask"><img alt="🔥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f525.svg" title=":fire:" /> MapTask 工作机制详解</h2>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310030234857.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310030234857.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310030236450.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310030236450.png" /></a></p>
+<ul>
+<li>内存缓冲区的目的是为了减少磁盘 I/O</li>
+<li>分区只会在 ReduceTask &gt;= 2 的时候产生。</li>
+</ul>
+<p><strong>详细步骤：</strong></p>
+<p><mark><strong>Step 1</strong></mark></p>
+<ul>
+<li>
+<p>读取数据组件 <code>InputFormat</code>（默认 <code>TextInputFormat</code>）会通过 <code>getSplits()</code> 方法对输入目录中文件进行逻辑规划得到 splits，有多少个 split 就对应启动多少个 MapTask。默认情况下 split 与 block 的是一对一关系。</p>
+</li>
+<li>
+<p>逻辑规划后，由 <code>RecordReader</code> 对象（默认 <code>LineRecordReader</code>）进行读取，以回车换行作为分隔符，读取一行数据，返回 <code>&lt;key，value&gt;</code>。key 表示每行首字符偏移值，value 表示这一行文本内容。</p>
+</li>
+<li>
+<p>读取 split 返回 <code>&lt;key,value&gt;</code>，进入用户自己继承的 Mapper 类中，执行用户重写的 map() 方法。RecordReader 读取一行数据，调用一次 map() 方法处理。</p>
+</li>
+</ul>
+<p><mark><strong>Step 2</strong></mark></p>
+<ul>
+<li>
+<p>map() 处理完之后，将 map() 的每条结果通过 <code>context.write()</code> 由 collector 进行 <code>collect()</code> 数据收集。在 <code>collect()</code> 中，会先对其进行分区处理，默认使用 HashPartitioner。<code>collector.collect(key, value, partitioner.getPartition())</code> 。</p>
+</li>
+<li>
+<p>分区计算之后，会将数据写入内存，内存中这片区域叫做<strong>环形缓冲区</strong>，缓冲区的作用是批量收集 map 结果，减少磁盘 IO 的影响。<code>&lt;key, value&gt;</code> 对以及 partition 的结果都会被写入缓冲区。当然写入之前，key 与 value 值都会被序列化成<strong>字节数组</strong>。</p>
+</li>
+<li>
+<p>环形缓冲区就是内存中的一块区域，<strong>底层是字节数组</strong>。缓冲区是有大小限制，默认是 100MB。</p>
+</li>
+</ul>
+<p><mark><strong>Step 3</strong></mark></p>
+<ul>
+<li>
+<p>当 MapTask 的输出结果很多时，就可能会撑爆内存，所以需要在一定条件下将缓冲区中的数据临时写入磁盘，然后重新利用这块缓冲区。这个从内存往磁盘写数据的过程被称为 Spill，中文可译为<strong>溢写</strong>。</p>
+</li>
+<li>
+<p><strong>溢写的过程是由单独线程来完成，不影响往缓冲区写 map 结果的线程</strong>。溢写线程启动时不应该阻止 map 的结果输出，所以整个缓冲区有个溢写的比例 spill.percent。这个比例默认是 0.8，也就是<strong>当缓冲区的数据已经达到阈值</strong>（buffer size * spill percent = 100MB * 0.8 = 80MB），<strong>溢写线程启动，锁定这 80MB 的内存，执行溢写过程</strong>。Map task 的输出结果还可以往剩下的 20MB 内存中写，互不影响。</p>
+</li>
+<li>
+<p>当溢写线程启动后，需要对这 80MB 空间内的 key 做排序 (Sort)。<strong>排序是 MapReduce 模型默认的行为</strong>，这里的排序也是对序列化的字节做的排序。</p>
+</li>
+<li>
+<p>如果 job 设置过 Combiner，<strong>排序之后，就是使用 Combiner 的时候了</strong>。将有相同 key 的键值对的 value 加起来，减少溢写到磁盘的数据量。Combiner 会优化 MapReduce 的中间结果，所以它在整个模型中会多次使用。</p>
+</li>
+</ul>
+<p>溢写的过程总结：</p>
+<ul>
+<li>排序</li>
+<li>combiner（如果有）</li>
+<li>压缩（如果有）</li>
+</ul>
+<p><mark><strong>Step 4</strong></mark></p>
+<ul>
+<li>
+<p>每次溢写会在磁盘上生成一个临时文件，如果 map 的输出结果真的很大，有多次这样的溢写发生，磁盘上相应的就会有多个临时文件存在。</p>
+</li>
+<li>
+<p>当整个数据处理结束之后开始对磁盘中的临时文件进行 merge 合并，因为最终的文件只有一个，写入磁盘，并且为这个文件提供了一个索引文件，以记录每个 reduce 对应数据的偏移量。</p>
+</li>
+</ul>
+<hr />
+<h2 id="reducetask"><img alt="🔥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f525.svg" title=":fire:" /> ReduceTask 工作机制详解</h2>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310030301547.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310030301547.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310030308950.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310030308950.png" /></a></p>
+<p><mark><strong>Step 1</strong></mark></p>
+<ul>
+<li><strong>Copy 阶段</strong>，简单地拉取数据。Reduce 进程启动一些数据 copy 线程 (Fetcher)，通过 HTTP 方式请求 MapTask <strong>获取属于自己的数据</strong>。</li>
+</ul>
+<p>注：EventFetcher 用于判断哪些 MapTask 已经完成工作，Fetcher 线程用于实际执行拉取数据。</p>
+<p><mark><strong>Step 2</strong></mark></p>
+<ul>
+<li>
+<p><strong>Merge &amp; Sort 阶段</strong>。Copy 过来的数据会先放入内存缓冲区中，这里的缓冲区大小要比 Map 端的更为灵活。</p>
+</li>
+<li>
+<p><strong>merge 有三种形式</strong>：内存到内存，内存到磁盘，磁盘到磁盘。<strong>默认情况下第一种形式不启用</strong>。当内存中的数据量到达一定阈值，就启动内存到磁盘的 merge。第二种 merge 方式一直在运行，直到没有 map 端的数据时才结束，然后启动第三种磁盘到磁盘的 merge 方式生成最终的文件。</p>
+</li>
+<li>
+<p>把分散的数据合并成一个大的数据后，还会再对合并后的数据排序。默认 key 的字典序排序。</p>
+</li>
+</ul>
+<p><mark><strong>Step 3</strong></mark></p>
+<ul>
+<li>
+<p><strong>Reduce 阶段</strong>。对排序后的键值对调用 reduce 方法，<strong>key 相等的键值对组成一组，调用一次 reduce() 方法</strong>。所谓分组就是纯粹的前后两个 key 比较，如果相等就继续判断下一个是否和当前相等。（为什么可以这样？因为经过了排序）</p>
+</li>
+<li>
+<p>reduce 处理的结果会调用默认输出组件 <code>TextOutputFormat</code> 写入到指定的目录文件中。<code>TextOutputFormat</code> 默认是一次输出写一行，key 和 value 之间以制表符 <code>\t</code> 分割。</p>
+</li>
+</ul>
+<hr />
+<h2 id="shuffle">Shuffle 工作机制详解</h2>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310030317655.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310030317655.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310030413591.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310030413591.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310030418522.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310030418522.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310030421662.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310030421662.png" /></a></p>
+<hr />
+<h2 id="mapreduce_7">MapReduce 中的排序</h2>
+<p>在 Map 任务和 Reduce 任务的过程中，一共发生了 3 次排序</p>
+<ul>
+<li>
+<p>当内存的环形缓冲区达到设定的阈值，在溢写磁盘之前，后台线程会对缓冲区的数据进行分区，在每个分区中进行内排序。</p>
+</li>
+<li>
+<p>在 Map 任务完成之前，磁盘上存在多个已经分好区，并排好序的溢写文件，这时溢写文件将被合并成一个已分区且已排序的输出文件。由于溢写文件已经经过第一次排序，所有合并文件只需要再做一次归并排序即可使输出文件整体有序。</p>
+</li>
+<li>
+<p>在 reduce 阶段，需要将多个 Map 任务的输出文件 copy 到 ReduceTask 中后合并，由于经过第二次排序，所以合并文件时只需再做一次归并排序即可使输出文件整体有序。</p>
+</li>
+</ul>
+<p>在这 3 次排序中第一次是内存缓冲区溢写时做的内排序，使用的算法是快速排序，第二次排序和第三次排序都是在文件合并阶段发生的，使用的是归并排序。</p>
+<div class="admonition question">
+<p class="admonition-title">为什么需要排序？</p>
+</div>
+<p>排序的<strong>主要目的是为了实现数据的分组</strong>，由于在 Reducer 中相同的 key 会被分到同一个分组中，因此对数据进行排序可以保证相同的 key 都在相邻的位置，方便后续的 reduce 过程。</p>
+<hr />
+<h2 id="reduce-side-join">Reduce Side Join</h2>
+<ul>
+<li>reduce side join，顾名思义，<strong>在 reduce 阶段执行 join 关联操作</strong>。</li>
+<li>这也是最容易想到和实现的 join 方式。因为通过 shuffle 过程就可以将相关的数据分到相同的分组中，这将为后面的 join 操作提供了便捷。</li>
+</ul>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310030433450.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310030433450.png" /></a></p>
+<p><strong>步骤：</strong></p>
+<ul>
+<li>mapper 分别读取不同的数据集；</li>
+<li>mapper 的输出中，通常以 join 的字段作为输出的 key；</li>
+<li>不同数据集的数据经过 shuffle，key 一样的会被分到同一分组处理；</li>
+<li>在 reduce 中根据业务需求把数据进行关联整合汇总，最终输出。</li>
+</ul>
+<p><strong>弊端：</strong></p>
+<ul>
+<li>reduce 端 join 最大的问题是整个 join 的工作是在 reduce 阶段完成的，但是通常情况下 MapReduce 中 reduce 的并行度是极小的（默认是 1 个），这就使得<strong>所有的数据都挤压到 reduce 阶段处理，压力颇大</strong>。虽然可以设置 reduce 的并行度，但是又会导致最终结果被分散到多个不同文件中。</li>
+<li>并且在数据从 mapper 到 reducer 的过程中，<strong>shuffle 阶段十分繁琐，数据集大时成本极高</strong>。</li>
+</ul>
+<p><a href="https://www.bilibili.com/video/BV11N411d7Zh?p=233&amp;vd_source=f3af28d1fd89af1eb80db058885d7130">12--MapReduce Join 关联操作--reduce side join--Mapper 类代码实现_哔哩哔哩_bilibili</a></p>
+<hr />
+<h2 id="_1">分布式缓存</h2>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310030504745.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310030504745.png" /></a></p>
+<p><strong>使用方式：</strong></p>
+<ul>
+<li>Step1：添加缓存文件。可以使用 MapReduce 的 API 添加需要缓存的文件。</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">//添加归档文件到分布式缓存中</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">job</span><span class="p">.</span><span class="na">addCacheArchive</span><span class="p">(</span><span class="n">URI</span><span class="w"> </span><span class="n">uri</span><span class="p">);</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1">//添加普通文件到分布式缓存中</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">job</span><span class="p">.</span><span class="na">addCacheFile</span><span class="p">(</span><span class="n">URI</span><span class="w"> </span><span class="n">uri</span><span class="p">);</span>
+</code></pre></div>
+<p>注意：缓存文件必须放在 HDFS 上（客户端将本地文件上传至 HDFS），即必须在集群模式下才能使用。</p>
+<ul>
+<li>Step2：MapReduce 程序中读取缓存文件。</li>
+</ul>
+<p>在 Mapper 类或者 Reducer 类的 <code>setup()</code> 方法中，用 <code>BufferedReader</code> 获取分布式缓存中的文件内容。</p>
+<p><code>BufferedReader</code> 是带缓冲区的字符流，能够减少访问磁盘的次数，提高文件读取性能；并且可以一次性读取一行字符。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kd">protected</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="n">Context</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="n">IOException</span><span class="p">,</span><span class="n">InterruptedException</span><span class="p">{</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">   </span><span class="n">FileReader</span><span class="w"> </span><span class="n">reader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">FileReader</span><span class="p">(</span><span class="s">&quot;myfile&quot;</span><span class="p">);</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">   </span><span class="n">BufferReader</span><span class="w"> </span><span class="n">br</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">BufferedReader</span><span class="p">(</span><span class="n">reader</span><span class="p">);</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">......</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="map-side-join">Map Side Join</h2>
+<p>Map Side Join 指的是在 Map 阶段执行 Join 操作，并且<strong>通常程序也没有了 Reduce 阶段</strong>，避免了繁琐的 Shuffle 阶段。</p>
+<p>Map Side Join 适合小表 Join 大表的情况。</p>
+<p>实现 Map Side Join 的关键是使用 MapReduce 的分布式缓存。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310051522131.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310051522131.png" /></a></p>
+<p><strong>实现思路：</strong></p>
+<ul>
+<li>首先分析处理的数据集，使用分布式缓存技术将小的数据集进行分布式缓存。</li>
+<li>MapReduce 框架在执行的时候会自动将缓存的数据分发到各个 MapTask 运行的机器上。</li>
+<li><strong>在 mapper 初始化的时候从分布式缓存中读取小数据集数据</strong>，然后和自己读取的大数据集进行 join 关联，输出最终的结果。</li>
+</ul>
+<p><strong>优势：</strong></p>
+<ul>
+<li>整个 join 的过程没有 shuffle，没有 reduce，减少 shuffle 时候的数据传输成本。</li>
+<li>并且 mapper 的并行度可以根据输入数据量自动调整（逻辑切片），充分发挥分布式计算的优势。</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>只有在执行 Map 端连接操作的其中一个表足够小以适应内存时，Map 端连接才是适当的。因此，对于两个表都包含大量数据的情况，执行 Map 端连接是不适合的。</li>
+</ul>
+<p><a href="https://www.bilibili.com/video/BV11N411d7Zh?p=238&amp;vd_source=f3af28d1fd89af1eb80db058885d7130">17--MapReduce Join 关联操作--map side join--案例需求与实现思路_哔哩哔哩_bilibili</a></p>
+<hr />
+<h2 id="mapreduce_8"><img alt="🔥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f525.svg" title=":fire:" /> MapReduce 优化</h2>
+<p>MapReduce 的优化核心在于<strong>修改数据文件类型、合并小文件、使用压缩</strong>等方式，通过降低 IO 开销来提升 MapReduce 过程中 Task 的执行效率。</p>
+<p>此外，也可以通过调节一些<strong>参数</strong>来从整体上提升 MapReduce 的性能。</p>
+<p>从整个 MapReduce 流程上来看：</p>
+<ul>
+<li>数据输入阶段：合并小文件、采用 CombineTextInputFormat 解决大量小文件的问题</li>
+<li>Map 阶段：减少溢写次数（增加缓冲区大小、提高阈值）、减少合并次数（增加 merge 的文件数量阈值）、使用 Combiner 进行局部聚合、使用压缩</li>
+<li>Reduce 阶段：设置合理的 ReduceTask 个数</li>
+<li>考虑数据倾斜问题</li>
+</ul>
+<h3 id="_2">文件存储格式优化</h3>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310030544471.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310030544471.png" /></a></p>
+<p><strong>行式存储适合数据的写入，列式存储适合数据的查询。</strong></p>
+<p><strong>Sequence File：</strong></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310021715272.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310021715272.png" /></a></p>
+<p>优点：</p>
+<ul>
+<li>二进制格式存储，比文本文件更紧凑</li>
+<li>支持不同级别的压缩（Record 级别和 Block 级别）</li>
+<li>文件支持拆分和并行处理，适合 MapReduce 程序</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>二进制格式不方便查看</li>
+<li>特定于 Hadoop，只有 Java API 可以与之交互</li>
+</ul>
+<p>SequenceFile 文件，主要由一条条 record 记录组成；每个 record 是键值对形式的</p>
+<ul>
+<li>
+<p>SequenceFile 文件可以作为小文件的存储容器；</p>
+</li>
+<li>
+<p>每条 record 保存一个小文件的内容</p>
+</li>
+<li>小文件名作为当前 record 的键；</li>
+<li>小文件的内容作为当前 record 的值；</li>
+<li>
+<p>如 10000 个 100KB 的小文件，可以编写程序将这些文件放到一个 SequenceFile 文件。</p>
+</li>
+<li>
+<p>一个 SequenceFile 是<strong>可分割</strong>的，所以 MapReduce 可将文件切分成块，每一块独立操作。</p>
+</li>
+</ul>
+<p>我们直接将数据写入一个 SequenceFile 文件，省去小文件作为中间媒介。</p>
+<hr />
+<p><strong>ORC File：</strong></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310030556568.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310030556568.png" /></a></p>
+<ul>
+<li><strong>ORC 文件空间更小、列处理更快、可以构建索引、支持压缩</strong></li>
+<li>列式存储适合数据查询，也适合数据压缩、编码优化。</li>
+<li>一个 Stripe = 一个 horizontal partition（行组）。</li>
+<li>ORC 文件是以<strong>二进制方式存储</strong>的，所以是不可以直接读取。</li>
+</ul>
+<hr />
+<h3 id="_3">数据压缩优化</h3>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310032141227.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310032141227.png" /></a></p>
+<p>MR 过程中两个输出阶段可以进行压缩：</p>
+<ul>
+<li>Map 的输出阶段，减少 Mapper 和 Reducer 间网络传输的开销，加快文件传输效率</li>
+<li>Reduce 的输出，减少磁盘存储的空间</li>
+</ul>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310032146978.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310032146978.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310032156462.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310032156462.png" /></a></p>
+<hr />
+<h3 id="_4">小文件优化</h3>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310032300695.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310032300695.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310032301276.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310032301276.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310032301459.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310032301459.png" /></a></p>
+<hr />
+<h3 id="shuffle_1">Shuffle 优化</h3>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310032308831.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310032308831.png" /></a></p>
+<p><strong>减少溢写次数：</strong></p>
+<ul>
+<li>调整缓冲区大小</li>
+<li>调整溢写触发比例的阈值</li>
+</ul>
+<p><strong>减少 merge 次数：</strong></p>
+<ul>
+<li>默认每次生成 10 个临时文件进行合并，增加文件个数，可以减少 merge 的次数</li>
+</ul>
+<hr />
+<h3 id="_5">参数优化</h3>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310032157027.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310032157027.png" /></a></p>
+<div class="admonition question">
+<p class="admonition-title">在调整参数属性之后，如何评估 MR 的性能？</p>
+<p>使用基准测试。
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">yarn</span><span class="w"> </span><span class="n">jar</span><span class="w"> </span><span class="o">/</span><span class="n">hadoop</span><span class="o">-</span><span class="mf">3.1.4</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/</span><span class="n">mapreduce</span><span class="o">/</span><span class="n">hadoop</span><span class="o">-</span><span class="n">mapreduce</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">jobclient</span><span class="o">-</span><span class="mf">3.1.4</span><span class="o">-</span><span class="n">tests</span><span class="p">.</span><span class="na">jar</span>
+</code></pre></div></p>
+</div>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310032251737.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310032251737.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202310032254302.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202310032254302.png" /></a></p>
+<hr />
+<h2 id="mapreduce_9">MapReduce 数据倾斜</h2>
+<p>数据倾斜是指在数据处理过程中，某些特定的键（Key）或分区（Partition）上的数据量远远超过其他键或分区，导致部分计算节点的负载不均衡，从而降低整个作业的性能。</p>
+<p>常见的数据倾斜通常有两种：</p>
+<ul>
+<li>数据频率倾斜：某些 key 对应的键值对数量远远大于其他 key 对应的键值对数量</li>
+<li>数据大小倾斜：部分记录的大小远远大于平均值</li>
+</ul>
+<p>在 MapReduce 中，数据倾斜可能发生在 Map 端和 Reduce 端。Reduce 端的数据倾斜常常来源于 MapReduce 的默认分区器。</p>
+<p><strong>解决方案：</strong></p>
+<ul>
+<li>自定义分区：基于业务背景进行自定义分区，或者对倾斜严重的 key 再做一层 hash，将数据打散</li>
+<li>使用 Combiner 进行局部聚合</li>
+<li>动态调整 Reducer 的个数，使得数据能够更均匀地分布到各个 Reducer 上</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "search.suggest", "search.highlight", "content.code.copy", "navigation.top", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.f1b6f286.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
+</html>

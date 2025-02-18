@@ -1,0 +1,4076 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../1.Spark%20Core/">
+      
+      
+        <link rel="next" href="../PySpark/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.4">
+    
+    
+      
+        <title>Spark SQL - Everything Big Data</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8608ea7d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i%7CConsolas:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Lato";--md-code-font:"Consolas"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+   <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../assets/javascripts/glightbox.min.js"></script></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#spark-sql" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="Everything Big Data" class="md-header__button md-logo" aria-label="Everything Big Data" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m-3.1 3.9s-.7-.3-1-.3c-.6-.1-1 .1-1.2 1.1L12 16.8c-.2.8-.5 1.4-1 1.8-.4.3-.8.4-1.3.4-.8 0-2-.5-2-.5l.5-1.4s.8.3 1 .3c.3.1.5 0 .7-.1s.3-.4.4-.7l1.6-9.2c.1-.8.5-1.4 1-1.9.6-.4 1.3-.5 2.1-.4.7.1 1.5.5 1.5.5z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Everything Big Data
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Spark SQL
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+    
+  
+  Welcome
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Flink/1.Flink%20%E5%9F%BA%E7%A1%80/" class="md-tabs__link">
+          
+  
+  Flink
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Hadoop/1.%20Hadoop/" class="md-tabs__link">
+          
+  
+  Hadoop
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Hive/1.%20Hive/" class="md-tabs__link">
+          
+  
+  Hive
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../SQL/SQL%20%E5%88%B7%E9%A2%98/" class="md-tabs__link">
+          
+  
+  SQL
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../1.Spark%20Core/" class="md-tabs__link">
+          
+  
+  Spark
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../blog/" class="md-tabs__link">
+          
+  
+  Blog
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/Linux/" class="md-tabs__link">
+          
+  
+  大数据技术栈
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E7%90%86%E8%AE%BA/" class="md-tabs__link">
+          
+  
+  数据仓库
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/0.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/" class="md-tabs__link">
+          
+  
+  数据结构与算法
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Everything Big Data" class="md-nav__button md-logo" aria-label="Everything Big Data" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m-3.1 3.9s-.7-.3-1-.3c-.6-.1-1 .1-1.2 1.1L12 16.8c-.2.8-.5 1.4-1 1.8-.4.3-.8.4-1.3.4-.8 0-2-.5-2-.5l.5-1.4s.8.3 1 .3c.3.1.5 0 .7-.1s.3-.4.4-.7l1.6-9.2c.1-.8.5-1.4 1-1.9.6-.4 1.3-.5 2.1-.4.7.1 1.5.5 1.5.5z"/></svg>
+
+    </a>
+    Everything Big Data
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Welcome
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Flink
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Flink
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/1.Flink%20%E5%9F%BA%E7%A1%80/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flink 基础
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/2.DataStream%20API/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DataStream API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/3.%E6%97%B6%E9%97%B4%E5%92%8C%E7%AA%97%E5%8F%A3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    时间和窗口
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/4.%E5%A4%9A%E6%B5%81%E8%BD%AC%E6%8D%A2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    多流转换
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/5.%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    状态管理
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/6.%E5%AE%B9%E9%94%99%E6%9C%BA%E5%88%B6/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    容错机制
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/7.Process%20Function/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Process Function
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/8.%E5%BC%82%E6%AD%A5%20IO/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    异步 I/O
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20CDC/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flink CDC
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_10" id="__nav_2_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Flink SQL
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_10">
+            <span class="md-nav__icon md-icon"></span>
+            Flink SQL
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/Examples/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Examples
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/Joins/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Joins
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/Top-N/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Top-N 与 窗口 Top-N
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/%E6%A8%A1%E5%BC%8F%E6%A3%80%E6%B5%8B/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    模式检测
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/%E6%B5%81%E5%BC%8F%E6%A6%82%E5%BF%B5/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    流式概念
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/%E7%AA%97%E5%8F%A3%E5%87%BD%E6%95%B0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    窗口函数
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_11" id="__nav_2_11_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    论文 & FLIP
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_11">
+            <span class="md-nav__icon md-icon"></span>
+            论文 & FLIP
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/%E8%AE%BA%E6%96%87%20%26%20FLIP/98.Flink%20%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flink 论文精读
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/%E8%AE%BA%E6%96%87%20%26%20FLIP/99.Dataflow%20%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dataflow 论文精读
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/%E8%AE%BA%E6%96%87%20%26%20FLIP/FLIP/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FLIP
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Hadoop
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Hadoop
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hadoop/1.%20Hadoop/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hadoop
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hadoop/2.%20HDFS/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HDFS
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hadoop/3.%20MapReduce/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MapReduce
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hadoop/4.%20Yarn/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Yarn
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Hive
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Hive
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hive/1.%20Hive/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hive/2.%20Hive%20%E9%9D%A2%E8%AF%95%E9%A2%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive 面试题
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hive/Hive%20%E5%87%BD%E6%95%B0%E7%9B%B8%E5%85%B3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive 函数相关
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hive/Hive%20%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive 性能调优
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    SQL
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            SQL
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SQL/SQL%20%E5%88%B7%E9%A2%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SQL 刷题
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SQL/SQL%20%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive/Spark SQL 相关知识
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SQL/Spark%20SQL%20%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0%E6%95%B4%E7%90%86/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark SQL 常用函数整理
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SQL/UDF%20%E5%BC%80%E5%8F%91/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    UDF 开发
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Spark
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Spark
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1.Spark%20Core/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark Core
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Spark SQL
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Spark SQL
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#dataframe-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      DataFrame &amp; DataSet
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DataFrame & DataSet">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rdddataframe-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      RDD、DataFrame 和 DataSet 的异同
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#catalyst" class="md-nav__link">
+    <span class="md-ellipsis">
+      Catalyst 优化器
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tungsten" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tungsten
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spark-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spark Session
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dataframe" class="md-nav__link">
+    <span class="md-ellipsis">
+      创建 DataFrame
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="创建 DataFrame">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#driver-dataframe" class="md-nav__link">
+    <span class="md-ellipsis">
+      从 Driver 创建 DataFrame
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dataframe_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      从文件系统创建 DataFrame
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rdbms-dataframe" class="md-nav__link">
+    <span class="md-ellipsis">
+      从 RDBMS 创建 DataFrame
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      创建 DataSet
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rdddataframedataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      RDD、DataFrame、DataSet 的转换
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="RDD、DataFrame、DataSet 的转换">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rdd-to-dataframe" class="md-nav__link">
+    <span class="md-ellipsis">
+      RDD to DataFrame
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rdd-to-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      RDD to DataSet
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dataframe-to-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      DataFrame to DataSet
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dataset-to-dataframe" class="md-nav__link">
+    <span class="md-ellipsis">
+      DataSet to DataFrame
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dataframe_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      DataFrame 算子
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DataFrame 算子">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      同源类算子
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      探索类算子
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      清洗类算子
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      转换类算子
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      分析类算子
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      持久化类算子
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#join" class="md-nav__link">
+    <span class="md-ellipsis">
+      Join 的实现机制和策略
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Join 的实现机制和策略">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nested-loop-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Loop Join
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sort-merge-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sort Merge Join
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hash-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hash Join
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      总结
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shuffle-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      Shuffle Join
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#broadcast-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      Broadcast Join
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#join_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Join 策略选择
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      源码
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spark-sql_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spark SQL 的表类型
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      缓存
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      元数据管理
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spark-on-hive-hive-on-spark" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spark on Hive &amp; Hive on Spark
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Spark on Hive & Hive on Spark">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#spark-on-hive" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spark on Hive
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hive-on-spark" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hive on Spark
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#udf-udaf" class="md-nav__link">
+    <span class="md-ellipsis">
+      UDF &amp; UDAF
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aqe" class="md-nav__link">
+    <span class="md-ellipsis">
+      AQE
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dpp" class="md-nav__link">
+    <span class="md-ellipsis">
+      DPP
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DPP">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      实现原理
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      总结
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PySpark/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PySpark
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDD%20%E7%AE%97%E5%AD%90%20API/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RDD 算子 API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Spark%20%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark 性能优化
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Spark%20%E9%9D%A2%E8%AF%95%E9%A2%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark 面试题
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Blog
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Blog
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Blog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    归档
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    大数据技术栈
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            大数据技术栈
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/Linux/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Linux
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_2" id="__nav_8_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    HBase
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_2">
+            <span class="md-nav__icon md-icon"></span>
+            HBase
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/HBase/1.HBase/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HBase
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/HBase/99.inbox/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Inbox
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_3" id="__nav_8_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Kafka
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_3">
+            <span class="md-nav__icon md-icon"></span>
+            Kafka
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/Kafka/1.Kafka/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Kafka
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_4" id="__nav_8_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Scala
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_4">
+            <span class="md-nav__icon md-icon"></span>
+            Scala
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/Scala/Scala/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Scala
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_5" id="__nav_8_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    ZooKeeper
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_5">
+            <span class="md-nav__icon md-icon"></span>
+            ZooKeeper
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/ZooKeeper/1.%20ZooKeeper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ZooKeeper
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/ZooKeeper/2.%20ZooKeeper%20%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ZooKeeper 如何实现分布式锁
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    数据仓库
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            数据仓库
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E7%90%86%E8%AE%BA/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    数据仓库理论
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    数据结构与算法
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            数据结构与算法
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/0.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    数据结构复习
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/1.%E7%AE%97%E6%B3%95%E5%A4%8D%E4%B9%A0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    算法复习
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    数据结构与算法笔记
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E7%BA%BF%E6%80%A7%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    线性动态规划
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    背包问题
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_10_6" id="__nav_10_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    好题分类
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_6">
+            <span class="md-nav__icon md-icon"></span>
+            好题分类
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E4%BA%8C%E5%8F%89%E6%A0%91/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    二叉树
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E5%89%8D%E7%BC%80%E5%92%8C/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    前缀和
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E5%93%88%E5%B8%8C%E8%A1%A8/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    哈希表
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E5%A4%9A%E7%A7%8D%E8%A7%A3%E6%B3%95/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    多种解法
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    滑动窗口
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E9%93%BE%E8%A1%A8/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    链表
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#dataframe-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      DataFrame &amp; DataSet
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DataFrame & DataSet">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rdddataframe-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      RDD、DataFrame 和 DataSet 的异同
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#catalyst" class="md-nav__link">
+    <span class="md-ellipsis">
+      Catalyst 优化器
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tungsten" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tungsten
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spark-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spark Session
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dataframe" class="md-nav__link">
+    <span class="md-ellipsis">
+      创建 DataFrame
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="创建 DataFrame">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#driver-dataframe" class="md-nav__link">
+    <span class="md-ellipsis">
+      从 Driver 创建 DataFrame
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dataframe_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      从文件系统创建 DataFrame
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rdbms-dataframe" class="md-nav__link">
+    <span class="md-ellipsis">
+      从 RDBMS 创建 DataFrame
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      创建 DataSet
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rdddataframedataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      RDD、DataFrame、DataSet 的转换
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="RDD、DataFrame、DataSet 的转换">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rdd-to-dataframe" class="md-nav__link">
+    <span class="md-ellipsis">
+      RDD to DataFrame
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rdd-to-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      RDD to DataSet
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dataframe-to-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      DataFrame to DataSet
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dataset-to-dataframe" class="md-nav__link">
+    <span class="md-ellipsis">
+      DataSet to DataFrame
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dataframe_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      DataFrame 算子
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DataFrame 算子">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      同源类算子
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      探索类算子
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      清洗类算子
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      转换类算子
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      分析类算子
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      持久化类算子
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#join" class="md-nav__link">
+    <span class="md-ellipsis">
+      Join 的实现机制和策略
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Join 的实现机制和策略">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nested-loop-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested Loop Join
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sort-merge-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sort Merge Join
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hash-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hash Join
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      总结
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shuffle-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      Shuffle Join
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#broadcast-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      Broadcast Join
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#join_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Join 策略选择
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      源码
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spark-sql_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spark SQL 的表类型
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      缓存
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      元数据管理
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spark-on-hive-hive-on-spark" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spark on Hive &amp; Hive on Spark
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Spark on Hive & Hive on Spark">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#spark-on-hive" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spark on Hive
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hive-on-spark" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hive on Spark
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#udf-udaf" class="md-nav__link">
+    <span class="md-ellipsis">
+      UDF &amp; UDAF
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aqe" class="md-nav__link">
+    <span class="md-ellipsis">
+      AQE
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dpp" class="md-nav__link">
+    <span class="md-ellipsis">
+      DPP
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DPP">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      实现原理
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      总结
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="spark-sql">Spark SQL</h1>
+<h2 id="dataframe-dataset">DataFrame &amp; DataSet</h2>
+<p>DataFrame 是一种<strong>带 Schema 的分布式数据集</strong>，在结构上类似于一张二维表。</p>
+<p>DataFrame 背后的计算引擎是 Spark SQL，而 RDD 的计算引擎是 Spark Core。</p>
+<p>DataFrame 与 RDD 的主要区别在于，DataFrame 带有 <strong>schema 元信息</strong>。</p>
+<p>DataSet 是 DataFrame 的一个扩展。DataSet 是强类型的，支持泛型特性，可以让 Java、Scala 语言更好的利用。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211943343.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211943343.png" /></a></p>
+<div class="admonition question">
+<p class="admonition-title">有了 RDD 为什么还要 DataFrame？</p>
+<p>在 RDD 开发框架下，Spark Core 的<strong>优化空间受限</strong>。绝大多数 RDD 高阶算子所封装的封装的计算逻辑（形参函数 f）对于 Spark Core 是透明的，Spark Core 除了用闭包的方式把函数 f 分发到 Executors 以外，没什么优化余地。而 DataFrame 的出现带来了新思路，它携带的 Schema 提供了丰富的类型信息，而且 DataFrame 算子大多为处理数据列的标量函数。DataFrame 的这两个特点，为引擎内核的优化打开了全新的空间。在 DataFrame 的开发框架下，负责具体优化过程的正是 Spark SQL。</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Spark Core 和 Spark SQL 的关系</p>
+<p>Spark SQL，则是凌驾于 Spark Core 之上的一层优化引擎，它的主要职责，<strong>是在用户代码交付 Spark Core 之前，对用户代码进行优化</strong>。</p>
+<p>Spark Core 特指 Spark 底层执行引擎（Execution Engine），它包括了调度系统、存储系统、内存管理、Shuffle 管理等核心功能模块。而 Spark SQL 则凌驾于 Spark Core 之上，是一层独立的<strong>优化引擎（Optimization Engine）</strong>。换句话说，<strong>Spark Core 负责执行，而 Spark SQL 负责优化，Spark SQL 优化过后的代码，依然要交付 Spark Core 来做执行</strong>。</p>
+<p>再者，从开发入口来说，在 RDD 框架下开发的应用程序，会直接交付 Spark Core 运行。而使用 DataFrame API 开发的应用，则会先过一遍 Spark SQL，由 Spark SQL 优化过后再交由 Spark Core 去做执行。</p>
+</div>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211539272.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211539272.png" /></a></p>
+<h3 id="rdddataframe-dataset">RDD、DataFrame 和 DataSet 的异同</h3>
+<p>三者的共性：</p>
+<ul>
+<li>RDD、DataFrame、Dataset 都是 Spark 中的分布式弹性数据集，为处理海量数据提供便利</li>
+<li>三者都有许多相同的概念，如分区、持久化、容错等；有许多共同的函数，如 map, filter, sortBy 等</li>
+<li>三者都有惰性机制，只有在遇到 Action 算子时，才会开始真正的计算</li>
+</ul>
+<p>三者的区别：</p>
+<ul>
+<li>与 RDD 和 Dataset 不同，DataFrame 每一行的类型固定为 Row，只有通过解析才能获取各个字段的值</li>
+<li>DataFrame 定义为 <code>Dataset[Row]</code>。每一行的类型是 Row，然后在 Row 包含具体的字段信息</li>
+<li>Dataset 每一行的类型都是一个 case class，在自定义了 case class 之后可以很自由的获得每一行的信息</li>
+</ul>
+<hr />
+<h2 id="catalyst"><img alt="🔥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f525.svg" title=":fire:" /> Catalyst 优化器</h2>
+<p>基于 DataFrame，Spark SQL 是如何进行优化的？</p>
+<ul>
+<li>Catalyst 优化器</li>
+<li>Tungsten</li>
+</ul>
+<p>Catalyst 优化器，它的职责在于创建并优化执行计划，它包含 3 个功能模块，分别是<strong>创建语法树并生成执行计划</strong>、<strong>逻辑阶段优化</strong>和<strong>物理阶段优化</strong>。</p>
+<ul>
+<li>创建 AST：Parser</li>
+<li>生成逻辑执行计划：Analyzer</li>
+<li>逻辑阶段优化：RBO（基于规则优化）</li>
+<li>物理阶段优化：CBO（基于代价优化）</li>
+</ul>
+<p>Tungsten 用于衔接 Catalyst 执行计划与底层的 Spark Core 执行引擎，它主要负责优化数据结构与可执行代码。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211542778.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211542778.png" /></a></p>
+<p><strong>逻辑阶段优化：</strong></p>
+<p>像<strong>谓词下推</strong>、<strong>列剪枝</strong>这样的特性，都被称为启发式的规则或策略。而 Catalyst 优化器的核心职责之一，就是在逻辑优化阶段，基于启发式的规则和策略调整、优化执行计划，为物理优化阶段提升性能奠定基础。</p>
+<p><strong>物理阶段优化：</strong></p>
+<p>Catalyst 在物理优化阶段还会进一步优化执行计划。与逻辑阶段主要依赖先验的启发式经验不同，物理阶段的优化，主要依赖各式各样的<strong>统计信息</strong>，如数据表尺寸、是否启用数据缓存、Shuffle 中间文件，等等。换句话说，逻辑优化更多的是一种“经验主义”，而物理优化则是“用数据说话”。</p>
+<p>以 Join 为例，执行计划仅交代了两张数据表需要做关联，但是，它并没有交代清楚这两张表具体采用哪种机制来做关联。按照实现机制来分类，数据关联有 3 种实现方式，分别是<strong>嵌套循环连接（NLJ，Nested Loop Join）</strong>、<strong>排序归并连接（Sort Merge Join）</strong>和<strong>哈希连接（Hash Join）</strong>。而按照数据分发方式来分类，数据关联又可以分为 <strong>Shuffle Join</strong> 和 <strong>Broadcast Join</strong> 这两大类。因此，在分布式计算环境中，至少有 6 种 Join 策略供 Spark SQL 来选择。</p>
+<hr />
+<p>Catalyst 优化器工作流程图</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311230110271.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311230110271.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311260010008.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311260010008.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311260011490.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311260011490.png" /></a></p>
+<p><strong>Parser 模块</strong>：将 SparkSQL 字符串解析为一个抽象语法树/AST 。</p>
+<ul>
+<li>Parser 模块目前都是使用第三方类库<strong>ANTLR</strong>进行实现的</li>
+<li>在这个过程中，会判断 SQL 语句是否符合规范，比如 select from where 等这些关键字是否写对。</li>
+</ul>
+<p><strong>Analyzer 模块</strong>：该模块会遍历整个 AST，并对 AST 上的每个节点进行<strong>数据类型绑定以及函数绑定</strong>，然后根据元数据信息 Catalog 对数据表中的字段进行解析。</p>
+<p>此过程就会判断 SQL 语句的表名，字段名是否真的在元数据库里存在。</p>
+<p>元数据信息主要包括两部分：<strong>表的 Scheme</strong>和<strong>基本函数信息</strong></p>
+<ul>
+<li>表的 Scheme：包括表的基本定义（列名、数据类型）、表的数据格式（Json、Text）、表的物理位置等</li>
+<li>基本函数：主要指类信息</li>
+</ul>
+<p><strong>Optimizer 模块</strong>：主要分为 RBO 和 CBO 两种优化策略，其中<strong>RBO 是基于规则优化，CBO 是基于代价优化</strong>。常见的规则有：</p>
+<ul>
+<li><strong>谓词下推 Predicate Pushdown：将过滤操作下推到 join 之前进行</strong>，之后再进行 join 的时候，数据量将会得到显著的减少，join 耗时必然降低。</li>
+<li><strong>列值裁剪 Column Pruning：</strong>在谓词下推后,可以<strong>把表中没有用到的列裁剪掉，</strong>这一优化一方面大幅度减少了网络、内存数据量消耗，另一方面对于列式存储数据库来说大大提高了扫描效率</li>
+<li><strong>常量累加 Constant Folding：</strong>比如计算 <code>x+(100+80) -&gt; x+180</code>，虽然是一个很小的改动，但是意义巨大。如果没有进行优化的话，每一条结果都需要执行一次<code>100+80</code>的操作，然后再与结果相加。优化后就不需要再次执行 <code>100+80</code> 操作。</li>
+</ul>
+<p><strong>SparkPlanner 模块</strong>：将优化后的逻辑执行计划（OptimizedLogicalPlan）转换成<strong>physical plan（物理计划），</strong>也就是 Spark 可以真正执行的计划。</p>
+<p>比如 join 算子，Spark 根据不同场景为该算子制定了不同的算法策略，有 <code>BroadcastHashJoin</code>、<code>ShuffleHashJoin</code> 以及 <code>SortMergejoin</code> 等，物理执行计划实际上就是在这些具体实现中挑选一个耗时最小的算法实现，怎么挑选，下面简单说下：</p>
+<ul>
+<li>SparkPlanner 对优化后的逻辑计划进行转换，是生成了<strong>多个可以执行的物理计划 Physical Plan</strong>；</li>
+<li>接着<strong>CBO（基于代价优化）</strong>优化策略会根据<strong>Cost Model</strong>算出每个 Physical Plan 的代价，并选取代价最小的 Physical Plan 作为最终的 Physical Plan。</li>
+<li><strong>CostModel 模块</strong>：主要根据过去的性能统计数据，选择最佳的物理执行计划。这个过程的优化就是 CBO（基于代价优化）</li>
+</ul>
+<p><strong>执行物理计划：</strong>最后依据最优的物理执行计划，生成 java 字节码，将 SQL 转化为 DAG，以 RDD 形式进行操作。</p>
+<hr />
+<p>Catalyst 的一大好处是：相比于 RDD，使用 DataFrame 可以使得不同编程语言的执行效率接近，因为 DataFrame 的执行计划是一样的。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311260013592.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311260013592.png" /></a></p>
+<hr />
+<h2 id="tungsten">Tungsten</h2>
+<p>Tungsten 主要是在<strong>数据结构</strong>和<strong>执行代码</strong>这两个方面，做进一步的优化。数据结构优化指的是 <strong>Unsafe Row</strong> 的设计与实现，执行代码优化则指的是<strong>全阶段代码生成</strong>（WSCG，Whole Stage Code Generation）。</p>
+<p>我们先来看看为什么要有 Unsafe Row。对于 DataFrame 中的每一条数据记录，Spark SQL 默认采用 org.apache.spark.sql.Row 对象来进行封装和存储。我们知道，使用 Java Object 来存储数据会引入大量额外的存储开销。</p>
+<p>为此，Tungsten 设计并实现了一种叫做 Unsafe Row 的二进制数据结构。<strong>Unsafe Row 本质上是字节数组，它以极其紧凑的格式来存储 DataFrame 的每一条数据记录，大幅削减存储开销，从而提升数据的存储与访问效率。</strong></p>
+<p>接下来，我们再来说说 WSCG：全阶段代码生成。所谓全阶段，其实就是我们在调度系统中学过的 Stage。以图中的执行计划为例，标记为绿色的 3 个节点，在任务调度的时候，会被划分到同一个 Stage。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211551076.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211551076.png" /></a></p>
+<p>而代码生成，指的是 Tungsten <strong>在运行时把算子之间的「链式调用」捏合为一份代码</strong>。经过了 Tungsten 的 WSCG 优化之后，Filter、Select 和 Scan 这 3 个算子，会被「捏合」为一个函数 f。这样一来，Spark Core 只需要使用函数 f 来一次性地处理每一条数据，就能<strong>减少不同算子之间数据通信的开销</strong>，一气呵成地完成计算。</p>
+<hr />
+<h2 id="spark-session">Spark Session</h2>
+<p>The entry point to programming Spark with the Dataset and DataFrame API.</p>
+<p>Spark Core 中，如果想要执行应用程序，需要首先构建上下文环境对象 <strong>SparkContext</strong>， Spark SQL 其实可以理解为对 Spark Core 的一种封装，不仅仅在模型上进行了封装，上下文环境对象也进行了封装。<strong>SparkSession</strong> 是 Spark 最新的 SQL 查询起始点。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nc">SparkSession</span><span class="p">.</span><span class="n">builder</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="p">.</span><span class="n">master</span><span class="p">(</span><span class="s">&quot;local&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="p">.</span><span class="n">appName</span><span class="p">(</span><span class="s">&quot;Word Count&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="p">.</span><span class="n">config</span><span class="p">(</span><span class="s">&quot;spark.some.config.option&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;some-value&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="p">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">import</span><span class="w"> </span><span class="nn">org</span><span class="p">.</span><span class="nn">apache</span><span class="p">.</span><span class="nn">spark</span><span class="p">.</span><span class="nn">sql</span><span class="p">.</span><span class="nn">functions</span><span class="p">.</span><span class="n">_</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="kd">val</span><span class="w"> </span><span class="n">spark</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">SparkSession</span><span class="p">.</span><span class="n">builder</span><span class="p">()</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="p">.</span><span class="n">master</span><span class="p">(</span><span class="s">&quot;local&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="p">.</span><span class="n">appName</span><span class="p">(</span><span class="s">&quot;test&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="p">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="kd">val</span><span class="w"> </span><span class="n">sc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">sparkContext</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="k">import</span><span class="w"> </span><span class="nn">spark</span><span class="p">.</span><span class="nn">implicits</span><span class="p">.</span><span class="n">_</span>
+</code></pre></div>
+<hr />
+<h2 id="dataframe">创建 DataFrame</h2>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211601485.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211601485.png" /></a></p>
+<h3 id="driver-dataframe">从 Driver 创建 DataFrame</h3>
+<p><strong>方法一：createDataFrame 方法</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kd">val</span><span class="w"> </span><span class="n">seq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">List</span><span class="p">((</span><span class="s">&quot;Alice&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">18</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;Bob&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;Tom&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span><span class="p">))</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">import</span><span class="w"> </span><span class="nn">org</span><span class="p">.</span><span class="nn">apache</span><span class="p">.</span><span class="nn">spark</span><span class="p">.</span><span class="nn">sql</span><span class="p">.</span><span class="nn">functions</span><span class="p">.</span><span class="n">_</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="kd">val</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="p">.</span><span class="n">withColumnRenamed</span><span class="p">(</span><span class="s">&quot;_1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;name&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="p">.</span><span class="n">withColumnRenamed</span><span class="p">(</span><span class="s">&quot;_2&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;age&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="p">.</span><span class="n">orderBy</span><span class="p">(</span><span class="n">desc</span><span class="p">(</span><span class="s">&quot;age&quot;</span><span class="p">))</span><span class="w"> </span><span class="c1">// desc 来自于 org.apache.spark.sql.functions._</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="n">df</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="n">df</span><span class="p">.</span><span class="n">printSchema</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>方法二：toDF 方法</strong></p>
+<p>我们显示导入了 <code>spark.implicits</code> 包中的所有方法，然后通过在集合或 RDD 之上调用 toDF 就能轻松创建 DataFrame。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kd">val</span><span class="w"> </span><span class="n">seq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">List</span><span class="p">((</span><span class="s">&quot;Alice&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">18</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;Bob&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;Tom&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span><span class="p">))</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kd">val</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">seq</span><span class="p">).</span><span class="n">toDF</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;age&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">df</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">df</span><span class="p">.</span><span class="n">printSchema</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="dataframe_1">从文件系统创建 DataFrame</h3>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211620376.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211620376.png" /></a></p>
+<p><strong>以 CSV 为例：</strong></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211623003.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211623003.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211623290.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211623290.png" /></a></p>
+<p><strong>以 Parquet / ORC 为例：</strong></p>
+<p>Parquet 与 ORC，都是应用广泛的<strong>列存（Column-based Store）文件格式</strong>。在传统的行存文件格式中，数据记录以行为单位进行存储。虽然这非常符合人类的直觉，<strong>但在数据的检索与扫描方面，行存数据往往效率低下</strong>。例如，在数据探索、数据分析等数仓应用场景中，我们往往仅需扫描数据记录的某些字段，但在行存模式下，我们必须要扫描全量数据，才能完成字段的过滤。</p>
+<p>很多列存格式往往<strong>在文件中记录 Data Schema</strong>，比如 Parquet 和 ORC，它们会利用 Meta Data 数据结构，来记录所存储数据的数据模式。这样一来，在读取类似列存文件时，我们无需再像读取 CSV 一样，去手工指定 Data Schema。</p>
+<h3 id="rdbms-dataframe">从 RDBMS 创建 DataFrame</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">spark</span><span class="p">.</span><span class="n">read</span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;jdbc&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;driver&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;com.mysql.jdbc.Driver&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;url&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;jdbc:mysql://hostname:port/mysql&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;user&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;用户名&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;password&quot;</span><span class="p">,</span><span class="s">&quot;密码&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;numPartitions&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">)</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;dbtable&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;数据表名 &quot;</span><span class="p">)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="p">.</span><span class="n">load</span><span class="p">()</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kd">val</span><span class="w"> </span><span class="n">sqlQuery</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">“</span><span class="n">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="n">where</span><span class="w"> </span><span class="n">gender</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">‘</span><span class="n">female</span><span class="err">’”</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">spark</span><span class="p">.</span><span class="n">read</span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;jdbc&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;driver&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;com.mysql.jdbc.Driver&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;url&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;jdbc:mysql://hostname:port/mysql&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;user&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;用户名&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;password&quot;</span><span class="p">,</span><span class="s">&quot;密码&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;numPartitions&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;dbtable&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">sqlQuery</span><span class="p">)</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="p">.</span><span class="n">load</span><span class="p">()</span>
+</code></pre></div>
+<hr />
+<h2 id="dataset">创建 DataSet</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">createDataset</span><span class="p">[</span><span class="nc">T</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nc">Encoder</span><span class="p">](</span><span class="n">data</span><span class="p">:</span><span class="w"> </span><span class="nc">Seq</span><span class="p">[</span><span class="nc">T</span><span class="p">]):</span><span class="w"> </span><span class="nc">Dataset</span><span class="p">[</span><span class="nc">T</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{...}</span>
+</code></pre></div>
+<p>This method requires an <strong>encoder</strong> (<strong>to convert a JVM object of type T to and from the internal Spark SQL representation</strong>).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">import</span><span class="w"> </span><span class="nn">spark</span><span class="p">.</span><span class="nn">implicits</span><span class="p">.</span><span class="n">_</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">case</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Person</span><span class="p">(</span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="n">age</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">)</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="kd">val</span><span class="w"> </span><span class="n">seq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">List</span><span class="p">(</span><span class="nc">Person</span><span class="p">(</span><span class="s">&quot;Alice&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">18</span><span class="p">),</span><span class="w"> </span><span class="nc">Person</span><span class="p">(</span><span class="s">&quot;Bob&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">),</span><span class="w"> </span><span class="nc">Person</span><span class="p">(</span><span class="s">&quot;Tom&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span><span class="p">))</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="kd">val</span><span class="w"> </span><span class="n">ds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">createDataset</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="n">ds</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="n">ds</span><span class="p">.</span><span class="n">printSchema</span><span class="p">()</span>
+</code></pre></div>
+<p>使用 case class 的好处是，<strong>Spark SQL 会自动推断出 case class 的字段名和字段类型</strong>。</p>
+<hr />
+<h2 id="rdddataframedataset">RDD、DataFrame、DataSet 的转换</h2>
+<h3 id="rdd-to-dataframe">RDD to DataFrame</h3>
+<p>方法一：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">import</span><span class="w"> </span><span class="nn">spark</span><span class="p">.</span><span class="nn">implicits</span><span class="p">.</span><span class="n">_</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="kd">val</span><span class="w"> </span><span class="n">seq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">List</span><span class="p">((</span><span class="s">&quot;Alice&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">18</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;Bob&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;Tom&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span><span class="p">))</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="kd">val</span><span class="w"> </span><span class="n">rdd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sc</span><span class="p">.</span><span class="n">makeRDD</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="kd">val</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rdd</span><span class="p">.</span><span class="n">toDF</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;age&quot;</span><span class="p">)</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="n">df</span><span class="p">.</span><span class="n">printSchema</span><span class="p">()</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="n">df</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="kd">val</span><span class="w"> </span><span class="n">rdd2</span><span class="p">:</span><span class="w"> </span><span class="nc">RDD</span><span class="p">[</span><span class="nc">Row</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">df</span><span class="p">.</span><span class="n">rdd</span>
+</code></pre></div>
+<p>方法二：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">import</span><span class="w"> </span><span class="nn">spark</span><span class="p">.</span><span class="nn">implicits</span><span class="p">.</span><span class="n">_</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="kd">val</span><span class="w"> </span><span class="n">seq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">List</span><span class="p">((</span><span class="s">&quot;Alice&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">18</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;Bob&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;Tom&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span><span class="p">))</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="kd">val</span><span class="w"> </span><span class="n">rdd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sc</span><span class="p">.</span><span class="n">makeRDD</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nc">Row</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">_1</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">_2</span><span class="p">))</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="kd">val</span><span class="w"> </span><span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">StructType</span><span class="p">()</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">  </span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">StringType</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">  </span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="s">&quot;age&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">IntegerType</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="kd">val</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">rdd</span><span class="p">,</span><span class="w"> </span><span class="n">schema</span><span class="p">)</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="n">df</span><span class="p">.</span><span class="n">printSchema</span><span class="p">()</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="n">df</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="kd">val</span><span class="w"> </span><span class="n">rdd2</span><span class="p">:</span><span class="w"> </span><span class="nc">RDD</span><span class="p">[</span><span class="nc">Row</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">df</span><span class="p">.</span><span class="n">rdd</span>
+</code></pre></div>
+<hr />
+<h3 id="rdd-to-dataset">RDD to DataSet</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">import</span><span class="w"> </span><span class="nn">spark</span><span class="p">.</span><span class="nn">implicits</span><span class="p">.</span><span class="n">_</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="kd">val</span><span class="w"> </span><span class="n">seq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">List</span><span class="p">((</span><span class="s">&quot;Alice&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">18</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;Bob&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;Tom&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span><span class="p">))</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="k">case</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Person</span><span class="p">(</span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="n">age</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">)</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="kd">val</span><span class="w"> </span><span class="n">rdd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sc</span><span class="p">.</span><span class="n">makeRDD</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="kd">val</span><span class="w"> </span><span class="n">ds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rdd</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nc">Person</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">_1</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">_2</span><span class="p">)).</span><span class="n">toDS</span><span class="p">()</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="n">ds</span><span class="p">.</span><span class="n">printSchema</span><span class="p">()</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="n">ds</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="kd">val</span><span class="w"> </span><span class="n">rdd2</span><span class="p">:</span><span class="w"> </span><span class="nc">RDD</span><span class="p">[</span><span class="nc">Row</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ds</span><span class="p">.</span><span class="n">rdd</span>
+</code></pre></div>
+<hr />
+<h3 id="dataframe-to-dataset">DataFrame to DataSet</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">import</span><span class="w"> </span><span class="nn">spark</span><span class="p">.</span><span class="nn">implicits</span><span class="p">.</span><span class="n">_</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="kd">val</span><span class="w"> </span><span class="n">seq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">List</span><span class="p">((</span><span class="s">&quot;Alice&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">18</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;Bob&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;Tom&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span><span class="p">))</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="kd">val</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">seq</span><span class="p">.</span><span class="n">toDF</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;age&quot;</span><span class="p">)</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="kd">val</span><span class="w"> </span><span class="n">ds</span><span class="p">:</span><span class="w"> </span><span class="nc">Dataset</span><span class="p">[</span><span class="nc">Row</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">df</span><span class="p">.</span><span class="n">as</span><span class="p">(</span><span class="s">&quot;alias here&quot;</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h3 id="dataset-to-dataframe">DataSet to DataFrame</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">import</span><span class="w"> </span><span class="nn">spark</span><span class="p">.</span><span class="nn">implicits</span><span class="p">.</span><span class="n">_</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="kd">val</span><span class="w"> </span><span class="n">seq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">List</span><span class="p">((</span><span class="s">&quot;Alice&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">18</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;Bob&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;Tom&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span><span class="p">))</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="k">case</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Person</span><span class="p">(</span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="n">age</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">)</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="kd">val</span><span class="w"> </span><span class="n">rdd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sc</span><span class="p">.</span><span class="n">makeRDD</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="kd">val</span><span class="w"> </span><span class="n">ds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rdd</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nc">Person</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">_1</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">_2</span><span class="p">)).</span><span class="n">toDS</span><span class="p">()</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="kd">val</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ds</span><span class="p">.</span><span class="n">toDF</span><span class="p">()</span>
+</code></pre></div>
+<hr />
+<h2 id="dataframe_2">DataFrame 算子</h2>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211628692.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211628692.png" /></a></p>
+<h3 id="_1">同源类算子</h3>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211629921.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211629921.png" /></a></p>
+<h3 id="_2">探索类算子</h3>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211630809.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211630809.png" /></a></p>
+<h3 id="_3">清洗类算子</h3>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211630806.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211630806.png" /></a></p>
+<p>表格中的最后一个算子是 na，它的作用是选取 DataFrame 中的 null 数据，na 往往要结合 drop 或是 fill 来使用。例如，<code>employeesDF.na.drop</code> 用于删除 DataFrame 中带 null 值的数据记录，而 <code>employeesDF.na.fill(0)</code> 则将 DataFrame 中所有的 null 值都自动填充为整数零。</p>
+<h3 id="_4">转换类算子</h3>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211632149.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211632149.png" /></a></p>
+<p>select 算子在功能方面不够灵活。在灵活性这方面，selectExpr 做得更好。比如说，基于 id 和姓名，我们想把它们拼接起来生成一列新的数据。像这种需求，正是 selectExpr 算子的用武之地。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">employeesDF</span><span class="p">.</span><span class="n">selectExpr</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;name&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;concat(id, &#39;_&#39;, name) as id_name&quot;</span><span class="p">).</span><span class="n">show</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="cm">/** 结果打印</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="cm">+---+-------+---------+</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="cm">| id| name| id_name|</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="cm">+---+-------+---------+</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="cm">| 1| John| 1_John|</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="cm">| 2| Lily| 2_Lily|</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="cm">| 3|Raymond|3_Raymond|</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="cm">+---+-------+---------+</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="cm">*/</span>
+</code></pre></div>
+<p>withColumnRenamed 是重命名现有的数据列，而 withColumn 则用于生成新的数据列，这一点上，withColumn 倒是和 selectExpr 有着异曲同工之妙。withColumn 也可以充分利用 Spark SQL 提供的 Built-in Functions 来灵活地生成数据。比如，基于年龄列，我们想生成一列脱敏数据，隐去真实年龄，你就可以这样操作。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">employeesDF</span><span class="p">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s">&quot;crypto&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">hash</span><span class="p">(</span><span class="n">$</span><span class="s">&quot;age&quot;</span><span class="p">)).</span><span class="n">show</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="cm">/** 结果打印</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="cm">+---+-------+---+------+-----------+</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="cm">| id| name|age|gender| crypto|</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="cm">+---+-------+---+------+-----------+</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="cm">| 1| John| 26| Male|-1223696181|</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="cm">| 2| Lily| 28|Female|-1721654386|</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="cm">| 3|Raymond| 30| Male| 1796998381|</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="cm">+---+-------+---+------+-----------+</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="cm">*/</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kd">val</span><span class="w"> </span><span class="n">seq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Seq</span><span class="p">(</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;John&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">26</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Male&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">Seq</span><span class="p">(</span><span class="s">&quot;Sports&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;News&quot;</span><span class="p">)),</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Lily&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">28</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Female&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">Seq</span><span class="p">(</span><span class="s">&quot;Shopping&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Reading&quot;</span><span class="p">)),</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Raymond&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Male&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">Seq</span><span class="p">(</span><span class="s">&quot;Sports&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Reading&quot;</span><span class="p">))</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="p">)</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="kd">val</span><span class="w"> </span><span class="n">employeesDF</span><span class="p">:</span><span class="w"> </span><span class="nc">DataFrame</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">seq</span><span class="p">.</span><span class="n">toDF</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;name&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;age&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;gender&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;interests&quot;</span><span class="p">)</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="n">employeesDF</span><span class="p">.</span><span class="n">show</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="cm">/** 结果打印</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="cm">+---+-------+---+------+-------------------+</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="cm">| id| name|age|gender| interests|</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="cm">+---+-------+---+------+-------------------+</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="cm">| 1| John| 26| Male| [Sports, News]|</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="cm">| 2| Lily| 28|Female|[Shopping, Reading]|</span>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="cm">| 3|Raymond| 30| Male| [Sports, Reading]|</span>
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a><span class="cm">+---+-------+---+------+-------------------+</span>
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="cm">*/</span>
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a><span class="n">employeesDF</span><span class="p">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s">&quot;interest&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">explode</span><span class="p">(</span><span class="n">$</span><span class="s">&quot;interests&quot;</span><span class="p">)).</span><span class="n">show</span>
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a><span class="cm">/** 结果打印</span>
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a><span class="cm">+---+-------+---+------+-------------------+--------+</span>
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a><span class="cm">| id| name|age|gender| interests|interest|</span>
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a><span class="cm">+---+-------+---+------+-------------------+--------+</span>
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a><span class="cm">| 1| John| 26| Male| [Sports, News]| Sports|</span>
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a><span class="cm">| 1| John| 26| Male| [Sports, News]| News|</span>
+<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a><span class="cm">| 2| Lily| 28|Female|[Shopping, Reading]|Shopping|</span>
+<a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a><span class="cm">| 2| Lily| 28|Female|[Shopping, Reading]| Reading|</span>
+<a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a><span class="cm">| 3|Raymond| 30| Male| [Sports, Reading]| Sports|</span>
+<a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a><span class="cm">| 3|Raymond| 30| Male| [Sports, Reading]| Reading|</span>
+<a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a><span class="cm">+---+-------+---+------+-------------------+--------+</span>
+<a id="__codelineno-15-32" name="__codelineno-15-32" href="#__codelineno-15-32"></a><span class="cm">*/</span>
+</code></pre></div>
+<h3 id="_5">分析类算子</h3>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211635230.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211635230.png" /></a></p>
+<h3 id="_6">持久化类算子</h3>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211637013.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211637013.png" /></a></p>
+<p>在 write API 中，mode 用于指定“写入模式”，分别有 Append、Overwrite、ErrorIfExists、Ignore 这 4 种模式，它们的含义与描述如下表所示。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211637410.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211637410.png" /></a></p>
+<hr />
+<h2 id="join">Join 的实现机制和策略</h2>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211843173.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211843173.png" /></a></p>
+<p>Join 有 3 种实现机制，分别是 <strong>NLJ（Nested Loop Join）</strong>、<strong>SMJ（Sort Merge Join）</strong>和 <strong>HJ（Hash Join）</strong>。</p>
+<p>在分布式环境下，从数据分发模式来看，Join 又可以分为 <strong>Shuffle Join</strong> 和 <strong>Broadcast Join</strong> 这两大类。因此，<strong>在分布式计算环境中，至少有 6 种 Join 策略供 Spark SQL 来选择</strong>。</p>
+<hr />
+<h3 id="nested-loop-join">Nested Loop Join</h3>
+<p>对于参与关联的两张表，如 salaries 和 employees，按照它们在代码中出现的顺序，我们约定俗成地把 salaries 称作“左表”，而把 employees 称作“右表”。在探讨关联机制的时候，我们又常常把左表称作是“驱动表”，而把右表称为“基表”。</p>
+<p>一般来说，驱动表的体量往往较大，在实现关联的过程中，驱动表是主动扫描数据的那一方。而基表相对来说体量较小，它是被动参与数据扫描的那一方。</p>
+<p>在 NLJ 的实现机制下，算法会使用外、内两个嵌套的 for 循环，来依次扫描驱动表与基表中的数据记录。在扫描的同时，还会判定关联条件是否成立，如内关联例子中的 <code>salaries("id") === employees("id")</code>。如果关联条件成立，就把两张表的记录拼接在一起，然后对外进行输出。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211833130.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211833130.png" /></a></p>
+<p>不难发现，假设驱动表有 M 行数据，而基表有 N 行数据，那么 NLJ 算法的计算复杂度是 <span class="arithmatex">\(O(M * N)\)</span>。尽管 NLJ 的实现方式简单、直观、易懂，但它的执行效率显然很差。</p>
+<hr />
+<h3 id="sort-merge-join">Sort Merge Join</h3>
+<p>鉴于 NLJ 低效的计算效率，SMJ 应运而生。Sort Merge Join，顾名思义，SMJ 的实现思路是<strong>先排序、再归并</strong>。给定参与关联的两张表，SMJ 先把他们各自排序，然后再使用独立的游标，对排好序的两张表做归并关联。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211835410.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211835410.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211838341.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211838341.png" /></a></p>
+<p>SMJ 算法的计算复杂度为 <span class="arithmatex">\(O(MlogM + NlogN)\)</span>。如果两张表已排序，那么 SMJ 的计算复杂度就是 <span class="arithmatex">\(O(M + N)\)</span>。</p>
+<hr />
+<h3 id="hash-join">Hash Join</h3>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211841081.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211841081.png" /></a></p>
+<p>具体来说，HJ 的计算分为两个阶段，分别是 Build 阶段和 Probe 阶段。在 Build 阶段，在基表之上，算法使用既定的哈希函数构建哈希表，如上图的步骤 1 所示。哈希表中的 Key 是 id 字段应用（Apply）哈希函数之后的哈希值，而哈希表的 Value 同时包含了原始的 Join Key（id 字段）和 Payload。</p>
+<p>在 Probe 阶段，算法依次遍历驱动表的每一条数据记录。首先使用同样的哈希函数，以动态的方式计算 Join Key 的哈希值。然后，算法再用哈希值去查询刚刚在 Build 阶段创建好的哈希表。如果查询失败，则说明该条记录与基表中的数据不存在关联关系；相反，如果查询成功，则继续对比两边的 Join Key。如果 Join Key 一致，就把两边的记录进行拼接并输出，从而完成数据关联。</p>
+<hr />
+<h3 id="_7">总结</h3>
+<p>Join 支持 3 种实现机制，它们分别是 Hash Join、Sort Merge Join 和 Nested Loop Join。三者之中，Hash Join 的执行效率最高，这主要得益于哈希表 <span class="arithmatex">\(O(1)\)</span> 的查找效率。不过，在 Probe 阶段享受哈希表的“性能红利”之前，Build 阶段得先在内存中构建出哈希表才行。因此，<strong>Hash Join 这种算法对于内存的要求比较高，适用于内存能够容纳基表数据的计算场景。</strong></p>
+<p>相比之下，Sort Merge Join 就没有内存方面的限制。不论是排序、还是合并，SMJ 都可以利用磁盘来完成计算。所以，在稳定性这方面，SMJ 更胜一筹。</p>
+<p>与前两者相比，Nested Loop Join 看上去有些多余，嵌套的双层 for 循环带来的计算复杂度最高：<span class="arithmatex">\(O(M * N)\)</span>。不过，尺有所短寸有所长，<strong>执行高效的 HJ 和 SMJ 只能用于等值关联，也就是说关联条件必须是等式</strong>，像 <code>salaries("id") &lt; employees("id")</code> 这样的关联条件，HJ 和 SMJ 是无能为力的。相反，<strong>NLJ 既可以处理等值关联（Equi Join），也可以应付不等值关联（Non Equi Join）</strong>，可以说是数据关联在实现机制上的最后一道防线。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211901706.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211901706.png" /></a></p>
+<hr />
+<h3 id="shuffle-join">Shuffle Join</h3>
+<p>Spark SQL 默认采用 Shuffle Join 来完成分布式环境下的数据关联。对于参与 Join 的两张数据表，Spark SQL 先是按照如下规则，来决定不同数据记录应当分发到哪个 Executors 中去：</p>
+<ul>
+<li>根据 Join Keys 计算哈希值</li>
+<li>将哈希值对并行度（Parallelism）取模</li>
+</ul>
+<p>由于左表与右表在并行度（分区数）上是一致的，因此，按照同样的规则分发数据之后，一定能够保证 id 字段值相同的薪资数据与员工数据坐落在同样的 Executors 中。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311220441835.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311220441835.png" /></a></p>
+<p>经过 Shuffle 过后，Join Keys 相同的记录被分发到了同样的 Executors 中去。接下来，在 Reduce 阶段，Reduce Task 就可以使用 HJ、SMJ、或是 NLJ 算法在 Executors 内部完成数据关联的计算。</p>
+<hr />
+<h3 id="broadcast-join">Broadcast Join</h3>
+<p>实际上，Spark 不仅可以在普通变量上创建广播变量，<strong>在分布式数据集（如 RDD、DataFrame）之上也可以创建广播变量</strong>。这样一来，对于参与 Join 的两张表，我们可以把其中较小的一个封装为广播变量，然后再让它们进行关联。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">import</span><span class="w"> </span><span class="nn">org</span><span class="p">.</span><span class="nn">apache</span><span class="p">.</span><span class="nn">spark</span><span class="p">.</span><span class="nn">sql</span><span class="p">.</span><span class="nn">functions</span><span class="p">.</span><span class="n">broadcast</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="c1">// 创建员工表的广播变量</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="kd">val</span><span class="w"> </span><span class="n">bcEmployees</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">broadcast</span><span class="p">(</span><span class="n">employees</span><span class="p">)</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="c1">// 内关联，PS：将原来的employees替换为bcEmployees</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="kd">val</span><span class="w"> </span><span class="n">jointDF</span><span class="p">:</span><span class="w"> </span><span class="nc">DataFrame</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">salaries</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">bcEmployees</span><span class="p">,</span><span class="w"> </span><span class="n">salaries</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="n">employees</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;inner&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>在 Broadcast Join 的执行过程中，Spark SQL 首先从各个 Executors 收集 employees 表所有的数据分片，然后在 Driver 端构建广播变量 bcEmployees。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311220441854.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311220441854.png" /></a></p>
+<p>尽管广播变量的创建与分发同样需要消耗网络带宽，但相比 Shuffle Join 中两张表的全网分发，因为仅仅<strong>通过分发体量较小的数据表来完成数据关联</strong>，Spark SQL 的执行性能显然要高效得多。</p>
+<hr />
+<h3 id="join_1">Join 策略选择</h3>
+<p>不论是 Shuffle Join，还是 Broadcast Join，一旦数据分发完毕，理论上可以采用 HJ、SMJ 和 NLJ 这 3 种实现机制中的任意一种，完成 Executors 内部的数据关联。因此，两种分发模式，与三种实现机制，它们组合起来，总共有 6 种分布式 Join 策略，如下图所示。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211857818.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211857818.png" /></a></p>
+<p>注意：上图中的 Broadcast SMJ 是灰色的。这是因为 Spark 在能够 Broadcast 其中一张表的前提条件成立的情况下，会优先选择 Broadcast HJ 来完成数据关联，而不会选择性能更差的 Broadcast SMJ。因此 Spark 中实际可用的 Join 策略只有 5 种：</p>
+<ul>
+<li>Broadcast HJ：最优先选择</li>
+<li>Shuffle HJ</li>
+<li>Shuffle SMJ</li>
+<li>Broadcast NLJ</li>
+<li>Shuffle NLJ：又称为 Cartesian Product Join</li>
+</ul>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211858363.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211858363.png" /></a></p>
+<pre class="mermaid"><code>flowchart TD
+    A["Join"] --&gt; B{"小表能否存入内存？"}
+    B --&gt;|"Yes"| C["Broadcast Join"]
+    C --&gt; I{"等值连接？"}
+    I --&gt;|"Yes"| J["Broadcast HJ"]
+    I --&gt;|"No"| K["Broadcast NLJ"]
+    B ----&gt;|"No"| E["Shuffle Join"]
+    E --&gt; F{"等值连接？"}
+    F --&gt;|"Yes"| G["Shuffle SMJ/Shuffle HJ"]
+    F --&gt;|"No"| H["Shuffle NLJ"]</code></pre>
+<p><strong>不论是等值关联、还是不等值关联，只要 Broadcast Join 的前提条件成立，Spark SQL 一定会优先选择 Broadcast Join 相关的策略。</strong></p>
+<p><strong>Broadcast Join 得以实施的基础，是被广播数据表的全量数据能够完全放入 Driver 的内存、以及各个 Executors 的内存。</strong></p>
+<p>另外，为了避免因广播表尺寸过大而引入新的性能隐患，Spark SQL 要求被广播表的内存大小不能超过 8GB。</p>
+<p>当然，在 Broadcast Join 前提条件不成立的情况下，Spark SQL 就会退化到 Shuffle Join 的策略。在不等值的数据关联中，Spark SQL 只有 Shuffle NLJ 这一种选择。</p>
+<p>学习过 Shuffle 之后，我们知道，Shuffle 在 Map 阶段往往会对数据做排序，而这恰恰正中 SMJ 机制的下怀。对于已经排好序的两张表，SMJ 的复杂度是 <span class="arithmatex">\(O(M + N)\)</span>，这样的执行效率与 HJ 的 <span class="arithmatex">\(O(M)\)</span> 可以说是不相上下。再者，SMJ 在执行稳定性方面，远胜于 HJ，在内存受限的情况下，SMJ 可以充分利用磁盘来顺利地完成关联计算。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211900112.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311211900112.png" /></a></p>
+<div class="admonition question">
+<p class="admonition-title">Broadcast Join 一定比 Shuffle Join 快吗？</p>
+<p>在进行 Broadcast Join 之前，Spark 需要把处于 Executor 端的数据先发送到 Driver 端，然后 Driver 端制作哈希表之后再把数据广播到 Executor 端。如果我们需要广播的表的数据比较多，那么这个过程就会比较耗时，而且还会占用大量的网络带宽，甚至也有 OOM 的风险。因此，<strong>Broadcast Join 并不一定比 Shuffle Join 快</strong>。</p>
+</div>
+<hr />
+<h3 id="_8">源码</h3>
+<p>在 <code>SparkStrategies.scala</code> 中，我们可以看到 Spark SQL 中的 Join 策略是如何实现的：</p>
+<p>Select the proper physical plan for join based on join strategy hints, the availability of equi-join keys and the sizes of joining relations. Below are the existing join strategies, their characteristics and their limitations.</p>
+<ul>
+<li><strong>Broadcast hash join (BHJ)</strong>: <mark>Only supported for equi-joins</mark>, while the join keys do not need to be sortable. <mark>Supported for all join types except full outer joins</mark>. BHJ usually performs faster than the other join algorithms when the broadcast side is small. However, broadcasting tables is a network-intensive operation and it could cause OOM or perform badly in some cases, especially when the build/broadcast side is big.</li>
+<li><strong>Shuffle hash join</strong>: <mark>Only supported for equi-joins</mark>, while the join keys do not need to be sortable. Supported for all join types. Building hash map from table is a memory-intensive operation and it could cause OOM when the build side is big.</li>
+<li><strong>Shuffle sort merge join (SMJ)</strong>: <mark>Only supported for equi-joins and the join keys have to be sortable</mark>. Supported for all join types.</li>
+<li><strong>Broadcast nested loop join (BNLJ)</strong>: Supports both equi-joins and non-equi-joins. Supports all the join types, but the implementation is optimized for: 1) broadcasting the left side in a right outer join; 2) broadcasting the right side in a left outer, left semi, left anti or existence join; 3) broadcasting either side in an inner-like join. For other cases, we need to scan the data multiple times, which can be rather slow.</li>
+<li><strong>Shuffle-and-replicate nested loop join</strong> (a.k.a. cartesian product join): Supports both equi-joins and non-equi-joins. <mark>Supports only inner like joins</mark>.</li>
+</ul>
+<hr />
+<p><strong>If it is an equi-join</strong>, we first look at the join hints w.r.t. the following order:</p>
+<ol>
+<li>broadcast hint: pick broadcast hash join if the join type is supported. If both sides
+    have the broadcast hints, choose the smaller side (based on stats) to broadcast.</li>
+<li>sort merge hint: pick sort merge join if join keys are sortable.</li>
+<li>shuffle hash hint: We pick shuffle hash join if the join type is supported. If both
+    sides have the shuffle hash hints, choose the smaller side (based on stats) as the
+    build side.</li>
+<li>shuffle replicate NL hint: pick cartesian product if join type is inner like.</li>
+</ol>
+<p><strong>If there is no hint or the hints are not applicable</strong>, we follow these rules one by one:</p>
+<ol>
+<li>Pick broadcast hash join if one side is small enough to broadcast, and the join type
+    is supported. If both sides are small, choose the smaller side (based on stats)
+    to broadcast.</li>
+<li>Pick shuffle hash join if one side is small enough to build local hash map, and is
+    much smaller than the other side, and <code>spark.sql.join.preferSortMergeJoin</code> is false.</li>
+<li>Pick sort merge join if the join keys are sortable.</li>
+<li>Pick cartesian product if join type is inner like.</li>
+<li>Pick broadcast nested loop join as the final solution. It may OOM but we don't have
+    other choice.</li>
+</ol>
+<hr />
+<h2 id="spark-sql_1">Spark SQL 的表类型</h2>
+<p>在 Spark SQL 中，表的类型分为 3 种，分别是：</p>
+<ul>
+<li>管理表（Managed Table）</li>
+<li>外部表（External Table）</li>
+<li>视图（View）</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">case</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">CatalogTableType</span><span class="w"> </span><span class="k">private</span><span class="p">(</span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">)</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="k">object</span><span class="w"> </span><span class="nc">CatalogTableType</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="nc">EXTERNAL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">CatalogTableType</span><span class="p">(</span><span class="s">&quot;EXTERNAL&quot;</span><span class="p">)</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="nc">MANAGED</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">CatalogTableType</span><span class="p">(</span><span class="s">&quot;MANAGED&quot;</span><span class="p">)</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="nc">VIEW</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">CatalogTableType</span><span class="p">(</span><span class="s">&quot;VIEW&quot;</span><span class="p">)</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">tableTypes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Seq</span><span class="p">(</span><span class="nc">EXTERNAL</span><span class="p">,</span><span class="w"> </span><span class="nc">MANAGED</span><span class="p">,</span><span class="w"> </span><span class="nc">VIEW</span><span class="p">)</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="p">}</span>
+</code></pre></div>
+<p>和 Hive 类似，管理表是由 Spark SQL 管理其元数据和数据存储的表。当你创建一个管理表时，Spark 会将表的元数据（如表结构、列类型等）和数据存储在默认的存储位置中，通常是在 Hive 的仓库中（默认是在 HDFS 上）。当你删除一个管理表时，Spark 会自动删除表的元数据和数据。</p>
+<p>外部表的元数据由 Spark 管理，但数据存储在外部存储系统中，例如 HDFS、S3、HBase 等。创建无管理表时，你需要指定数据的存储位置（path），Spark 会将元数据保存在其内部，但不会管理数据的生命周期。这意味着当你删除一个无管理表时，Spark 只会删除元数据，而不会删除实际的数据。</p>
+<p>视图既可以是全局的（对给定集群的所有 SparkSession 可见），也可以是会话级别的（只对单个 SparkSession 可见）。会话级别的视图就是临时视图，这些视图随 Spark 应用结束而消失。视图和表的区别是，视图不会存放实际数据。</p>
+<hr />
+<h2 id="_9">缓存</h2>
+<p>用户可以像缓存 RDD 那样缓存 Spark SQL 中表与视图，或删除缓存。在 Spark 3.0 中，除了缓存命令原有的一些选项，还可以将表声明为 LAZY，这样它就不会立即被缓存，直到第一次遇到 Action 算子时才会真正被缓存。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="kd">val</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">read</span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">&quot;header&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">).</span><span class="n">csv</span><span class="p">(</span><span class="s">&quot;src/main/resources/data/people.csv&quot;</span><span class="p">)</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="n">df</span><span class="p">.</span><span class="n">cache</span><span class="p">()</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="n">df</span><span class="p">.</span><span class="n">createTempView</span><span class="p">(</span><span class="s">&quot;people&quot;</span><span class="p">)</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="n">spark</span><span class="p">.</span><span class="n">sqlContext</span><span class="p">.</span><span class="n">cacheTable</span><span class="p">(</span><span class="s">&quot;people&quot;</span><span class="p">)</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="n">spark</span><span class="p">.</span><span class="n">sqlContext</span><span class="p">.</span><span class="n">uncacheTable</span><span class="p">(</span><span class="s">&quot;people&quot;</span><span class="p">)</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="c1">// SQL 方式</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="n">spark</span><span class="p">.</span><span class="n">sql</span><span class="p">(</span><span class="s">&quot;CACHE TABLE people&quot;</span><span class="p">)</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="n">spark</span><span class="p">.</span><span class="n">sql</span><span class="p">(</span><span class="s">&quot;UNCACHE TABLE people&quot;</span><span class="p">)</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="n">spark</span><span class="p">.</span><span class="n">sql</span><span class="p">(</span><span class="s">&quot;CACHE LAZY TABLE people&quot;</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="_10">元数据管理</h2>
+<p><strong>Catalog 是 Spark SQL 中的元数据管理组件</strong>，它负责管理表、视图、函数等元数据信息。Catalog 有两种实现，分别是 HiveMetastoreCatalog 和 SessionCatalog。前者是对 Hive Metastore 的封装，后者是对内置元数据管理的封装。</p>
+<p>Catalog 是 Spark 2.0 之后提供的访问元数据的类，其提供一些 API 用来对数据库、表、视图、缓存、列、函数（UDF/UDAF）进行操作。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="kd">val</span><span class="w"> </span><span class="n">spark</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">SparkSession</span><span class="p">.</span><span class="n">builder</span><span class="p">()</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="w">  </span><span class="p">.</span><span class="n">master</span><span class="p">(</span><span class="s">&quot;local&quot;</span><span class="p">)</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">  </span><span class="p">.</span><span class="n">appName</span><span class="p">(</span><span class="s">&quot;catalog&quot;</span><span class="p">)</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">  </span><span class="p">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="kd">val</span><span class="w"> </span><span class="n">catalog</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">catalog</span>
+</code></pre></div>
+<p>查看数据库信息：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="kd">val</span><span class="w"> </span><span class="n">catalog</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">catalog</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="n">spark</span><span class="p">.</span><span class="n">sql</span><span class="p">(</span><span class="s">&quot;show databases&quot;</span><span class="p">).</span><span class="n">show</span><span class="p">()</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="n">spark</span><span class="p">.</span><span class="n">catalog</span><span class="p">.</span><span class="n">listDatabases</span><span class="p">().</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<hr />
+<h2 id="spark-on-hive-hive-on-spark">Spark on Hive &amp; Hive on Spark</h2>
+<h3 id="spark-on-hive">Spark on Hive</h3>
+<p>在 Spark 中使用 Hive 的功能。Spark 提供了一个称为 HiveContext（在 Spark 2.0+ 版本中被 SparkSession 取代）的 API，通过该 API 可以使用 Hive 的元数据和查询语言（HiveQL）来访问和操作 Hive 表。</p>
+<p>Spark on Hive 能够在 Spark 中使用 Hive 的表和数据，以及执行 HiveQL 查询。它允许你使用 Spark 的强大分布式计算功能，并与 Hive 集成。</p>
+<h3 id="hive-on-spark">Hive on Spark</h3>
+<p>指在 Hive 中使用 Spark 的执行引擎。在传统的 Hive 中，查询通常使用 MapReduce 作为执行引擎，但这可能导致较高的延迟。为了改善查询性能，Hive 也提供了一个称为 SparkExecutionEngine 的选项，该选项将查询的执行转移到 Spark 引擎上。可以通过使用 <code>set hive.execution.engine=spark</code> 的方式切换 Hive 底层的执行引擎。使用 Hive on Spark，你可以利用 Spark 的内存计算和并行处理能力来加速 Hive 查询。这种方式允许你在 Hive 中继续使用 HiveQL，但底层的执行引擎变为 Spark。</p>
+<hr />
+<h2 id="udf-udaf">UDF &amp; UDAF</h2>
+<p>用户可以通过 spark.udf 功能添加自定义函数，实现自定义功能。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="k">object</span><span class="w"> </span><span class="nc">UDF</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="p">:</span><span class="w"> </span><span class="nc">Array</span><span class="p">[</span><span class="nc">String</span><span class="p">]):</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">    </span><span class="c1">// 创建运行环境</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="n">spark</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">SparkSession</span><span class="p">.</span><span class="n">builder</span><span class="p">()</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="w">      </span><span class="p">.</span><span class="n">master</span><span class="p">(</span><span class="s">&quot;local&quot;</span><span class="p">)</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="w">      </span><span class="p">.</span><span class="n">appName</span><span class="p">(</span><span class="s">&quot;test&quot;</span><span class="p">)</span>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="w">      </span><span class="p">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="n">sc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">sparkContext</span>
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="w">    </span><span class="k">import</span><span class="w"> </span><span class="nn">spark</span><span class="p">.</span><span class="nn">implicits</span><span class="p">.</span><span class="n">_</span>
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spark</span><span class="p">.</span><span class="n">read</span><span class="p">.</span><span class="n">json</span><span class="p">(</span><span class="s">&quot;data/user.json&quot;</span><span class="p">)</span>
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a><span class="w">    </span><span class="n">df</span><span class="p">.</span><span class="n">createOrReplaceTempView</span><span class="p">(</span><span class="s">&quot;user&quot;</span><span class="p">)</span>
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a><span class="w">    </span><span class="n">spark</span><span class="p">.</span><span class="n">udf</span><span class="p">.</span><span class="n">register</span><span class="p">(</span><span class="s">&quot;prefixName&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a><span class="w">      </span><span class="s">&quot;Name: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">name</span>
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a><span class="w">    </span><span class="p">})</span>
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a><span class="w">    </span><span class="n">spark</span><span class="p">.</span><span class="n">sql</span><span class="p">(</span><span class="s">&quot;select age, prefixName(username) from user&quot;</span><span class="p">).</span><span class="n">show</span>
+<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>
+<a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a><span class="w">    </span><span class="c1">//关闭环境</span>
+<a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a><span class="w">    </span><span class="n">spark</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
+<a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a><span class="p">}</span>
+</code></pre></div>
+<p>强类型的 Dataset 和弱类型的 DataFrame 都提供了相关的聚合函数， 如 count()，countDistinct()，avg()，max()，min()。除此之外，用户可以设定自己的自定义聚合函数。通过继承 UserDefinedAggregateFunction 来实现用户自定义弱类型聚合函数。从 Spark3.0 版本后，UserDefinedAggregateFunction 已经不推荐使用了。可以统一采用强类型聚合函数 Aggregator。</p>
+<hr />
+<h2 id="aqe">AQE</h2>
+<p>在 2.0 版本之前，Spark SQL 仅仅支持启发式、静态的优化过程。</p>
+<p>启发式的优化又叫 RBO（Rule Based Optimization，基于规则的优化），它往往基于一些规则和策略实现，如谓词下推、列剪枝，这些规则和策略来源于数据库领域已有的应用经验。也就是说，启发式的优化实际上算是一种经验主义。</p>
+<p>CBO 的特点是“实事求是”，基于数据表的统计信息（如表大小、数据列分布）来选择优化策略。CBO 支持的统计信息很丰富，比如数据表的行数、每列的基数（Cardinality）、空值数、最大值、最小值和直方图等等。因为有统计数据做支持，所以 CBO 选择的优化策略往往优于 RBO 选择的优化规则。</p>
+<p>但是，CBO 也面临三个方面的窘境：“窄、慢、静”。窄指的是适用面太窄，CBO 仅支持注册到 Hive Metastore 的数据表，但在大量的应用场景中，数据源往往是存储在分布式文件系统的各类文件，如 Parquet、ORC、CSV 等等。</p>
+<p>慢指的是统计信息的搜集效率比较低。对于注册到 Hive Metastore 的数据表，开发者需要调用 ANALYZE TABLE COMPUTE STATISTICS 语句收集统计信息，而各类信息的收集会消耗大量时间。</p>
+<p>静指的是静态优化，这一点与 RBO 一样。CBO 结合各类统计信息制定执行计划，一旦执行计划交付运行，CBO 的使命就算完成了。换句话说，如果在运行时数据分布发生动态变化，CBO 先前制定的执行计划并不会跟着调整、适配。</p>
+<p><strong>而 AQE 可以让 Spark 在运行时的不同阶段，结合实时的运行时状态，周期性地动态调整前面的逻辑计划，然后根据再优化的逻辑计划，重新选定最优的物理计划，从而调整运行时后续阶段的执行方式</strong>。</p>
+<hr />
+<p><strong>AQE 是 Spark SQL 的一种动态优化机制，在运行时，每当 Shuffle Map 阶段执行完毕，AQE 都会结合这个阶段的统计信息，基于既定的规则动态地调整、修正尚未执行的逻辑计划和物理计划，来完成对原始查询语句的运行时优化。</strong></p>
+<p><strong>AQE 优化机制触发的时机是 Shuffle Map 阶段执行完毕。也就是说，AQE 优化的频次与执行计划中 Shuffle 的次数一致</strong>。反过来说，如果你的查询语句不会引入 Shuffle 操作，那么 Spark SQL 是不会触发 AQE 的。</p>
+<p>首先，AQE 赖以优化的统计信息与 CBO 不同，这些统计信息并不是关于某张表或是哪个列，而是 <strong>Shuffle Map 阶段输出的中间文件</strong>。我们知道，每个 Map Task 都会输出以 data 为后缀的数据文件，还有以 index 为结尾的索引文件，这些文件统称为中间文件。每个 data 文件的大小、空文件数量与占比、每个 Reduce Task 对应的分区大小，所有这些基于中间文件的统计值构成了 AQE 进行优化的信息来源。</p>
+<p>其次，AQE 从运行时获取统计信息，在条件允许的情况下，<strong>优化决策会分别作用到逻辑计划和物理计划</strong>。</p>
+<p><strong>AQE 既定的规则和策略主要有 4 个，分为 1 个逻辑优化规则和 3 个物理优化策略</strong>。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202312140320449.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202312140320449.png" /></a></p>
+<ul>
+<li>Join 策略调整：如果某张表在过滤之后，尺寸小于广播变量阈值，这张表参与的数据关联就会从 Shuffle Sort Merge Join 降级（Demote）为执行效率更高的 Broadcast Hash Join。</li>
+<li>自动分区合并：在 Shuffle 过后，Reduce Task 数据分布参差不齐，AQE 将自动合并过小的数据分区。</li>
+<li>自动倾斜处理：结合配置项，AQE 自动拆分 Reduce 阶段过大的数据分区，降低单个 Reduce Task 的工作负载。</li>
+</ul>
+<hr />
+<h2 id="dpp">DPP</h2>
+<p>DPP（Dynamic Partition Pruning，动态分区剪裁）是 Spark 3.0 版本中第二个引人注目的特性，它指的是在星型数仓的数据关联场景中，可以充分利用过滤之后的维度表，大幅削减事实表的数据扫描量，从整体上提升关联计算的执行性能。</p>
+<p>我们先来看这个例子。在星型（Start Schema）数仓中，我们有两张表，一张是订单表 orders，另一张是用户表 users。显然，订单表是事实表（Fact），而用户表是维度表（Dimension）。业务需求是统计所有头部用户贡献的营业额，并按照营业额倒序排序。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>// 订单表orders关键字段
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>userId, Int
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>itemId, Int
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>price, Float
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>quantity, Int
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>// 用户表users关键字段
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>id, Int
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>name, String
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>type, String //枚举值，分为头部用户和长尾用户
+</code></pre></div>
+<p>给定上述数据表，我们只需把两张表做内关联，然后分组、聚合、排序，就可以实现业务逻辑，具体的查询语句如下。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="k">select</span><span class="w"> </span><span class="p">(</span><span class="n">orders</span><span class="p">.</span><span class="n">price</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">order</span><span class="p">.</span><span class="n">quantity</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">income</span><span class="p">,</span><span class="w"> </span><span class="n">users</span><span class="p">.</span><span class="n">name</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="k">from</span><span class="w"> </span><span class="n">orders</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="k">inner</span><span class="w"> </span><span class="k">join</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">orders</span><span class="p">.</span><span class="n">userId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">users</span><span class="p">.</span><span class="n">id</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="k">where</span><span class="w"> </span><span class="n">users</span><span class="p">.</span><span class="k">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Head User&#39;</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="k">group</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">users</span><span class="p">.</span><span class="n">name</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="k">order</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">income</span><span class="w"> </span><span class="k">desc</span>
+</code></pre></div>
+<p>不难发现，<strong>如果过滤谓词中包含分区键，那么 Spark SQL 对分区表做扫描的时候，是完全可以跳过（剪掉）不满足谓词条件的分区目录，这就是分区剪裁</strong>。例如，在我们的查询语句中，用户表的过滤谓词是 <code>users.type = 'Head User'</code>。假设用户表是分区表，那么对于用户表的数据扫描，Spark SQL 可以完全跳过前缀为"Tail User"的子目录。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202312140331492.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202312140331492.png" /></a></p>
+<p>通过与谓词下推作对比，我们可以直观地感受分区剪裁的威力。如图所示，上下两行分别表示用户表在不做分区和做分区的情况下，Spark SQL 对于用户表的数据扫描。在不做分区的情况下，用户表所有的数据分片全部存于同一个文件系统目录，尽管 Parquet 格式在注脚（Footer）中提供了 type 字段的统计值，Spark SQL 可以利用谓词下推来减少需要扫描的数据分片，但由于很多分片注脚中的 type 字段同时包含‘Head User’和‘Tail User’（第一行 3 个浅绿色的数据分片），因此，用户表的数据扫描仍然会涉及 4 个数据分片。</p>
+<p>相反，当用户表本身就是分区表时，由于 type 字段为‘Head User’的数据记录全部存储到前缀为‘Head User’的子目录，也就是图中第二行浅绿色的文件系统目录，这个目录中仅包含两个 type 字段全部为‘Head User’的数据分片。这样一来，Spark SQL 可以完全跳过其他子目录的扫描，从而大幅提升 I/O 效率。</p>
+<hr />
+<h3 id="_11">实现原理</h3>
+<p>我们刚才说了，<strong>DPP 指的是在数据关联的场景中，Spark SQL 利用维度表提供的过滤信息，减少事实表中数据的扫描量、降低 I/O 开销，从而提升执行性能</strong>。那么，DPP 是怎么做到这一点的呢？它背后的逻辑是什么？</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202312140333962.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202312140333962.png" /></a></p>
+<p>首先，过滤条件 users.type = ‘Head User’会帮助维度表过滤一部分数据。与此同时，维度表的 ID 字段也顺带着经过一轮筛选，如图中的步骤 1 所示。经过这一轮筛选之后，保留下来的 ID 值，仅仅是维度表 ID 全集的一个子集。</p>
+<p>然后，在关联关系也就是 orders.userId = users.id 的作用下，过滤效果会通过 users 的 ID 字段传导到事实表的 userId 字段，也就是图中的步骤 2。这样一来，满足关联关系的 userId 值，也是事实表 userId 全集中的一个子集。把满足条件的 userId 作为过滤条件，应用（Apply）到事实表的数据源，就可以做到减少数据扫描量，提升 I/O 效率，如图中的步骤 3 所示。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202312140334201.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202312140334201.png" /></a></p>
+<p>虽然 DPP 的运作逻辑非常清晰，但并不是所有的数据关联场景都可以享受到 DPP 的优化机制，想要利用 DPP 来加速事实表数据的读取和访问，数据关联场景还要满足三个额外的条件。</p>
+<p>首先，DPP 是一种分区剪裁机制，它是以分区为单位对事实表进行过滤。结合刚才的逻辑，维度表上的过滤条件会转化为事实表上 Join Key 的过滤条件。具体到我们的例子中，就是 orders.userId 这个字段。显然，DPP 生效的前提是事实表按照 orders.userId 这一列预先做好了分区。因此，<strong>事实表必须是分区表，而且分区字段（可以是多个）必须包含 Join Key</strong>。</p>
+<p>其次，过滤效果的传导，依赖的是等值的关联关系，比如 orders.userId = users.id。因此，<strong>DPP 仅支持等值 Joins，不支持大于、小于这种不等值关联关系</strong>。</p>
+<p>此外，DPP 机制得以实施还有一个隐含的条件：<strong>维度表过滤之后的数据集要小于广播阈值</strong>。</p>
+<hr />
+<p>结合刚才对于 DPP 实现逻辑的分析和推导，我们不难发现，实现 DPP 机制的关键在于，我们要让处理事实表的计算分支，能够拿到满足过滤条件的 Join Key 列表，然后用这个列表来对事实表做分区剪裁。那么问题来了，用什么办法才能拿到这个列表呢？</p>
+<p>Spark SQL 选择了一种“一箭双雕”的做法：<strong>使用广播变量封装过滤之后的维度表数据</strong>。具体来说，在维度表做完过滤之后，Spark SQL 在其上构建哈希表（Hash Table），这个哈希表的 Key 就是用于关联的 Join Key。在我们的例子中，Key 就是满足过滤 users.type = ‘Head User’条件的 users.id；Value 是投影中需要引用的数据列，在之前订单表与用户表的查询中，这里的引用列就是 users.name。</p>
+<p>哈希表构建完毕之后，Spark SQL 将其封装到广播变量中，这个广播变量的作用有二。第一个作用就是给事实表用来做分区剪裁，如图中的步骤 1 所示，哈希表中的 Key Set 刚好可以用来给事实表过滤符合条件的数据分区。</p>
+<p>第二个作用就是参与后续的 Broadcast Join 数据关联，如图中的步骤 2 所示。这里的哈希表，本质上就是 Hash Join 中的 Build Table，其中的 Key、Value，记录着数据关联中所需的所有字段，如 users.id、users.name，刚好拿来和事实表做 Broadcast Hash Join。</p>
+<hr />
+<h3 id="_12">总结</h3>
+<p>相比于谓词下推，分区剪裁往往能更好地提升磁盘访问的 I/O 效率。</p>
+<p>这是因为，谓词下推操作往往是根据文件注脚中的统计信息完成对文件的过滤，过滤效果取决于文件中内容的“纯度”。分区剪裁则不同，它的分区表可以把包含不同内容的文件，隔离到不同的文件系统目录下。这样一来，包含分区键的过滤条件能够以文件系统目录为粒度对磁盘文件进行过滤，从而大幅提升磁盘访问的 I/O 效率。</p>
+<p>而动态分区剪裁这个功能主要用在星型模型数仓的数据关联场景中，它指的是在运行的时候，Spark SQL 利用维度表提供的过滤信息，来减少事实表中数据的扫描量、降低 I/O 开销，从而提升执行性能。</p>
+<p>动态分区剪裁运作的背后逻辑，是把维度表中的过滤条件，通过关联关系传导到事实表，来完成事实表的优化。在数据关联的场景中，开发者要想利用好动态分区剪裁特性，需要注意 3 点：</p>
+<ul>
+<li>事实表必须是分区表，并且分区字段必须包含 Join Key</li>
+<li>动态分区剪裁只支持等值 Joins，不支持大于、小于这种不等值关联关系</li>
+<li>维度表过滤之后的数据集，必须要小于广播阈值，因此，开发者要注意调整配置项 <code>spark.sql.autoBroadcastJoinThreshold</code></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "search.suggest", "search.highlight", "content.code.copy", "navigation.top", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.f1b6f286.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
+</html>

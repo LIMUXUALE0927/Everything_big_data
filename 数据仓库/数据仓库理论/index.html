@@ -1,0 +1,4112 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/ZooKeeper/2.%20ZooKeeper%20%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/">
+      
+      
+        <link rel="next" href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/0.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.4">
+    
+    
+      
+        <title>数据仓库理论 - Everything Big Data</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8608ea7d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i%7CConsolas:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Lato";--md-code-font:"Consolas"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+   <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../assets/javascripts/glightbox.min.js"></script></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="Everything Big Data" class="md-header__button md-logo" aria-label="Everything Big Data" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m-3.1 3.9s-.7-.3-1-.3c-.6-.1-1 .1-1.2 1.1L12 16.8c-.2.8-.5 1.4-1 1.8-.4.3-.8.4-1.3.4-.8 0-2-.5-2-.5l.5-1.4s.8.3 1 .3c.3.1.5 0 .7-.1s.3-.4.4-.7l1.6-9.2c.1-.8.5-1.4 1-1.9.6-.4 1.3-.5 2.1-.4.7.1 1.5.5 1.5.5z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Everything Big Data
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              数据仓库理论
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+    
+  
+  Welcome
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Flink/1.Flink%20%E5%9F%BA%E7%A1%80/" class="md-tabs__link">
+          
+  
+  Flink
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Hadoop/1.%20Hadoop/" class="md-tabs__link">
+          
+  
+  Hadoop
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Hive/1.%20Hive/" class="md-tabs__link">
+          
+  
+  Hive
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../SQL/SQL%20%E5%88%B7%E9%A2%98/" class="md-tabs__link">
+          
+  
+  SQL
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Spark/1.Spark%20Core/" class="md-tabs__link">
+          
+  
+  Spark
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../blog/" class="md-tabs__link">
+          
+  
+  Blog
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/Linux/" class="md-tabs__link">
+          
+  
+  大数据技术栈
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  数据仓库
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/0.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/" class="md-tabs__link">
+          
+  
+  数据结构与算法
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Everything Big Data" class="md-nav__button md-logo" aria-label="Everything Big Data" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m-3.1 3.9s-.7-.3-1-.3c-.6-.1-1 .1-1.2 1.1L12 16.8c-.2.8-.5 1.4-1 1.8-.4.3-.8.4-1.3.4-.8 0-2-.5-2-.5l.5-1.4s.8.3 1 .3c.3.1.5 0 .7-.1s.3-.4.4-.7l1.6-9.2c.1-.8.5-1.4 1-1.9.6-.4 1.3-.5 2.1-.4.7.1 1.5.5 1.5.5z"/></svg>
+
+    </a>
+    Everything Big Data
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Welcome
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Flink
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Flink
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/1.Flink%20%E5%9F%BA%E7%A1%80/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flink 基础
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/2.DataStream%20API/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DataStream API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/3.%E6%97%B6%E9%97%B4%E5%92%8C%E7%AA%97%E5%8F%A3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    时间和窗口
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/4.%E5%A4%9A%E6%B5%81%E8%BD%AC%E6%8D%A2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    多流转换
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/5.%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    状态管理
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/6.%E5%AE%B9%E9%94%99%E6%9C%BA%E5%88%B6/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    容错机制
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/7.Process%20Function/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Process Function
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/8.%E5%BC%82%E6%AD%A5%20IO/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    异步 I/O
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20CDC/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flink CDC
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_10" id="__nav_2_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Flink SQL
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_10">
+            <span class="md-nav__icon md-icon"></span>
+            Flink SQL
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/Examples/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Examples
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/Joins/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Joins
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/Top-N/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Top-N 与 窗口 Top-N
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/%E6%A8%A1%E5%BC%8F%E6%A3%80%E6%B5%8B/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    模式检测
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/%E6%B5%81%E5%BC%8F%E6%A6%82%E5%BF%B5/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    流式概念
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/%E7%AA%97%E5%8F%A3%E5%87%BD%E6%95%B0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    窗口函数
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_11" id="__nav_2_11_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    论文 & FLIP
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_11">
+            <span class="md-nav__icon md-icon"></span>
+            论文 & FLIP
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/%E8%AE%BA%E6%96%87%20%26%20FLIP/98.Flink%20%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flink 论文精读
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/%E8%AE%BA%E6%96%87%20%26%20FLIP/99.Dataflow%20%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dataflow 论文精读
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/%E8%AE%BA%E6%96%87%20%26%20FLIP/FLIP/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FLIP
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Hadoop
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Hadoop
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hadoop/1.%20Hadoop/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hadoop
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hadoop/2.%20HDFS/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HDFS
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hadoop/3.%20MapReduce/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MapReduce
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hadoop/4.%20Yarn/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Yarn
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Hive
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Hive
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hive/1.%20Hive/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hive/2.%20Hive%20%E9%9D%A2%E8%AF%95%E9%A2%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive 面试题
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hive/Hive%20%E5%87%BD%E6%95%B0%E7%9B%B8%E5%85%B3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive 函数相关
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hive/Hive%20%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive 性能调优
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    SQL
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            SQL
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SQL/SQL%20%E5%88%B7%E9%A2%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SQL 刷题
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SQL/SQL%20%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive/Spark SQL 相关知识
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SQL/Spark%20SQL%20%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0%E6%95%B4%E7%90%86/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark SQL 常用函数整理
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SQL/UDF%20%E5%BC%80%E5%8F%91/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    UDF 开发
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Spark
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Spark
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Spark/1.Spark%20Core/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark Core
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Spark/2.Spark%20SQL/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark SQL
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Spark/PySpark/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PySpark
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Spark/RDD%20%E7%AE%97%E5%AD%90%20API/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RDD 算子 API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Spark/Spark%20%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark 性能优化
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Spark/Spark%20%E9%9D%A2%E8%AF%95%E9%A2%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark 面试题
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Blog
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Blog
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Blog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    归档
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    大数据技术栈
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            大数据技术栈
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/Linux/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Linux
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_2" id="__nav_8_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    HBase
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_2">
+            <span class="md-nav__icon md-icon"></span>
+            HBase
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/HBase/1.HBase/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HBase
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/HBase/99.inbox/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Inbox
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_3" id="__nav_8_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Kafka
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_3">
+            <span class="md-nav__icon md-icon"></span>
+            Kafka
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/Kafka/1.Kafka/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Kafka
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_4" id="__nav_8_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Scala
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_4">
+            <span class="md-nav__icon md-icon"></span>
+            Scala
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/Scala/Scala/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Scala
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_5" id="__nav_8_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    ZooKeeper
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_5">
+            <span class="md-nav__icon md-icon"></span>
+            ZooKeeper
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/ZooKeeper/1.%20ZooKeeper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ZooKeeper
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/ZooKeeper/2.%20ZooKeeper%20%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ZooKeeper 如何实现分布式锁
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    数据仓库
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            数据仓库
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    数据仓库理论
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    数据仓库理论
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      数据仓库的定义
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      为什么要建设数仓
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vs" class="md-nav__link">
+    <span class="md-ellipsis">
+      数据库 VS 数据仓库
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mpp-vs" class="md-nav__link">
+    <span class="md-ellipsis">
+      MPP VS 分布式架构
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MPP VS 分布式架构">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mpp" class="md-nav__link">
+    <span class="md-ellipsis">
+      MPP
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      分布式架构
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lambda-vs-kappa" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lambda VS Kappa 架构
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      数据库三范式
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      数仓分层的意义
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      数仓分层建设思路
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vs_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      范式建模 VS 维度建模
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      需求开发流程
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      模型设计基本原则
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      维度建模有哪些模型
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      事实表设计
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="事实表设计">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      事实类型
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      事实表类型
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      事实表设计过程
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      多事务事实表中事实的处理方法
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      事实表设计的八大原则
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      维度表设计
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="维度表设计">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      维度表设计过程
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_19" class="md-nav__link">
+    <span class="md-ellipsis">
+      处理缓慢变化维
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_20" class="md-nav__link">
+    <span class="md-ellipsis">
+      数据质量
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_21" class="md-nav__link">
+    <span class="md-ellipsis">
+      如何理解大数据 &amp; 数仓
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_22" class="md-nav__link">
+    <span class="md-ellipsis">
+      数仓工作理解 &amp; 数仓价值
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_23" class="md-nav__link">
+    <span class="md-ellipsis">
+      什么是一个好数仓
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_24" class="md-nav__link">
+    <span class="md-ellipsis">
+      如何衡量数仓模型为业务带来的价值
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_25" class="md-nav__link">
+    <span class="md-ellipsis">
+      如何评价一个数仓模型的好坏
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    数据结构与算法
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            数据结构与算法
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/0.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    数据结构复习
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/1.%E7%AE%97%E6%B3%95%E5%A4%8D%E4%B9%A0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    算法复习
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    数据结构与算法笔记
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E7%BA%BF%E6%80%A7%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    线性动态规划
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    背包问题
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_10_6" id="__nav_10_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    好题分类
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_6">
+            <span class="md-nav__icon md-icon"></span>
+            好题分类
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E4%BA%8C%E5%8F%89%E6%A0%91/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    二叉树
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E5%89%8D%E7%BC%80%E5%92%8C/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    前缀和
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E5%93%88%E5%B8%8C%E8%A1%A8/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    哈希表
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E5%A4%9A%E7%A7%8D%E8%A7%A3%E6%B3%95/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    多种解法
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    滑动窗口
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E9%93%BE%E8%A1%A8/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    链表
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      数据仓库的定义
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      为什么要建设数仓
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vs" class="md-nav__link">
+    <span class="md-ellipsis">
+      数据库 VS 数据仓库
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mpp-vs" class="md-nav__link">
+    <span class="md-ellipsis">
+      MPP VS 分布式架构
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MPP VS 分布式架构">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mpp" class="md-nav__link">
+    <span class="md-ellipsis">
+      MPP
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      分布式架构
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lambda-vs-kappa" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lambda VS Kappa 架构
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      数据库三范式
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      数仓分层的意义
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      数仓分层建设思路
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vs_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      范式建模 VS 维度建模
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      需求开发流程
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      模型设计基本原则
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      维度建模有哪些模型
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      事实表设计
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="事实表设计">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      事实类型
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      事实表类型
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      事实表设计过程
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      多事务事实表中事实的处理方法
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      事实表设计的八大原则
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      维度表设计
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="维度表设计">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      维度表设计过程
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_19" class="md-nav__link">
+    <span class="md-ellipsis">
+      处理缓慢变化维
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_20" class="md-nav__link">
+    <span class="md-ellipsis">
+      数据质量
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_21" class="md-nav__link">
+    <span class="md-ellipsis">
+      如何理解大数据 &amp; 数仓
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_22" class="md-nav__link">
+    <span class="md-ellipsis">
+      数仓工作理解 &amp; 数仓价值
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_23" class="md-nav__link">
+    <span class="md-ellipsis">
+      什么是一个好数仓
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_24" class="md-nav__link">
+    <span class="md-ellipsis">
+      如何衡量数仓模型为业务带来的价值
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_25" class="md-nav__link">
+    <span class="md-ellipsis">
+      如何评价一个数仓模型的好坏
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="_1">数据仓库理论</h1>
+<h2 id="_2">数据仓库的定义</h2>
+<p>数据仓库是一个<strong>面向主题的</strong>、<strong>集成的</strong>、<strong>相对稳定的</strong>、<strong>反映历史变化的</strong>数据集合，用于提供数据支持和辅助决策。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">定义</th>
+<th style="text-align: left;">解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">面向主题</td>
+<td style="text-align: left;">按主题组织数据，每个主题反映业务需求/分析对象</td>
+</tr>
+<tr>
+<td style="text-align: left;">集成</td>
+<td style="text-align: left;">多个数据源汇集</td>
+</tr>
+<tr>
+<td style="text-align: left;">相对稳定</td>
+<td style="text-align: left;">大量查询为主，修改、删除较少</td>
+</tr>
+<tr>
+<td style="text-align: left;">反映历史变化</td>
+<td style="text-align: left;">保存大量历史数据</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_3">为什么要建设数仓</h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>数据仓库试图提供一种从操作系统到决策支持环境的<strong>数据流模型</strong>。数据仓库概念的提出是为了解决和数据流相关的各种问题，特别是<strong>多重数据复制带来的高成本问题</strong>。在没有数据仓库的时代，数据分析人员需要收集、清洗、整合多个数据源的数据，并对每个决策支持环境做部分数据复制，耗时长且准确率低。</p>
+</div>
+<ul>
+<li>维护历史数据，减轻业务系统存储、计算压力，提供长期数据视图</li>
+<li>集成多个数据源，提供一个统一的数据视图</li>
+<li>通过冗余减少表关联，复用计算结果</li>
+<li>通过建设宽表/集市，提升数据的易用性和可理解性</li>
+</ul>
+<hr />
+<h2 id="vs">数据库 VS 数据仓库</h2>
+<p>数据库：OLTP，面向业务处理和事务设计，一般会采用范式建模，主要追求低冗余、数据一致性和写入性能。</p>
+<p>数据仓库：OLAP，面向主题分析设计的，一般会采用维度建模，主要追求数据的可理解性、查询性能，本质是一种空间换时间的架构。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"></th>
+<th style="text-align: left;">数据库</th>
+<th style="text-align: left;">数据仓库</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">面向</td>
+<td style="text-align: left;">事务</td>
+<td style="text-align: left;">分析</td>
+</tr>
+<tr>
+<td style="text-align: left;">数据类型</td>
+<td style="text-align: left;">细节、业务</td>
+<td style="text-align: left;">综合、清洗过的数据</td>
+</tr>
+<tr>
+<td style="text-align: left;">数据特点</td>
+<td style="text-align: left;">当前的、最新的</td>
+<td style="text-align: left;">历史的、跨时间维护</td>
+</tr>
+<tr>
+<td style="text-align: left;">目的</td>
+<td style="text-align: left;">业务处理、事务</td>
+<td style="text-align: left;">长期信息需求、决策支持</td>
+</tr>
+<tr>
+<td style="text-align: left;">设计模型</td>
+<td style="text-align: left;">基于 ER 模型，面向应用</td>
+<td style="text-align: left;">星型、雪花模型，面向主题</td>
+</tr>
+<tr>
+<td style="text-align: left;">操作</td>
+<td style="text-align: left;">读、写</td>
+<td style="text-align: left;">大多为读</td>
+</tr>
+<tr>
+<td style="text-align: left;">数据规模</td>
+<td style="text-align: left;">小、中</td>
+<td style="text-align: left;">大</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="mpp-vs">MPP VS 分布式架构</h2>
+<h3 id="mpp">MPP</h3>
+<p>传统的数据仓库通过 MPP 来实现。MPP 是一种分布式计算架构，它将单个查询分解为多个并行的任务，每个任务在不同的节点上执行，最后将结果合并返回给用户。MPP 由多个单节点的单机数据库组成，每个节点都有自己的 CPU、内存、存储和操作系统，节点之间通过网络连接。分库分表、汇总查询结果等通过中间件来实现。</p>
+<ul>
+<li>节点间为非共享架构（Share Nothing），每个节点都有自己的磁盘存储系统和内存系统</li>
+<li>节点间通过专用高速网络连接</li>
+<li>设计上优先考虑 C（一致性），其次考虑 A（可用性），尽量做好 P（分区容错性）</li>
+</ul>
+<p><strong>优点：</strong></p>
+<ul>
+<li>运算方式精细，延迟低、吞吐低</li>
+<li>适合中等规模的结构化数据处理</li>
+</ul>
+<p><strong>问题：</strong></p>
+<ul>
+<li>单个节点容易成为性能瓶颈，扩展性有限</li>
+<li>数据热点问题</li>
+<li>分布式事务的实现会导致扩展性降低</li>
+</ul>
+<hr />
+<h3 id="_4">分布式架构</h3>
+<ul>
+<li>利用分布式文件系统的扩展性，完成海量数据的存储</li>
+<li>将 SQL 转换为大数据计算引擎任务，完成数据分析</li>
+<li>设计上优先考虑 P（分区容错性），然后是 A（可用性），最后考虑 C（一致性）</li>
+<li>与 MPP 最大的不同是，分布式架构是共享数据的，而 MPP 是非共享数据的</li>
+</ul>
+<pre class="mermaid"><code>flowchart TD
+    A["分布式 SQL 引擎"] --&gt; B["大数据计算引擎"] --&gt; C["分布式文件系统"]</code></pre>
+<p><strong>问题：</strong></p>
+<ul>
+<li>SQL 支持率</li>
+<li>事务支持（分布式事务）</li>
+</ul>
+<hr />
+<p><strong>MPP + 分布式架构：</strong></p>
+<ul>
+<li>数据存储采用分布式架构中的公共存储，提高分区容错性</li>
+<li>上层架构采用 MPP，减少运算延迟（常用于实时流处理）</li>
+</ul>
+<hr />
+<h2 id="lambda-vs-kappa">Lambda VS Kappa 架构</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"></th>
+<th style="text-align: left;">Lambda 架构</th>
+<th style="text-align: left;">Kappa 架构</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">实时性</td>
+<td style="text-align: left;">秒级实时</td>
+<td style="text-align: left;">秒级实时</td>
+</tr>
+<tr>
+<td style="text-align: left;">计算资源</td>
+<td style="text-align: left;">流批分开执行，资源消耗大</td>
+<td style="text-align: left;">只有流计算，正常运行资源消耗少，只有重算资源消耗较大</td>
+</tr>
+<tr>
+<td style="text-align: left;">重算能力</td>
+<td style="text-align: left;">批式全量处理，吞吐量高</td>
+<td style="text-align: left;">流式全量处理，吞吐较批处理低</td>
+</tr>
+<tr>
+<td style="text-align: left;">开发测试</td>
+<td style="text-align: left;">每个需求都要开发两套代码，开发测试成本高</td>
+<td style="text-align: left;">仅需一套代码，开发测试成本低</td>
+</tr>
+<tr>
+<td style="text-align: left;">运维成本</td>
+<td style="text-align: left;">维护两套架构，运维成本高</td>
+<td style="text-align: left;">只维护一套系统，运维成本低</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_5">数据库三范式</h2>
+<div class="admonition note">
+<p class="admonition-title">1NF</p>
+<p><strong>确保表中的每列是原子、不可再分的。</strong></p>
+</div>
+<p>假设有以下表：</p>
+<table>
+<thead>
+<tr>
+<th>employee_id</th>
+<th>name</th>
+<th>job_code</th>
+<th>job</th>
+<th>state_code</th>
+<th>home_state</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>E001</td>
+<td>Alice</td>
+<td>J01</td>
+<td>Chef</td>
+<td>26</td>
+<td>Michigan</td>
+</tr>
+<tr>
+<td>E001</td>
+<td>Alice</td>
+<td>J02</td>
+<td>Waiter</td>
+<td>26</td>
+<td>Michigan</td>
+</tr>
+<tr>
+<td>E002</td>
+<td>Bob</td>
+<td>J02</td>
+<td>Waiter</td>
+<td>56</td>
+<td>Wyoming</td>
+</tr>
+<tr>
+<td>E002</td>
+<td>Bob</td>
+<td>J03</td>
+<td>Bartender</td>
+<td>56</td>
+<td>Wyoming</td>
+</tr>
+<tr>
+<td>E003</td>
+<td>Alice</td>
+<td>J01</td>
+<td>Chef</td>
+<td>56</td>
+<td>Wyoming</td>
+</tr>
+</tbody>
+</table>
+<p>所有条目都是原子的，并且有一个复合主键 <code>(employee_id, job_code)</code>，因此表符合第一范式（1NF）。</p>
+<div class="admonition note">
+<p class="admonition-title">2NF</p>
+<p>在满足 1NF 的情况下，<strong>不能存在部分依赖。</strong>即非主键字段必须<strong>完全依赖</strong>于主键，而不能依赖于主键的一部分。</p>
+</div>
+<p>但是即使你只知道某人的 <code>employee_id</code>，那么你也可以确定他们的 <code>name</code>、<code>home_state</code> 和 <code>state_code</code>。<code>name</code>、即 <code>name</code>、<code>home_state</code> 和 <code>state_code</code> 依赖于 <code>employee_id</code>（复合主键的一部分）。因此该表不符合第二范式（2NF）。</p>
+<p>将上面的表进行拆分：</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1"><code>employee_roles</code></label><label for="__tabbed_1_2"><code>employees</code></label><label for="__tabbed_1_3"><code>jobs</code></label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<table>
+<thead>
+<tr>
+<th>employee_id</th>
+<th>job_code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>E001</td>
+<td>J01</td>
+</tr>
+<tr>
+<td>E001</td>
+<td>J02</td>
+</tr>
+<tr>
+<td>E002</td>
+<td>J02</td>
+</tr>
+<tr>
+<td>E002</td>
+<td>J03</td>
+</tr>
+<tr>
+<td>E003</td>
+<td>J01</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabbed-block">
+<table>
+<thead>
+<tr>
+<th>employee_id</th>
+<th>name</th>
+<th>state_code</th>
+<th>home_state</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>E001</td>
+<td>Alice</td>
+<td>26</td>
+<td>Michigan</td>
+</tr>
+<tr>
+<td>E002</td>
+<td>Bob</td>
+<td>56</td>
+<td>Wyoming</td>
+</tr>
+<tr>
+<td>E003</td>
+<td>Alice</td>
+<td>56</td>
+<td>Wyoming</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabbed-block">
+<table>
+<thead>
+<tr>
+<th>job_code</th>
+<th>job</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>J01</td>
+<td>Chef</td>
+</tr>
+<tr>
+<td>J02</td>
+<td>Waiter</td>
+</tr>
+<tr>
+<td>J03</td>
+<td>Bartender</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">3NF</p>
+<p>在满足 2NF 的情况下，<strong>不能存在传递依赖。</strong> 3NF 是对字段冗余性的约束，要求任何字段不能由其他字段派生出来，它要求字段没有冗余，即不存在传递依赖。</p>
+</div>
+<p>在上面的 <code>employees</code> 表中，<code>home_state</code> 依赖于 <code>state_code</code>。所以，如果知道 <code>state_code</code>，那么就可以找到对应的 <code>home_state</code> 值。为了满足第三范式，继续拆分 <code>employees</code> 表。</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:4"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><input id="__tabbed_2_4" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1"><code>employee_roles</code></label><label for="__tabbed_2_2"><code>employees</code></label><label for="__tabbed_2_3"><code>jobs</code></label><label for="__tabbed_2_4"><code>states</code></label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<table>
+<thead>
+<tr>
+<th>employee_id</th>
+<th>job_code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>E001</td>
+<td>J01</td>
+</tr>
+<tr>
+<td>E001</td>
+<td>J02</td>
+</tr>
+<tr>
+<td>E002</td>
+<td>J02</td>
+</tr>
+<tr>
+<td>E002</td>
+<td>J03</td>
+</tr>
+<tr>
+<td>E003</td>
+<td>J01</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabbed-block">
+<table>
+<thead>
+<tr>
+<th>employee_id</th>
+<th>name</th>
+<th>state_code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>E001</td>
+<td>Alice</td>
+<td>26</td>
+</tr>
+<tr>
+<td>E002</td>
+<td>Bob</td>
+<td>56</td>
+</tr>
+<tr>
+<td>E003</td>
+<td>Alice</td>
+<td>56</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabbed-block">
+<table>
+<thead>
+<tr>
+<th>job_code</th>
+<th>job</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>J01</td>
+<td>Chef</td>
+</tr>
+<tr>
+<td>J02</td>
+<td>Waiter</td>
+</tr>
+<tr>
+<td>J03</td>
+<td>Bartender</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabbed-block">
+<table>
+<thead>
+<tr>
+<th>state_code</th>
+<th>home_state</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>26</td>
+<td>Michigan</td>
+</tr>
+<tr>
+<td>56</td>
+<td>Wyoming</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<hr />
+<h2 id="_6">数仓分层的意义</h2>
+<div class="admonition note">
+<p class="admonition-title">一些个人思考</p>
+<p>数据仓库分层主要是基于使用经验进行的优化操作，对于分层意义的探讨，只要合理就行。Kimball 在《数据仓库工具箱》阐述维度建模时，提到了 「<strong>可理解性</strong>」 与 「<strong>性能</strong>」 这两点，我认为这两点精确且简洁地概括了数据仓库建设和维度建模的理念，所以围绕「<strong>可理解性</strong>」 与 「<strong>性能</strong>」 来论述基本不会有偏差。</p>
+</div>
+<ol>
+<li><strong>清晰数据结构</strong>：每一层都有它的作用域和职责，在设计表时有一套标准，在使用表的时候能更方便地定位和理解。​</li>
+<li><strong>方便追踪数据来源</strong>：由于最终的分析数据通常是经过复杂架构汇总的结果，有了标准的分层，我们就可以更快速地定位数据来源。</li>
+<li><strong>减少重复开发</strong>：规范数据分层，开发一些通用的中间组件，能减少极大的重复计算，提高程序复用性。​</li>
+<li><strong>统一数据口径</strong>：通过数据分层提供统一的数据出口，统一对外输出的数据口径。​</li>
+<li><strong>复杂问题简单化</strong>：将一个复杂的任务分解成多个步骤来完成，每一层解决特定的问题。</li>
+</ol>
+<hr />
+<h2 id="_7">数仓分层建设思路</h2>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202411271427945.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/LIMUXUALE0927/image/main/img/202411271427945.png" /></a></p>
+<hr />
+<h2 id="vs_1">范式建模 VS 维度建模</h2>
+<p>范式建模（Normalized Modeling）和维度建模（Dimensional Modeling）是数据仓库设计中两种常用的数据建模方法，它们有以下区别：</p>
+<p><strong>一、数据结构</strong></p>
+<dl>
+<dt><ins>范式建模</ins></dt>
+<dd>基于关系型数据库的设计理念，遵循严格的规范化规则。通常将数据分解到多个实体中，以减少数据冗余。例如，在一个订单系统中，客户信息、产品信息和订单信息会分别存储在不同的表中。</dd>
+<dd>一般采用第三范式（3NF），即一个表中的非主属性都依赖于主属性，并且不存在传递依赖。这种结构在处理复杂的数据关系时非常有效。</dd>
+<dt><ins>维度建模</ins></dt>
+<dd>以分析需求为导向，将数据按照事实表（Fact Table）和维度表（Dimension Table）进行组织。事实表包含业务度量值（如销售额、数量等），而维度表包含描述这些度量值的属性（如时间、地点、产品等）。</dd>
+<dd>常见的模式有星型模式和雪花模式。星型模式中，事实表位于中心，周围连接多个维度表；雪花模式则是在星型模式的基础上，对某些维度表进行进一步的规范化，形成类似雪花的结构。</dd>
+</dl>
+<p><strong>二、数据处理</strong></p>
+<dl>
+<dt><ins>范式建模</ins></dt>
+<dd>在数据插入和更新时，由于数据分散在多个表中，遵循规范化规则，数据一致性容易维护。例如，当客户信息发生变化时，只需要在客户表中更新相应记录。</dd>
+<dd>但在查询时，由于数据分散，往往需要进行多表连接操作，这在处理复杂查询时可能会导致性能下降。例如，查询某个客户的所有订单信息，可能需要连接客户表、订单表和订单详情表。</dd>
+<dt><ins>维度建模</ins></dt>
+<dd>在数据加载时，由于数据是按照分析需求进行组织的，可能会存在一定的数据冗余。例如，在维度表中可能会重复存储一些属性值。</dd>
+<dd>但在查询时，由于数据结构简单，通常只需要对事实表和少数维度表进行连接操作，查询性能较高。例如，在分析销售数据时，只需要将销售事实表与相关的时间、地点和产品维度表连接即可。</dd>
+</dl>
+<p><strong>三、应用场景</strong></p>
+<dl>
+<dt><ins>范式建模</ins></dt>
+<dd>适用于对数据一致性要求较高、业务逻辑复杂的操作型数据库系统。例如，企业的核心业务系统，如 ERP（企业资源计划）系统，需要严格保证数据的准确性和一致性。</dd>
+<dt><ins>维度建模</ins></dt>
+<dd>主要应用于数据仓库和商业智能（BI）系统，这些系统以数据分析和决策支持为主要目的。例如，企业的数据分析部门利用维度建模构建数据仓库，以便快速生成各类报表和进行数据分析。</dd>
+</dl>
+<p><strong>四、维护难度</strong></p>
+<dl>
+<dt><ins>范式建模</ins></dt>
+<dd>在数据结构变化时，由于数据分散且遵循规范化规则，对表结构的修改相对容易。例如，添加一个新的客户属性，只需要在客户表中添加一个新列。</dd>
+<dd>但在处理复杂的业务逻辑和数据关系时，维护成本可能较高，尤其是在涉及多表连接的查询操作时。</dd>
+<dt><ins>维度建模</ins></dt>
+<dd>在数据结构变化时，由于数据存在一定的冗余，可能需要对多个表进行修改。例如，当产品维度增加一个新属性时，可能需要在多个相关的事实表和维度表中进行相应的修改。</dd>
+<dd>然而，在数据分析需求相对稳定的情况下，维度建模的数据仓库维护成本相对较低，因为查询操作相对简单。</dd>
+</dl>
+<hr />
+<h2 id="_8">需求开发流程</h2>
+<dl>
+<dt><ins>I.需求沟通</ins></dt>
+<dd>
+<p>沟通需求的背景、排期优先级以及最后交付物</p>
+</dd>
+<dt><ins>II.评估可行性和潜在影响</ins></dt>
+<dd>
+<p>需要用到哪些数据，目前有没有对应的模型？没有的话是否需要接入新的数据？接入的话是否会对下游 SLA 产生影响？</p>
+</dd>
+<dt><ins>III.数据开发</ins></dt>
+<dd>
+<p>1.数据探查：简单走一遍数据链路，看需要的字段是否都能取到</p>
+</dd>
+<dd>
+<p>2.选模型（已有）：一般越上层的表，字段越丰富/预计算过，可以减少重复开发/计算，但是同时越上层耦合程度越高，产出时间也越晚</p>
+</dd>
+<dd>
+<p>3.模型开发（新建）：梳理一下需要新建哪些表，放哪一层，依赖关系是怎样。维度建模流程：业务过程 → 粒度 → 维度 → 事实</p>
+</dd>
+<dt><ins>IV.测试&amp;上线</ins></dt>
+<dd>
+<p>关注：</p>
+<ol>
+<li>数据的准确性、数据质量</li>
+<li>代码规范、命名规范</li>
+<li>性能</li>
+</ol>
+</dd>
+<dt><ins>V.DQC&amp;SLA</ins></dt>
+<dd>
+<p>按需配置 DQC 和 SLA</p>
+</dd>
+</dl>
+<hr />
+<h2 id="_9">模型设计基本原则</h2>
+<table>
+<thead>
+<tr>
+<th>原则</th>
+<th>阐述</th>
+<th>目的及意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>高内聚和低耦合</td>
+<td>将业务相关、粒度相同的数据设计为同一个物理模型，将高频率同时访问的数据放一起，将低频率同时访问的数据分开存储</td>
+<td>提高数据组织合理性，便于快速获取高频访问数据，提升使用效率，降低关联干扰，使数据结构清晰，便于维护管理</td>
+</tr>
+<tr>
+<td>核心模型与扩展模型分离</td>
+<td>核心模型包括的字段支持常用的核心业务，扩展模型包括的字段支持个性化或少量应用的需要</td>
+<td>聚焦核心业务需求，保障核心业务数据处理高效、稳定，满足多样化业务诉求，保持数据模型灵活性和可扩展性</td>
+</tr>
+<tr>
+<td>公共处理逻辑下沉</td>
+<td>越是公用的处理逻辑，越应该在数据调度依赖的底层进行封装与实现，不要让公共逻辑多处同时存在</td>
+<td>减少代码重复编写，降低不一致性风险，便于统一修改优化，提高维护效率，保证数据处理一致性和准确性</td>
+</tr>
+<tr>
+<td>成本与性能平衡</td>
+<td>适当的数据冗余可以换取查询和刷新性能，但不要过度冗余</td>
+<td>提升查询、刷新等操作性能，加快数据读取和展示速度，提高系统响应能力，避免过度冗余占用大量空间及增加操作复杂度，权衡成本与性能关系</td>
+</tr>
+<tr>
+<td>数据可回滚</td>
+<td>处理逻辑不变，在不同时间多次运行，数据结果确定不变</td>
+<td>保证数据稳定性和可追溯性，便于还原历史数据状态，助力数据质量把控和问题排查</td>
+</tr>
+<tr>
+<td>一致性</td>
+<td>具有相同含义的字段在不同的表中命名必须相同</td>
+<td>保证数据在不同表间统一性、规范性，便于理解数据含义，避免误解，方便数据整合、关联及分析，提升可用性</td>
+</tr>
+<tr>
+<td>命名清晰可理解</td>
+<td>表名需易于消费者理解和使用</td>
+<td>让使用者快速知晓表中数据范围和用途，提高查找、使用效率，有助于数据模型推广和应用</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_10">维度建模有哪些模型</h2>
+<table>
+<thead>
+<tr>
+<th>模型名称</th>
+<th>定义</th>
+<th>特点及应用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>星型模型</td>
+<td>以事实表作为中心，所有的维度表都直接与事实表相连接，整体结构呈现出类似星星的形状，故而得名星型模型。是维度建模中最为常用的一种方式。</td>
+<td>结构简单清晰，数据关系直观，数据分析和查询时操作相对便捷，能高效获取数据。常用于业务逻辑相对清晰、维度相对固定的数据分析场景。</td>
+</tr>
+<tr>
+<td>雪花模型</td>
+<td>由星型模型衍生而来，维度表可以进一步连接其他维度表，结构特点在一定程度上类似于遵循第三范式（3NF）的关系模型，通过对维度表的进一步细化和规范化来组织数据。</td>
+<td>减少了数据冗余，数据结构更规范化，但查询时相较于星型模型可能需更多连接操作，复杂度增加。适用于对数据规范性要求较高、数据量较大且需严格控制冗余的场景。</td>
+</tr>
+<tr>
+<td>星座模型</td>
+<td>是星型模型的衍生形式，基于多张事实表构建，且事实表之间会共享维度信息，即维度表之间有可能相互连接在一起，在实际企业环境中多被用于维度建模。</td>
+<td>能适应企业复杂业务场景，将多个相关业务的事实表通过共享维度进行整合，便于从多个角度对不同业务数据进行综合分析。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_11">事实表设计</h2>
+<h3 id="_12">事实类型</h3>
+<p>作为度量业务过程的事实，有可加性、半可加性和不可加性三种类型：</p>
+<ul>
+<li>可加性事实指可以按照与事实表关联的任意维度进行汇总。</li>
+<li>半可加事实只能按照特定维度汇总，不能对所有维度汇总。</li>
+<li>不可加性事实完全不具备可加性，比如比例事实。对于不可加性事实可考虑分解为可加的组件来实现聚合。</li>
+</ul>
+<hr />
+<h3 id="_13">事实表类型</h3>
+<ul>
+<li><strong>事务事实表</strong>：记录事务层面的事实，记录最原子的数据，粒度通常为每个事务记录一条数据</li>
+<li><strong>周期快照事实表</strong>：以周期性的时间间隔来记录事实，如库存日快照表，粒度是一个周期性的时间间隔内的事务记录一条数据</li>
+<li><strong>累计快照事实表</strong>：记录不确定周期的数据，通常覆盖一个事务的生命周期，记录一些关键时间点，如订单累计快照事实表会记录付款日期、发货日期、收货日期等。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>事务事实表</th>
+<th>周期快照事实表</th>
+<th>累计快照事实表</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>时间</strong></td>
+<td>离散事务时间点</td>
+<td>以有规律的、可预测的间隔产生快照</td>
+<td>用于时间跨度不确定的不断变化的工作流</td>
+</tr>
+<tr>
+<td><strong>日期维度</strong></td>
+<td>事务日期</td>
+<td>快照日期</td>
+<td>相关业务过程涉及的多个日期</td>
+</tr>
+<tr>
+<td><strong>粒度</strong></td>
+<td>每行代表实体的一个事务</td>
+<td>每行代表某时间周期的一个实体</td>
+<td>每行代表一个实体的生命周期</td>
+</tr>
+<tr>
+<td><strong>事实</strong></td>
+<td>事务事实</td>
+<td>累积事实</td>
+<td>相关业务过程事实和时间间隔事实</td>
+</tr>
+<tr>
+<td><strong>事实表加载</strong></td>
+<td>插入</td>
+<td>插入</td>
+<td>插入与更新</td>
+</tr>
+<tr>
+<td><strong>事实表更新</strong></td>
+<td>不更新</td>
+<td>不更新</td>
+<td>业务过程变更时更新</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="_14">事实表设计过程</h3>
+<p><strong>第一步：选择业务过程及确定事实表类型</strong></p>
+<ul>
+<li><strong>选业务过程</strong>：业务过程用行为动词体现活动，如淘宝订单流转含“创建订单”“买家付款”等四个过程，需依业务需求选与维度建模相关的过程。</li>
+<li><strong>定事实表类型</strong>：选好业务过程后确定事实表类型。如果选“买家付款”这一业务过程则对应单事务事实表；如果选四个过程且要分析时间间隔，则对应累计快照事实表。</li>
+</ul>
+<p><strong>第二步：声明粒度</strong></p>
+<ul>
+<li><strong>重要性</strong>：明确粒度可避免对事实表行含义理解混淆，保证按统一细节层次记录事实。</li>
+<li><strong>原则</strong>：尽量选最细的原子粒度，保障事实表应用灵活性。</li>
+</ul>
+<p><strong>第三步：确定维度</strong></p>
+<p>完成粒度声明即确定主键，据此确定维度组合与相关字段，要选能描述业务环境的维度信息，如淘宝订单付款事实表（粒度为子订单）的买家、卖家等维度。</p>
+<p><strong>第四步：确定事实</strong></p>
+<p>通过回答“过程的度量是什么”确定事实，如淘宝订单付款事实表中同粒度事实有子订单分摊支付金额、邮费、优惠金额等。</p>
+<p><strong>第五步：冗余维度</strong></p>
+<p>传统维度建模星型模型将维度放维表，用外键获取以减少冗余、存储消耗；大数据事实表模型为提高下游用户使用效率，常冗余常用维度，如淘宝订单付款事实表中冗余商品类目、卖家店铺等字段。</p>
+<hr />
+<h3 id="_15">多事务事实表中事实的处理方法</h3>
+<dl>
+<dt><strong>方法一：使用不同事实字段存放不同业务过程的事实</strong></dt>
+<dd>不同业务过程的事实通过设置不同的事实字段来进行存放。
+例如，在淘宝交易事务事实表中，会设置“下单度量”字段用于存放下单业务过程相关事实，“支付度量”字段用于存放支付业务过程相关事实，“完结度量”字段用于存放完结业务过程相关事实。</dd>
+<dt><strong>方法二：使用同一个事实字段存放不同业务过程的事实并增加业务过程标签</strong></dt>
+<dd>将不同业务过程的事实放在同一个事实字段中存储，同时增加一个业务过程标签来区分。
+比如在收藏事务事实表中，会设置“收藏删除类型”字段以表明业务过程类型（是收藏还是删除等），以及“收藏删除度量”字段来存放对应的度量数据。</dd>
+</dl>
+<p><strong>两种方法的选择依据</strong></p>
+<ul>
+<li>当不同业务过程的度量比较相似时，适宜采用第二种方式。</li>
+<li>当不同业务过程的度量差异比较大时，则采用第一种方式。</li>
+</ul>
+<hr />
+<h3 id="_16">事实表设计的八大原则</h3>
+<ol>
+<li>尽可能包含所有与业务过程相关的事实</li>
+<li>只选择与业务过程相关的事实</li>
+<li>分解不可加事实为可加事实</li>
+<li>在选择维度和事实之前必须先声明粒度</li>
+<li>在同一个事实表中不能有不同粒度的事实</li>
+<li>事实的单位要保持一致</li>
+<li>对事实的 null 值要处理</li>
+<li>使用退化维度提高事实表的易用性</li>
+</ol>
+<hr />
+<h2 id="_17">维度表设计</h2>
+<h3 id="_18">维度表设计过程</h3>
+<p>以淘宝的商品维度为例阐述维度设计方法</p>
+<dl>
+<dt><strong>第一步：选择维度</strong></dt>
+<dd>维度建模中，维度的选择至关重要，其作为核心部分，在企业级数仓里务必确保维度的唯一性。在此案例中，确定选择的维度为商品维度，它将成为后续围绕商品相关数据进行分析的关键角度。</dd>
+<dt><strong>第二步：确定主维表</strong></dt>
+<dd>通常而言，主维表一般选取 ODS（操作数据存储）表，这类表能够直接与业务系统进行同步，保障数据的及时性与原始性。以淘宝商品维度为例，“s_auction_auctions”表是与前台商品中心系统实现同步的商品表，所以该表即被确定为主维表，它承载着商品维度的核心数据信息，是后续构建维度的重要基础。</dd>
+<dt><strong>第三步：确定相关维表</strong></dt>
+<dd>数据仓库本身是对业务源系统数据的整合汇聚，在实际业务中，不同业务系统或者同一业务系统内的不同表之间往往存在着关联性。基于对业务流程的梳理，要精准确定哪些表与主维表存在关联关系。就淘宝商品维度而言，经过梳理分析可以发现，其与类目、SPU（标准化产品单元）、卖家、店铺等维度存在关联，也就意味着与这些维度对应的相关表会和主维表在构建商品维度时有数据上的关联互动。</dd>
+</dl>
+<p><strong>第四步：确定维度属性</strong></p>
+<p>这一步骤包含两个子步骤：</p>
+<ol>
+<li><strong>从主维表中选择或生成维度属性</strong>：首先聚焦主维表，也就是“s_auction_auctions”表，从中挑选那些能够清晰描述商品维度的属性，例如商品名称、商品编号、商品价格等基础属性，同时，也可以根据业务需求以及已有的数据，通过一定的计算、转换等方式生成新的维度属性，用以更全面、细致地刻画商品特征。</li>
+<li><strong>从相关维表中选择或生成维度属性</strong>：接着，针对那些与主维表相关联的表，如类目表、SPU 表、卖家表、店铺表等，同样从这些表中选取对商品维度有价值的属性，像商品所属类目名称、SPU 规格、卖家信誉等级、店铺地址等，还可以依据业务逻辑与数据分析要求，从中生成一些新的维度属性，进一步丰富商品维度的描述信息，使其更利于后续从多维度角度对商品相关数据进行分析与洞察。</li>
+</ol>
+<hr />
+<h3 id="_19">处理缓慢变化维</h3>
+<p><strong>1. 重写维度值</strong></p>
+<ul>
+<li><strong>特点</strong>：采用这种方式时，一旦维度值发生变化，就直接进行重写覆盖，其弊端在于无法保留历史数据，导致过往的维度状态信息丢失，不利于追溯历史情况。</li>
+</ul>
+<p><strong>2. 快照维表</strong></p>
+<ul>
+<li><strong>方式描述</strong>：每天保存一份全量快照数据。</li>
+<li><strong>优点</strong>：简单有效，其开发和维护成本相对较低，在实际操作中较为容易实施。使用方便且理解性好，对于数据使用方而言，只需要限定日期，就能获取到当天的快照数据。而且，任意一天的事实快照和维度快照通过维度的自然键进行关联即可，操作流程清晰明了。</li>
+<li><strong>缺点</strong>：存在存储资源浪费的问题。比如针对某一维度，如果每天的变化量占总体数据量的比例很低，甚至没有变化，那么全量保存快照数据就会极大地浪费存储空间，增加不必要的数据存储成本。</li>
+</ul>
+<p><strong>3. 插入新的维度行</strong></p>
+<ul>
+<li><strong>特点</strong>：当维度发生变化后，通过插入新的维度行来记录新的维度值，以此能够保留历史数据。</li>
+<li><strong>局限性</strong>：然而，该方式存在一定局限，它不能将变化前后记录的事实归一化为变化前的维度或者变化后的维度。例如，根据具体业务需求，若需要将 11 月份的交易额全部统计到类目 2 上，利用这种方式是无法实现相应操作的，会给按照特定维度统一统计事实数据带来不便。</li>
+</ul>
+<p><strong>4. 添加维度列</strong></p>
+<ul>
+<li><strong>特点</strong>：此方式在维度表中添加新的维度列来记录维度变化情况，优势在于可以保留历史数据，方便后续查看维度在不同阶段的具体状态，有助于进行历史数据的分析与比对。</li>
+</ul>
+<p><strong>5. 拉链表</strong></p>
+<ul>
+<li><strong>方式描述</strong>：通过新增两个时间戳字段（start_dt 和 end_dt），将所有以天为粒度的变更数据记录下来。</li>
+<li><strong>背景示例</strong>：例如在 2016 年 1 月 1 日，卖家 A 在淘宝网发布了 B、C 两个商品，到了 1 月 2 日，卖家 A 在淘宝网下架了商品 B，同时又发布了商品 D，像这样的数据变化情况可以通过拉链表进行记录。</li>
+<li><strong>与快照维表对比</strong>：在快照维表中，dt 是分区字段，而拉链表对于不变的数据，不再重复存储，在一定程度上节省了存储空间。</li>
+<li><strong>使用示例</strong>：例如，当用户想要访问 1 月 2 日的数据时，只需要限制 start_dt &lt;= 20160102 和 end_dt &gt; 20160102 即可获取到相应数据。</li>
+<li><strong>缺点</strong>：一方面，其理解性较差，相较于其他方式，使用者需要花费更多精力去理解其存储逻辑和数据关联方式；另一方面，其存储方式采用 start_dt 和 end_dt 做分区，随着时间的推移，分区数量会极度膨胀，而现行的数据库系统对分区数量通常都有所限制，这可能会在长期使用过程中带来一些不便和问题。</li>
+</ul>
+<hr />
+<h2 id="_20">数据质量</h2>
+<ol>
+<li><strong>完整性</strong>：数据的字段和条数是否完整，是否存在缺失的情况</li>
+<li><strong>准确性</strong>：是指数据中记录的信息和数据是否准确，是否存在异常或者错误的信息，如负数金额</li>
+<li><strong>一致性</strong>：对于同一份数据，必须保证一致性（命名一致性、口径一致性）</li>
+<li><strong>时效性</strong>：保障数据能够及时产出</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>目标</th>
+<th>达成方式</th>
+<th>具体说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>完整性和准确性</td>
+<td>配置 DQC 监控</td>
+<td>通过配置数据质量监控（DQC），对相关数据进行监测，以此确保数据具备完整性与准确性，及时发现可能存在的数据问题并加以解决。</td>
+</tr>
+<tr>
+<td>时效性</td>
+<td>配置 SLA 基线</td>
+<td>借助配置服务水平协议（SLA）基线的方式，来保障数据的时效性，使得数据能够在规定时间内满足相应的业务需求，符合预期的时间要求。</td>
+</tr>
+<tr>
+<td>一致性</td>
+<td>权限管控</td>
+<td>采取权限管控的思路，不对外开放操作数据存储（ODS）到明细数据层（DWD）的权限，而是将指标放置在主题宽表中，并保证相同粒度的表只有一张，以此来满足一致性这一规范性要求，确保数据在相应环节的一致性表现。</td>
+</tr>
+<tr>
+<td>一致性</td>
+<td>指标管理系统</td>
+<td>运用指标管理系统来保障数据的一致性，从系统层面规范和管理相关指标，使其符合一致性的要求，实现数据在各方面的规范统一。</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>事前预防：所有可能对数据链路产生影响的改动都需要进行评估。上线前的探查、测试、代码评审等。</li>
+<li>事中监控：DQC 强规则 → 熔断；弱规则 → 短信/电话/APP 告警</li>
+<li>事后补救：排查故障，补数，解决代码问题</li>
+</ol>
+<hr />
+<h2 id="_21">如何理解大数据 &amp; 数仓</h2>
+<p>更好、更有效地组织数据，提升数据价值。</p>
+<table>
+<thead>
+<tr>
+<th>流程</th>
+<th>意义、价值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>数据的采集</td>
+<td>采集是基础，获取全面准确的原始数据。</td>
+</tr>
+<tr>
+<td>数据建模 / 数仓建设</td>
+<td>结构化组织数据，设计合理模型，提升数据质量与查询效率。<strong>纵向分层、横向分主题</strong>。</td>
+</tr>
+<tr>
+<td>数据链路的建设</td>
+<td>构建完整流程，确保数据顺畅流动。提高时效性与可靠性。</td>
+</tr>
+<tr>
+<td>数据应用的开发</td>
+<td>利用数据开发应用（接口/报表/BI），转化为信息洞察，实现商业价值。</td>
+</tr>
+<tr>
+<td>数仓维护、数据治理</td>
+<td>维护数仓保证稳定运行与数据质量，包括 DQC、SLA 等，降低风险提升价值。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_22">数仓工作理解 &amp; 数仓价值</h2>
+<p>个人认为数仓更多的是企业数据方面的基建，不同发展阶段的作用/价值不同。</p>
+<dl>
+<dt><ins>前期：</ins></dt>
+<dd>
+<p>存储历史数据，建设简单的数据链路，来支持简单的需求。</p>
+</dd>
+<dt><ins>中期：</ins></dt>
+<dd>
+<p>数仓建设方面通过合理的分层、分主题以及合理的数据建模，来追求数据的<strong>可理解性和性能</strong>。数据治理方面追求<strong>数据质量和时效性</strong>。这两方面共同决定了下游/其他部门取数、用数的难易程度，以及是否信任数仓产出的数据。</p>
+</dd>
+<dt><ins>后期：</ins></dt>
+<dd>
+<p>从业务沉淀数据 → 数据反哺业务。主动思考数据能产出的价值，寻求一些跨部门合作的机会。</p>
+</dd>
+</dl>
+<hr />
+<h2 id="_23">什么是一个好数仓</h2>
+<p><strong>I. 合理的分层、分主题（MECE）</strong></p>
+<p><strong>II. 规范的模型设计</strong></p>
+<ul>
+<li>高内聚低耦合（主题）</li>
+<li>核心/扩展分离（稳定性）</li>
+<li>公共处理下沉（复用性）</li>
+<li>命名规范（规范）</li>
+</ul>
+<p><strong>III. 良好的中间层设计</strong></p>
+<ul>
+<li>避免重复开发</li>
+<li>提升指标一致性</li>
+<li>宽表提供一个统一视图</li>
+</ul>
+<p><strong>IV. 良好的数据质量</strong></p>
+<ul>
+<li>完整性</li>
+<li>准确性</li>
+<li>时效性</li>
+<li>一致性</li>
+</ul>
+<hr />
+<h2 id="_24">如何衡量数仓模型为业务带来的价值</h2>
+<dl>
+<dt><strong>I. 具体业务场景的直接价值</strong></dt>
+<dd>
+<p>e.g.风险商品识别+下架了多少，有具体量化的数字</p>
+</dd>
+<dt><strong>II. 间接对核心指标的贡献</strong></dt>
+<dd>
+<p>不好直接衡量，但会间接作用于核心指标上。e.g.看板类需求用于支持决策，决策的影响最终会体现在指标上，此时需要对指标进行<strong>归因分析</strong></p>
+</dd>
+<dt><strong>III. 数据作为基建的价值</strong></dt>
+<dd>
+<p>数据质量、时效性、性能、开发效率等</p>
+</dd>
+</dl>
+<hr />
+<h2 id="_25">如何评价一个数仓模型的好坏</h2>
+<dl>
+<dt><strong>I. 数据质量</strong></dt>
+<dd>
+<p>准确性、完整性、一致性、时效性</p>
+</dd>
+</dl>
+<p><strong>II. 数据建模</strong></p>
+<ul>
+<li>高内聚低耦合（主题）</li>
+<li>核心/扩展分离（稳定性）</li>
+<li>公共处理下沉（复用性）</li>
+<li>命名规范（规范）</li>
+</ul>
+<dl>
+<dt><strong>III. 可理解性/易用性</strong></dt>
+<dd>
+<p>性能和可理解性的权衡取舍</p>
+</dd>
+<dt><strong>IV. 成本 VS 收益</strong></dt>
+<dd>
+<p>计算/存储的成本 VS 实际的收益</p>
+</dd>
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "search.suggest", "search.highlight", "content.code.copy", "navigation.top", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.f1b6f286.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
+</html>

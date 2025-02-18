@@ -1,0 +1,3732 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../Spark%20%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">
+      
+      
+        <link rel="next" href="../../blog/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.4">
+    
+    
+      
+        <title>Spark 面试题 - Everything Big Data</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8608ea7d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i%7CConsolas:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Lato";--md-code-font:"Consolas"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+   <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../assets/javascripts/glightbox.min.js"></script></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#spark" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="Everything Big Data" class="md-header__button md-logo" aria-label="Everything Big Data" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m-3.1 3.9s-.7-.3-1-.3c-.6-.1-1 .1-1.2 1.1L12 16.8c-.2.8-.5 1.4-1 1.8-.4.3-.8.4-1.3.4-.8 0-2-.5-2-.5l.5-1.4s.8.3 1 .3c.3.1.5 0 .7-.1s.3-.4.4-.7l1.6-9.2c.1-.8.5-1.4 1-1.9.6-.4 1.3-.5 2.1-.4.7.1 1.5.5 1.5.5z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Everything Big Data
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Spark 面试题
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+    
+  
+  Welcome
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Flink/1.Flink%20%E5%9F%BA%E7%A1%80/" class="md-tabs__link">
+          
+  
+  Flink
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Hadoop/1.%20Hadoop/" class="md-tabs__link">
+          
+  
+  Hadoop
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Hive/1.%20Hive/" class="md-tabs__link">
+          
+  
+  Hive
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../SQL/SQL%20%E5%88%B7%E9%A2%98/" class="md-tabs__link">
+          
+  
+  SQL
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../1.Spark%20Core/" class="md-tabs__link">
+          
+  
+  Spark
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../blog/" class="md-tabs__link">
+          
+  
+  Blog
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/Linux/" class="md-tabs__link">
+          
+  
+  大数据技术栈
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E7%90%86%E8%AE%BA/" class="md-tabs__link">
+          
+  
+  数据仓库
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/0.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/" class="md-tabs__link">
+          
+  
+  数据结构与算法
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Everything Big Data" class="md-nav__button md-logo" aria-label="Everything Big Data" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m-3.1 3.9s-.7-.3-1-.3c-.6-.1-1 .1-1.2 1.1L12 16.8c-.2.8-.5 1.4-1 1.8-.4.3-.8.4-1.3.4-.8 0-2-.5-2-.5l.5-1.4s.8.3 1 .3c.3.1.5 0 .7-.1s.3-.4.4-.7l1.6-9.2c.1-.8.5-1.4 1-1.9.6-.4 1.3-.5 2.1-.4.7.1 1.5.5 1.5.5z"/></svg>
+
+    </a>
+    Everything Big Data
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Welcome
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Flink
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Flink
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/1.Flink%20%E5%9F%BA%E7%A1%80/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flink 基础
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/2.DataStream%20API/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DataStream API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/3.%E6%97%B6%E9%97%B4%E5%92%8C%E7%AA%97%E5%8F%A3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    时间和窗口
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/4.%E5%A4%9A%E6%B5%81%E8%BD%AC%E6%8D%A2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    多流转换
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/5.%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    状态管理
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/6.%E5%AE%B9%E9%94%99%E6%9C%BA%E5%88%B6/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    容错机制
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/7.Process%20Function/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Process Function
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/8.%E5%BC%82%E6%AD%A5%20IO/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    异步 I/O
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20CDC/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flink CDC
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_10" id="__nav_2_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Flink SQL
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_10">
+            <span class="md-nav__icon md-icon"></span>
+            Flink SQL
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/Examples/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Examples
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/Joins/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Joins
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/Top-N/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Top-N 与 窗口 Top-N
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/%E6%A8%A1%E5%BC%8F%E6%A3%80%E6%B5%8B/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    模式检测
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/%E6%B5%81%E5%BC%8F%E6%A6%82%E5%BF%B5/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    流式概念
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/Flink%20SQL/%E7%AA%97%E5%8F%A3%E5%87%BD%E6%95%B0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    窗口函数
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_11" id="__nav_2_11_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    论文 & FLIP
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_11">
+            <span class="md-nav__icon md-icon"></span>
+            论文 & FLIP
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/%E8%AE%BA%E6%96%87%20%26%20FLIP/98.Flink%20%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flink 论文精读
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/%E8%AE%BA%E6%96%87%20%26%20FLIP/99.Dataflow%20%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dataflow 论文精读
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Flink/%E8%AE%BA%E6%96%87%20%26%20FLIP/FLIP/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FLIP
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Hadoop
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Hadoop
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hadoop/1.%20Hadoop/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hadoop
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hadoop/2.%20HDFS/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HDFS
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hadoop/3.%20MapReduce/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MapReduce
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hadoop/4.%20Yarn/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Yarn
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Hive
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Hive
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hive/1.%20Hive/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hive/2.%20Hive%20%E9%9D%A2%E8%AF%95%E9%A2%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive 面试题
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hive/Hive%20%E5%87%BD%E6%95%B0%E7%9B%B8%E5%85%B3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive 函数相关
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hive/Hive%20%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive 性能调优
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    SQL
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            SQL
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SQL/SQL%20%E5%88%B7%E9%A2%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SQL 刷题
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SQL/SQL%20%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive/Spark SQL 相关知识
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SQL/Spark%20SQL%20%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0%E6%95%B4%E7%90%86/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark SQL 常用函数整理
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SQL/UDF%20%E5%BC%80%E5%8F%91/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    UDF 开发
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Spark
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Spark
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1.Spark%20Core/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark Core
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2.Spark%20SQL/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark SQL
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PySpark/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PySpark
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDD%20%E7%AE%97%E5%AD%90%20API/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RDD 算子 API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Spark%20%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark 性能优化
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Spark 面试题
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Spark 面试题
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#spark_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spark 的特点
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spark_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spark 运行架构
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spark_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spark 部署模式
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spark-on-yarn" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spark on Yarn
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sparkcontext" class="md-nav__link">
+    <span class="md-ellipsis">
+      SparkContext
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spark-submit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spark Submit
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spark_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spark 应用执行流程
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spark_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spark 调度系统
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spark-mr" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spark 为什么比 MR 快
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sparksession" class="md-nav__link">
+    <span class="md-ellipsis">
+      SparkSession
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      RDD 是什么
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rdd_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      RDD 的五大核心属性
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#jobstagetask" class="md-nav__link">
+    <span class="md-ellipsis">
+      Job、Stage、Task
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      分区与并行度
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rdd_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      RDD 算子
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      相似算子比较
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shuffle" class="md-nav__link">
+    <span class="md-ellipsis">
+      哪些算子会产生 Shuffle
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      宽窄依赖
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stage 划分
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shuffle_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Shuffle 机制
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Shuffle 机制">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hashshuffle" class="md-nav__link">
+    <span class="md-ellipsis">
+      HashShuffle
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hashshuffle_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      优化的 HashShuffle
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hashshuffle_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      HashShuffle 总结
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sortshuffle" class="md-nav__link">
+    <span class="md-ellipsis">
+      SortShuffle
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sortshuffle_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      SortShuffle 总结
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shuffle_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Shuffle 为什么需要排序以及为什么要合并溢写文件
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spark-task" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spark 为什么让 Task 以线程的方式运行而不是进程
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cache-persist" class="md-nav__link">
+    <span class="md-ellipsis">
+      cache 和 persist
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checkpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      checkpoint
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      广播变量
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      累加器
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spark-oom" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spark OOM
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Blog
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Blog
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Blog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    归档
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    大数据技术栈
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            大数据技术栈
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/Linux/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Linux
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_2" id="__nav_8_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    HBase
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_2">
+            <span class="md-nav__icon md-icon"></span>
+            HBase
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/HBase/1.HBase/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HBase
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/HBase/99.inbox/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Inbox
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_3" id="__nav_8_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Kafka
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_3">
+            <span class="md-nav__icon md-icon"></span>
+            Kafka
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/Kafka/1.Kafka/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Kafka
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_4" id="__nav_8_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Scala
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_4">
+            <span class="md-nav__icon md-icon"></span>
+            Scala
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/Scala/Scala/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Scala
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_5" id="__nav_8_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    ZooKeeper
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_5">
+            <span class="md-nav__icon md-icon"></span>
+            ZooKeeper
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/ZooKeeper/1.%20ZooKeeper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ZooKeeper
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E6%A0%88/ZooKeeper/2.%20ZooKeeper%20%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ZooKeeper 如何实现分布式锁
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    数据仓库
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            数据仓库
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E7%90%86%E8%AE%BA/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    数据仓库理论
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    数据结构与算法
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            数据结构与算法
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/0.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    数据结构复习
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/1.%E7%AE%97%E6%B3%95%E5%A4%8D%E4%B9%A0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    算法复习
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    数据结构与算法笔记
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E7%BA%BF%E6%80%A7%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    线性动态规划
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    背包问题
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_10_6" id="__nav_10_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    好题分类
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_6">
+            <span class="md-nav__icon md-icon"></span>
+            好题分类
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E4%BA%8C%E5%8F%89%E6%A0%91/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    二叉树
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E5%89%8D%E7%BC%80%E5%92%8C/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    前缀和
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E5%93%88%E5%B8%8C%E8%A1%A8/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    哈希表
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E5%A4%9A%E7%A7%8D%E8%A7%A3%E6%B3%95/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    多种解法
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    滑动窗口
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%A5%BD%E9%A2%98%E5%88%86%E7%B1%BB/%E9%93%BE%E8%A1%A8/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    链表
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#spark_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spark 的特点
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spark_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spark 运行架构
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spark_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spark 部署模式
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spark-on-yarn" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spark on Yarn
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sparkcontext" class="md-nav__link">
+    <span class="md-ellipsis">
+      SparkContext
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spark-submit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spark Submit
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spark_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spark 应用执行流程
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spark_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spark 调度系统
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spark-mr" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spark 为什么比 MR 快
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sparksession" class="md-nav__link">
+    <span class="md-ellipsis">
+      SparkSession
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      RDD 是什么
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rdd_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      RDD 的五大核心属性
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#jobstagetask" class="md-nav__link">
+    <span class="md-ellipsis">
+      Job、Stage、Task
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      分区与并行度
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rdd_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      RDD 算子
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      相似算子比较
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shuffle" class="md-nav__link">
+    <span class="md-ellipsis">
+      哪些算子会产生 Shuffle
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      宽窄依赖
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stage 划分
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shuffle_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Shuffle 机制
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Shuffle 机制">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hashshuffle" class="md-nav__link">
+    <span class="md-ellipsis">
+      HashShuffle
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hashshuffle_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      优化的 HashShuffle
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hashshuffle_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      HashShuffle 总结
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sortshuffle" class="md-nav__link">
+    <span class="md-ellipsis">
+      SortShuffle
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sortshuffle_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      SortShuffle 总结
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shuffle_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Shuffle 为什么需要排序以及为什么要合并溢写文件
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spark-task" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spark 为什么让 Task 以线程的方式运行而不是进程
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cache-persist" class="md-nav__link">
+    <span class="md-ellipsis">
+      cache 和 persist
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checkpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      checkpoint
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      广播变量
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      累加器
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spark-oom" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spark OOM
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="spark">Spark 面试题</h1>
+<h2 id="spark_1">Spark 的特点</h2>
+<p>Spark 是一种基于内存的快速、通用、可扩展的分布式分析计算引擎。</p>
+<p>Spark 框架是<strong>基于内存</strong>计算的，它将大量的输入数据和中间数据都缓存到内存中，能够有效地提高交互型 Job 和迭代型 Job 的执行效率。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202307241933054.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202307241933054.png" /></a></p>
+<p>Spark 的特点：</p>
+<ul>
+<li>快速：Spark 基于内存计算，Spark 采用 RDD + DAG 的计算模型，对于复杂的计算，中间结果不需要落盘，只需要在最后一次 reduce 落盘即可。</li>
+<li>通用：Spark 提供了统一的解决方案，包括批处理、 SQL 查询、流式计算、机器学习和图计算。</li>
+<li>多语言支持：Spark 提供了 Scala、Java、Python 和 R 语言的 API。</li>
+<li>兼容性：Spark 可以运行在 Mesos、Kubernetes、Standalone 或云环境中，并且可以访问 HDFS、Alluxio、Cassandra、HBase、Hive 等多种数据源。</li>
+</ul>
+<p><strong>Spark 为什么快？</strong></p>
+<ol>
+<li>Spark 在非 Shuffle 的情况，中间结果不需要落盘，能有效减少磁盘 IO。</li>
+<li>Spark RDD 的分区特性，能够充分利用并行计算的优势。</li>
+<li>Spark 的 RDD 支持缓存，能够将频繁使用的数据缓存到内存中，不需要重复计算。</li>
+<li>Spark 的容错机制（lineage + checkpoint），能够将计算失败的节点上的数据重新计算，而不是重头开始计算。</li>
+<li>Spark 采用多线程模型，而 MR 采用多进程模型，进程的启停需要做很多初始化等工作，效率比较低。</li>
+</ol>
+<hr />
+<h2 id="spark_2">Spark 运行架构</h2>
+<p>Spark 框架的核心是一个计算引擎，整体来说，它采用了标准 master-slave 的结构。</p>
+<ul>
+<li>Master：管理整个集群的资源，类似于 YARN 的 ResourceManager</li>
+<li>Worker：管理单个服务器的资源，类似于 YARN 的 NodeManager</li>
+<li>Driver：管理单个 Spark 任务在运行时的工作，类似于 YARN 的 ApplicationMaster</li>
+<li>Executor：负责具体的任务执行，类似于 YARN 容器中运行的 Task</li>
+</ul>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311181708345.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311181708345.png" /></a></p>
+<p>由上图可以看出，对于 Spark 框架有两个核心组件：</p>
+<ul>
+<li>Driver</li>
+<li>Executor</li>
+</ul>
+<p>Driver：</p>
+<p>Spark Driver，指<strong>实际运行在 Spark 应用中 main() 函数的进程</strong>。Driver 独立于 Master 进程，如果是 Yarn 集群，那么 Driver 也可能被调度到 Worker 节点上运行。</p>
+<p>Driver 在 Spark 作业执行时主要负责：</p>
+<ul>
+<li>将用户程序转化为作业 (job)</li>
+<li>在 Executor 之间调度任务 (task)</li>
+<li>跟踪 Executor 的执行情况</li>
+</ul>
+<p>Executor：</p>
+<p>Spark Executor 在物理上是 Worker 节点中的一个 <strong>JVM 进程</strong>，负责在 Spark 作业中运行具体任务 (Task)，任务彼此之间相互独立。Spark 应用启动时，Executor 节点被同时启动，并且始终伴随着整个 Spark 应用的生命周期而存在。如果有 Executor 节点发生了故障或崩溃，Spark 应用也可以继续执行，会将出错节点上的任务调度到其他 Executor 节点上继续运行。</p>
+<p>Executor 有两个核心功能:</p>
+<ul>
+<li>负责运行组成 Spark 应用的任务，并将结果返回给 Driver 进程</li>
+<li>它们通过自身的块管理器 (Block Manager) 为用户程序中要求缓存的 RDD 提供内存式存储。<strong>RDD 是直接缓存在 Executor 进程内的</strong>，因此任务可以在运行时充分利用缓存数据加速运算。</li>
+</ul>
+<hr />
+<h2 id="spark_3">Spark 部署模式</h2>
+<ul>
+<li>本地模式（单机）：本地模式就是以一个<strong>独立的进程</strong>，通过其内部的<strong>多个线程来模拟</strong>整个 Spark 运行时环境</li>
+<li>Standalone 模式（集群）：Spark 中的各个角色以独立进程的形式存在，并组成 Spark 集群环境</li>
+<li>Spark on YARN 模式（集群）：Spark 中的各个角色运行在 YARN 的容器内部，并组成 Spark 集群环境</li>
+<li>Spark on Kubernetes 模式（集群）：Spark 中的各个角色运行在 Kubernetes 的容器内部，并组成 Spark 集群环境</li>
+</ul>
+<hr />
+<h2 id="spark-on-yarn">Spark on Yarn</h2>
+<p>Yarn 架构：</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311181704165.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311181704165.png" /></a></p>
+<ul>
+<li><strong>ResourceManager（RM）</strong>：全局的资源管理器，负责管理整个集群的资源</li>
+<li><strong>NodeManager（NM）</strong>：每个节点上的资源和任务的管理器</li>
+<li><strong>ApplicationMaster（AM）</strong>：应用程序管理器，负责应用程序的管理工作</li>
+</ul>
+<hr />
+<p>Spark Driver：</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311181708345.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311181708345.png" /></a></p>
+<p>Spark 应用程序由主程序中的 SparkContext（或 SparkSession）对象协调。简单地说，初始化 SparkContext 的代码就是你的 Driver。Driver 进程<strong>管理作业流程并调度任务</strong>，在应用程序运行期间始终可用。</p>
+<hr />
+<p>Spark on Yarn：</p>
+<p>当在 YARN 上运行 Spark 作业，每个 Spark executor 作为一个 YARN 容器运行。Spark 可以使得多个 Tasks 在同一个容器里面运行。Spark on Yarn 通常有以下两种运行模式：</p>
+<ul>
+<li>Client 模式</li>
+<li>Cluster 模式</li>
+</ul>
+<hr />
+<p>Client 模式：</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311181711811.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311181711811.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311181713904.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311181713904.png" /></a></p>
+<ol>
+<li>在 YARN Client 模式下，spark-submit 提交 Spark Job 之后，就会<strong>在提交的本地机器上启动一个对应的 Driver</strong></li>
+<li>Driver 启动后会与 ResourceManager 建立通讯并发起启动 ApplicationMaster 请求</li>
+<li>ResourceManager 接收到这个 Job 时，会在集群中选一个合适的 NodeManager 并分配一个 Container，及启动 ApplicationMaster（初始化 SparkContext）</li>
+<li>ApplicationMaster 的功能相当于一个 ExecutorLaucher ，负责向 ResourceManager 申请 Container 资源； ResourceManager 便会与 NodeManager 通信，并启动 Container</li>
+<li>ApplicationMaster 对指定 NodeManager 分配的 Container 发出启动 Executor 进程请求</li>
+<li>Executor 进程启动后会向 Driver 反向注册，Executor 全部注册完成后 Driver 开始执行执行 Job 任务</li>
+<li>Driver 中的 SparkContext 分配 Task 给 Executor 执行，Executor 运行 Task 并向 Driver 汇报运行的状态、进度、以及最终的计算结果；让 Driver 随时掌握各个任务的运行状态，从而可以在任务失败时重新启动任务；应用程序运行完成后，ApplicationMaster 向 ResourceManager 申请注销并关闭自己。</li>
+</ol>
+<hr />
+<p>Cluster 模式：</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311181714154.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311181714154.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311181714211.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311181714211.png" /></a></p>
+<p>在 YARN Cluster 模式下，spark-submit 提交 Spark Job 之后，就会在 YARN 集群中启动一个对应的 ApplicationMaster。<strong>此模式中的 Driver 运行在 ApplicationMaster 中</strong>。</p>
+<hr />
+<p>两种模式的区别：</p>
+<p>主要区别在于 Driver 的创建的位置不一样，Client 方式是直接在本地机器上创建一个 Driver 进程，而 Cluster 方式在通过 ResourceManager 在某一个 NodeManager 中创建一个 Driver。</p>
+<p>在使用场景当中，Yarn Client 方式一般适用于进行 Job 的调试（Debug），因为 Driver 是在本地可以直接远程断点调试，而且 Driver 会与 Executor 进行大量的通信就会造成占用大量 IO ；Yarn Cluster 方式一般适用于生产环境，因为 Driver 运行在某一个 NodeManager 中就不会出现某一台机器出现网卡激增的情况，缺点就是运行的 Job 日志不能在机器本地实时查看而是需要通过 Job Web 界面查看。</p>
+<hr />
+<h2 id="sparkcontext">SparkContext</h2>
+<p>SparkContext 是 Spark 中的主要入口点，它是与 Spark 集群通信的核心对象，可以用来在 Spark 集群中创建 RDD、累加器变量和广播变量等。SparkContext 的核心作用是<strong>初始化 Spark 应用程序运行所需要的核心组件</strong>，包括高层调度器(DAGScheduler)、底层调度器(TaskScheduler)和调度器的通信终端(SchedulerBackend)，同时还会负责 Spark 程序向 Master 注册程序等。</p>
+<p>注意，只可以有一个 SparkContext 实例运行在一个 JVM 内存中，所以在创建新的 SparkContext 实例前，必须调用 stop 方法停止当前 JVM 唯一运行的 SparkContext 实例。</p>
+<hr />
+<h2 id="spark-submit">Spark Submit</h2>
+<p>spark-submit 是在 spark 安装目录中 bin 目录下的一个 <strong>shell 脚本文件</strong>，<strong>用于在集群中启动应用程序</strong>（如<em>.jar、</em>.py 脚本等）；对于 spark 支持的集群模式，spark-submit 提交应用的时候有统一的接口，不用太多的设置。</p>
+<p>常用参数：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>--master：表示提交任务到哪里执行
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    local：提交到本地服务器执行，并分配单个线程
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    local[k]：提交到本地服务器执行，并分配 k 个线程
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    local[*]：提交到本地服务器执行，并分配本地 core 个数个线程
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    spark://HOST:PORT：提交到 standalone 模式部署的 spark 集群中，并指定主节点的 IP 与端口
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    yarn：提交到 yarn 模式部署的集群中
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>--deploy-mode
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    spark on yarn 的两种启动方式，client（默认值，应用程序在提交命令所在的节点上运行）或cluster（应用程序在集群中运行）
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>--class
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    应用程序的主类，仅针对 java 或 scala 应用
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>--name &lt;name&gt;：指定应用程序的名称。
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>--executor-memory &lt;memory&gt;：指定每个Executor的内存。
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>--num-executors &lt;num&gt;：指定要分配的Executor的数量。
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>--driver-memory &lt;memory&gt;：指定Driver程序的内存。
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>--conf &lt;key=value&gt;：指定其他Spark配置属性。
+</code></pre></div>
+<hr />
+<h2 id="spark_4">Spark 应用执行流程</h2>
+<ol>
+<li>Spark 程序提交后，Driver 端创建 SparkContext，SparkContext 向资源管理器（StandAlone/Yarn）注册并申请 Executor 资源。</li>
+<li>资源管理器分配 Executor 资源并启动 Executor 进程</li>
+<li>DAGScheduler 构建 DAG 图，并划分 Stage，将每个 Stage 并行执行的 task 封装为 TaskSet，交给 TaskScheduler。</li>
+<li>Executor 向 SparkContext 申请 task，TaskScheduler 将 task 和应用程序代码发送给 Executor。</li>
+<li>Executor 运行 task，运行完释放所有资源。</li>
+</ol>
+<hr />
+<h2 id="spark_5">Spark 调度系统</h2>
+<p>Spark 的调度系统主要包括三个部分：DAGScheduler, SchedulerBackend 和 TaskScheduler。</p>
+<p>任务调度流程：</p>
+<ol>
+<li>DAGScheduler 根据用户代码构建 DAG，以 Shuffle 为边界划分 Stages</li>
+<li>DAGScheduler 基于 Stages 创建 TaskSets，并交给 TaskScheduler 请求调度</li>
+<li>SchedulerBackend 获取集群内可用计算资源（以 WorkOffer 为粒度提供计算资源）</li>
+<li>TaskScheduler 对于给定的 WorkOffer，结合任务的本地倾向性完成任务调度</li>
+<li>SchedulerBackend 将任务分发给 Executor 进行执行</li>
+</ol>
+<hr />
+<h2 id="spark-mr">Spark 为什么比 MR 快</h2>
+<ol>
+<li>Spark 采用 RDD + DAG 的计算模型，对于复杂的计算，中间结果不需要落盘，只需要在最后一次 reduce 落盘即可。而 MR 每一轮计算只能包含一个 Map 和一个 Reduce，多轮计算的中间结果需要落盘，因此会造成大量的磁盘 IO，降低了计算效率。</li>
+<li>Spark 对 Shuffle 的优化：MR 的 Shuffle 会强制要求按照 Key 进行排序，而 Spark 则只有部分场景才需要排序（bypass 机制不需要排序）。而排序是非常耗时的操作。</li>
+<li>Spark 支持将频繁使用的数据进行缓存，从内存中读取，不需要再次计算，而 MR 每次计算都需要从磁盘中读取数据。</li>
+<li>Spark 采用多线程模型，而 MR 采用多进程模型，进程的启停需要做很多初始化等工作，效率比较低。</li>
+</ol>
+<hr />
+<h2 id="sparksession">SparkSession</h2>
+<p>SparkSession 是 Spark 2.0 以后 Spark 程序的入口，SparkSession 将 SparkContext、SQLContext、HiveContext 集成到了一起，使得 Spark 程序更加方便。</p>
+<hr />
+<h2 id="rdd">RDD 是什么</h2>
+<p>RDD(Resilient Distributed Dataset) 叫做<strong>弹性分布式数据集</strong>，是 <strong>Spark 中最基本的数据处理模型</strong>。代码中是一个抽象类，它代表一个弹性的、不可变、可分区、里面的元素可并行计算的集合。</p>
+<p>弹性：</p>
+<ul>
+<li>存储的弹性：内存与磁盘的自动切换</li>
+<li>容错的弹性：基于血缘的高效容错</li>
+<li>计算的弹性：Task 失败后的自动重试</li>
+<li>分片的弹性：可根据需要重新分片</li>
+</ul>
+<p>分布式：数据存储在大数据集群不同节点上</p>
+<p>数据集：RDD 封装了计算逻辑，并不保存数据</p>
+<p>数据抽象：RDD 是一个抽象类，需要子类具体实现</p>
+<p>不可变：RDD 封装了计算逻辑，是不可以改变的。如果想要改变，只能产生新的 RDD，在新的 RDD 里面封装计算逻辑</p>
+<p>可分区、并行计算</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311202122901.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311202122901.png" /></a></p>
+<p>RDD 是 Spark 对于分布式数据集的抽象，每一个 RDD 都代表着一种<strong>分布式数据形态</strong>。比如 lineRDD，它表示数据在集群中以行（Line）的形式存在；而 wordRDD 则意味着数据的形态是单词，分布在计算集群中。</p>
+<div class="admonition question">
+<p class="admonition-title">RDD 和普通数据结构/容器的区别？</p>
+<ol>
+<li>RDD只是一个逻辑概念，在内存中并不会真正地为某个 RDD 分配空间（除非需要被缓存）。RDD 中的数据只会在计算中产生，而且在计算完成后消失。</li>
+<li>RDD 可以包含多个数据分区，不同分区可以由不同的 task 在不同节点进行处理。</li>
+</ol>
+</div>
+<hr />
+<h2 id="rdd_1">RDD 的五大核心属性</h2>
+<p>Internally, each RDD is characterized by five main properties:</p>
+<ul>
+<li>A list of partitions</li>
+<li>A function for computing each split</li>
+<li>A list of dependencies on other RDDs</li>
+<li>Optionally, a Partitioner for key-value RDDs (e.g. to say that the RDD is hash-partitioned)</li>
+<li>Optionally, a list of preferred locations to compute each split on (e.g. block locations for an HDFS file)</li>
+</ul>
+<hr />
+<ul>
+<li><strong>分区列表</strong>：每个分区为 RDD 的一部分数据，分区的数量决定了 RDD 的并行度。</li>
+<li><strong>分区计算函数</strong>：Spark 在计算时，是使用分区函数对每一个分区进行计算。</li>
+<li><strong>RDD 之间的依赖关系</strong>：RDD 是计算模型的封装，当需求中需要将多个计算模型进行组合时，就需要将多个 RDD 建立依赖关系。</li>
+<li><strong>分区器 (可选)</strong> ：当数据为 KV 类型数据时，可以指定分区器（Hash/Range/自定义）。</li>
+<li><strong>首选位置 (可选)</strong>：计算数据时，判断把计算发送到哪个节点效率最优：移动计算，而不是移动数据。</li>
+</ul>
+<hr />
+<p>总结：</p>
+<ul>
+<li>RDD 可以看做是一系列的分区，每个分区就是一个数据集片段</li>
+<li>RDD 之间存在依赖关系</li>
+<li>算子是作用在分区之上的</li>
+<li>分区器是作用在 KV 类型的 RDD 上的</li>
+<li>移动计算，而不是移动数据</li>
+</ul>
+<hr />
+<h2 id="jobstagetask">Job、Stage、Task</h2>
+<ul>
+<li>一个 Action 算子对应一个 Job</li>
+<li>Stage 按照宽依赖划分</li>
+<li>一个分区对应一个 Task</li>
+</ul>
+<p>理论上：每一个 Stage 下有多少个分区，就有多少个 Task，Task 的数量就是任务的最大并行度。一般情况下一个 Task 使用一个 core。</p>
+<p>实际上：最大的并行度，取决于任务运行时使用的 Executor 拥有的最大核数。</p>
+<blockquote>
+<p>如果 Task 的数量超过了核数，那么多出来的 Task 就需要等待之前的 Task 执行完毕后才能执行。</p>
+</blockquote>
+<hr />
+<h2 id="_1">分区与并行度</h2>
+<p>默认情况下，Spark 可以将一个作业切分多个任务后，发送给 Executor 节点并行计算，而<strong>能够并行计算的任务数量我们称之为并行度</strong>。这个数量可以在构建 RDD 时指定。</p>
+<p>分区数：是一个静态的概念，如果是内存数据，那么分区数和设置的并行度一致；如果是 HDFS 文件，那么分区数就是 HDFS 文件 Block 个数。</p>
+<p>并行度：是一个动态的概念，取决于当前资源的可用核数。</p>
+<p>并行度小于等于分区数。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">object</span><span class="w"> </span><span class="nc">RDD_Par</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="p">:</span><span class="w"> </span><span class="nc">Array</span><span class="p">[</span><span class="nc">String</span><span class="p">]):</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="c1">// 准备环境</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="n">sparkConf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">SparkConf</span><span class="p">().</span><span class="n">setMaster</span><span class="p">(</span><span class="s">&quot;local[*]&quot;</span><span class="p">).</span><span class="n">setAppName</span><span class="p">(</span><span class="s">&quot;RDD&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="n">sc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">SparkContext</span><span class="p">(</span><span class="n">sparkConf</span><span class="p">)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="c1">// RDD的并行度和分区</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="c1">// makeRDD方法的第二个参数可以设置分区数，默认值为defaultParallelism（默认并行度）,</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="c1">// 是从上面的sparkConf中获取的，即当前环境的最大可用核数</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="n">rdd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sc</span><span class="p">.</span><span class="n">makeRDD</span><span class="p">(</span><span class="nc">List</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">),</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="n">rdd</span><span class="p">.</span><span class="n">saveAsTextFile</span><span class="p">(</span><span class="s">&quot;output&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="c1">// 关闭环境</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span><span class="n">sc</span><span class="p">.</span><span class="n">stop</span><span class="p">()</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="p">}</span>
+</code></pre></div>
+<p>读取<strong>内存数据</strong>时，数据可以按照并行度的设定进行数据的分区操作，数据分区规则的 Spark 核心源码如下：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">positions</span><span class="p">(</span><span class="n">length</span><span class="p">:</span><span class="w"> </span><span class="nc">Long</span><span class="p">,</span><span class="w"> </span><span class="n">numSlices</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">):</span><span class="w"> </span><span class="nc">Iterator</span><span class="p">[(</span><span class="nc">Int</span><span class="p">,</span><span class="w"> </span><span class="nc">Int</span><span class="p">)]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="p">(</span><span class="mi">0</span><span class="w"> </span><span class="n">until</span><span class="w"> </span><span class="n">numSlices</span><span class="p">).</span><span class="n">iterator</span><span class="p">.</span><span class="n">map</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=&gt;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">i</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">length</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">numSlices</span><span class="p">).</span><span class="n">toInt</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(((</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">length</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">numSlices</span><span class="p">).</span><span class="n">toInt</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="p">(</span><span class="n">start</span><span class="p">,</span><span class="w"> </span><span class="n">end</span><span class="p">)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="p">}</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="k">object</span><span class="w"> </span><span class="nc">RDD_Par_File</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="p">:</span><span class="w"> </span><span class="nc">Array</span><span class="p">[</span><span class="nc">String</span><span class="p">]):</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="c1">// 准备环境</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="n">sparkConf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">SparkConf</span><span class="p">().</span><span class="n">setMaster</span><span class="p">(</span><span class="s">&quot;local[*]&quot;</span><span class="p">).</span><span class="n">setAppName</span><span class="p">(</span><span class="s">&quot;RDD&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="n">sc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">SparkContext</span><span class="p">(</span><span class="n">sparkConf</span><span class="p">)</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span><span class="c1">// textFile可以将文件作为数据源，默认也可以设置分区（第二个参数）</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">    </span><span class="c1">// minPartitions：最小分区数量</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">    </span><span class="c1">// math.min(defaultParallelism, 2)</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="n">rdd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sc</span><span class="p">.</span><span class="n">textFile</span><span class="p">(</span><span class="s">&quot;data/1.txt&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">    </span><span class="n">rdd</span><span class="p">.</span><span class="n">saveAsTextFile</span><span class="p">(</span><span class="s">&quot;output&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">    </span><span class="c1">// 关闭环境</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">    </span><span class="n">sc</span><span class="p">.</span><span class="n">stop</span><span class="p">()</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="p">}</span>
+</code></pre></div>
+<p>读取<strong>文件数据</strong>时，分区个数默认 = HDFS 文件切片的个数。</p>
+<p>假设文件有 7 个字节，<code>totalSize = 7</code> ，<code>goalSize = 7/2 = 3</code> ，<code>7/3 = 2 ... 1</code> ，也就是说 2 个分区够装 6 个字节，还有剩余 1 个字节，但是此时这一个字节 <code>1/3 = 33.3% &gt; 10%</code> ，超过了 hadoop 的 1.1 倍原则，会多创建一个分区，因此最终会创建 3 个分区。</p>
+<p>Spark 分区数据的分配：</p>
+<ul>
+<li>Spark 读取文件，采取的是 hadoop 的方式读取，即一行一行地读取，和字节数无关。</li>
+<li>数据读取时以偏移量为单位。</li>
+</ul>
+<hr />
+<h2 id="rdd_2">RDD 算子</h2>
+<p>算子：即 RDD 的方法。</p>
+<ul>
+<li><strong>分布式集合对象上的 API 称之为算子</strong>。</li>
+<li>本地对象的 API 称之为方法。</li>
+</ul>
+<p>RDD 算子分为两大类：Transformation 和 Action。</p>
+<ul>
+<li>Transformation：转换算子，将原有 RDD 转换为新的 RDD，<strong>懒加载，不会触发作业的执行</strong>。</li>
+<li>Action：行动算子，触发作业的执行。</li>
+</ul>
+<hr />
+<h2 id="_2">相似算子比较</h2>
+<h2 id="shuffle">哪些算子会产生 Shuffle</h2>
+<hr />
+<h2 id="_3">宽窄依赖</h2>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311201815658.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311201815658.png" /></a></p>
+<p>如果父 RDD 中一个分区的数据只流向子 RDD 中的一个分区，这种依赖被称为<strong>窄依赖（Narrow Dependency）</strong>。</p>
+<p>如果父 RDD 中一个分区的数据需要一部分流入子 RDD 的某一个分区，另外一部分流入子 RDD 的另外分区，这种依赖被称为<strong>宽依赖（Shuffle Dependency）</strong>。</p>
+<div class="admonition summary">
+<p class="admonition-title">Summary</p>
+<p><strong>如果 parent RDD 的一个或多个分区中的数据需要全部流入 child RDD 的某一个或多个分区，则是窄依赖。如果 parent RDD 分区中的数据需要一部分流入 child RDD 的某一个分区，另外一部分流入 child RDD 的另外分区，则是宽依赖。</strong></p>
+</div>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202312121446943.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202312121446943.png" /></a></p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202312121446363.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202312121446363.png" /></a></p>
+<hr />
+<h2 id="stage">Stage 划分</h2>
+<p>DAG 记录了 RDD 的转换过程和任务的阶段（stage）。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202307241936236.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202307241936236.png" /></a></p>
+<p>用一句话来概括从 DAG 到 Stages 的拆分过程，那就是：<strong>以 Actions 算子为起点，从后向前回溯 DAG，以 Shuffle 操作为边界去划分 Stages</strong>。<strong>每个 Stage 里 Task 的数量由 Stage 中最后一个 RDD 的分区数量决定。</strong></p>
+<div class="admonition question">
+<p class="admonition-title">为什么需要划分阶段？</p>
+<ol>
+<li>stage 中生成的 task 不会太大也不会太小，而且是同构的，便于<strong>并行执行</strong></li>
+<li>可以将多个操作放在一个 task 里处理，使得操作可以进行串行、流水线式的处理，<strong>提高数据处理效率</strong></li>
+<li><strong>方便容错</strong>，如一个 stage 失效，可以重新运行 stage 而不需要重新运行整个 job</li>
+</ol>
+</div>
+<p>物理计划生成过程：</p>
+<ol>
+<li>根据 action 算子将应用划分为多个 job</li>
+<li>根据宽依赖将 job 划分为多个 stage</li>
+<li>在每个 stage 中，根据最后一个 RDD 的分区个数将 stage 划分为多个 task</li>
+</ol>
+<hr />
+<h2 id="shuffle_1">Shuffle 机制</h2>
+<p>Shuffle 在分布式计算场景中，它被引申为<strong>集群范围内跨节点、跨进程的数据分发</strong>。分布式数据集在集群内的分发，会引入大量的<strong>磁盘 I/O</strong> 与<strong>网络 I/O</strong>。</p>
+<p>Shuffle 解决的问题是如何将数据重新组织，使其能够在上游和下游 task 之间进行传递和计算。</p>
+<blockquote>
+<p>Map 阶段和 Reduce 阶段之间如何完成数据交换？</p>
+<p>通过生产与消费 Shuffle 中间文件的方式，来完成集群范围内的数据交换。</p>
+</blockquote>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311202113518.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311202113518.png" /></a></p>
+<p>在 Map 执行阶段，每个 Task 都会<strong>生成包含 data 文件与 index 文件的 Shuffle 中间文件</strong>，如上图所示。也就是说，Shuffle 文件的生成，<strong>是以 Map Task 为粒度的</strong>，Map 阶段有多少个 Map Task，就会生成多少份 Shuffle 中间文件。</p>
+<p>Spark Shuffle 分为两种：一种是基于 Hash 的 Shuffle，另一种是基于 Sort 的 Shuffle。但是在 Spark 2.0 版本中，<strong>Hash Shuffle 方式己经不再使用</strong>。Spark 放弃基于 Hash 的 Shuffle 的原因是，<strong>Hash Shuffle 会产生大量的小文件</strong>，当数据量越来越多时，产生的文件量是不可控的，这严重制约了 Spark 的性能及扩展能力。但是基于 Sort 的 Shuffle 会强制要求数据进行排序，这会增加计算时延。</p>
+<hr />
+<h3 id="hashshuffle">HashShuffle</h3>
+<p>将每个 task 处理的数据按 key 进行 hash partition，从而将相同 key 都写入同一个磁盘文件中，而每一个磁盘文件都只属于下游 stage 的一个 task。在将数据写入磁盘之前，会先将数据写入内存缓冲中，当内存缓冲填满之后，才会溢写到磁盘文件中去。</p>
+<p>未经优化的 Hash Shuffle 会产生 上游 <code>task 个数 * 下游 task 个数</code> 的文件数，这会导致大量的小文件和磁盘 IO，严重影响性能。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202312121744627.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202312121744627.png" /></a></p>
+<hr />
+<h3 id="hashshuffle_1">优化的 HashShuffle</h3>
+<p>为了优化 HashShuffle 我们可以设置一个参数：<code>spark.shuffle.consolidateFiles</code></p>
+<p>相比于未经优化的版本，就是在一个 Executor 中的所有的 task 是可以共用一个 buffer 内存。在 shuffle write 过程中，task 就不是为下游 stage 的每个 task 创建一个磁盘文件了，而是<strong>允许不同的 task 复用同一批磁盘文件</strong>，这样就可以有效将多个 task 的磁盘文件进行一定程度上的合并，从而大幅度减少磁盘文件的数量，进而提升 shuffle write 的性能。此时的文件个数是 <code>CPU core 的数量 × 下一个 stage 的 task 数量</code>。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202312121749334.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202312121749334.png" /></a></p>
+<hr />
+<h3 id="hashshuffle_2">HashShuffle 总结</h3>
+<p>基于 Hash 的 Shuffle 机制的优缺点</p>
+<p>优点：</p>
+<ul>
+<li>可以省略不必要的排序开销。</li>
+<li>避免了排序所需的内存开销。</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>生产的文件过多，会对文件系统造成压力。</li>
+<li>大量小文件的随机读写带来一定的磁盘开销。</li>
+<li>数据块写入时所需的缓存空间也会随之增加，对内存造成压力。</li>
+</ul>
+<hr />
+<h3 id="sortshuffle">SortShuffle</h3>
+<p>SortShuffleManager 的运行机制主要分成三种：</p>
+<ul>
+<li>普通运行机制</li>
+<li>bypass 运行机制，当 shuffle read task 的数量小于等于 <code>spark.shuffle.sort.bypassMergeThreshold</code> 参数的值时（默认为 200），就会启用 bypass 机制</li>
+<li>Tungsten Sort 运行机制，开启此运行机制需设置配置项 <code>spark.shuffle.manager=tungsten-sort</code>。开启此项配置也不能保证就一定采用此运行机制。</li>
+</ul>
+<p><strong>普通运行机制：</strong></p>
+<p>在该模式下，数据会先写入一个内存数据结构中，此时根据不同的 shuffle 算子，可能选用<strong>不同的数据结构</strong>。如果是 reduceByKey 这种聚合类的 shuffle 算子，那么会选用 Map 数据结构，一边通过 Map 进行聚合，一边写入内存；如果是 join 这种普通的 shuffle 算子，那么会选用 Array 数据结构，直接写入内存。接着，每写一条数据进入内存数据结构之后，就会判断一下，是否达到了某个临界阈值。如果达到临界阈值的话，那么就会尝试将内存数据结构中的数据溢写到磁盘，然后清空内存数据结构。</p>
+<p>在溢写到磁盘文件之前，会先根据 key 对内存数据结构中已有的数据进行排序。排序过后，会分批将数据写入磁盘文件。默认的 batch 数量是 10000 条，也就是说，排序好的数据，会以每批 1 万条数据的形式分批写入磁盘文件。写入磁盘文件是通过 Java 的 BufferedOutputStream 实现的。BufferedOutputStream 是 Java 的缓冲输出流，<strong>首先会将数据缓冲在内存中，当内存缓冲满溢之后再一次写入磁盘文件中，这样可以减少磁盘 IO 次数，提升性能</strong>。</p>
+<p>一个 task 将所有数据写入内存数据结构的过程中，会发生多次磁盘溢写操作，也就会产生多个临时文件。<strong>最后会将之前所有的临时磁盘文件都进行合并，这就是 merge 过程</strong>，此时会将之前所有临时磁盘文件中的数据读取出来，然后依次写入最终的磁盘文件之中。此外，由于一个 task 就只对应一个磁盘文件，也就意味着该 task 为下游 stage 的 task 准备的数据都在这一个文件中，因此还会单独写一份<strong>索引文件</strong>，其中标识了下游各个 task 的数据在文件中的 start offset 与 end offset。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202312121755437.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202312121755437.png" /></a></p>
+<hr />
+<p><strong>Bypass 运行机制：</strong></p>
+<p>下游任务数比较少的情况下，基于 Hash Shuffle 实现机制明显比基于 Sort Shuffle 实现机制要快，因此基于 Sort Shuffle 实现机制提供了一个带 Hash 风格的回退方案，就是 bypass 运行机制。对于 Reducer 端分区个数少于配置属性 <code>spark.shuffle.sort.bypassMergeThreshold</code> 设置的个数时，使用带 Hash 风格的回退计划。</p>
+<p>bypass 运行机制的触发条件如下：</p>
+<ul>
+<li>分区个数小于 <code>spark.shuffle.sort.bypassMergeThreshold</code> 参数的值。</li>
+<li>不是聚合类的 shuffle 算子。（因为聚合类算子通常需要使用 Map 数据结构分区、聚合和排序）</li>
+</ul>
+<p>此时，每个 task 会为每个下游 task 都创建一个临时磁盘文件，并将数据按 key 进行 hash 然后根据 key 的 hash 值，将 key 写入对应的磁盘文件之中。当然，写入磁盘文件时也是先写入内存缓冲，缓冲写满之后再溢写到磁盘文件的。最后，同样会将所有临时磁盘文件都合并成一个磁盘文件，并创建一个单独的索引文件。</p>
+<p>该过程的磁盘写机制其实跟未经优化的 HashShuffleManager 是一模一样的，因为都要创建数量惊人的磁盘文件，只是在最后会做一个磁盘文件的合并而已。因此少量的最终磁盘文件，也让该机制相对未经优化的 HashShuffleManager 来说，shuffle read 的性能会更好。</p>
+<p>而该机制与普通 SortShuffleManager 运行机制的不同在于：</p>
+<ul>
+<li>磁盘写机制不同（普通机制是达到阈值就溢写，bypass 机制是 hash partition）</li>
+<li>不会进行排序。</li>
+</ul>
+<p>也就是说，<strong>启用该机制的最大好处在于，shuffle write 过程中，不需要进行数据的排序操作</strong>，也就节省掉了这部分的性能开销。</p>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202312121759449.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202312121759449.png" /></a></p>
+<hr />
+<p><strong>Tungsten Sort 运行机制：</strong></p>
+<p>Tungsten Sort 是对普通 Sort 的一种优化，Tungsten Sort 会进行排序，但排序的不是内容本身，而是内容序列化后字节数组的指针(元数据)，把数据的排序转变为了指针数组的排序，实现了直接对序列化后的二进制数据进行排序。由于直接基于二进制数据进行操作，所以在这里面没有序列化和反序列化的过程。内存的消耗大大降低，相应的，会极大的减少的 GC 的开销。</p>
+<p>要实现 Tungsten Sort Shuffle 机制需要满足以下条件：</p>
+<ul>
+<li>Shuffle 依赖中不带聚合操作或没有对输出进行排序的要求。</li>
+<li>Shuffle 的序列化器支持序列化值的重定位（当前仅支持 KryoSerializer Spark SQL 框架自定义的序列化器）。</li>
+<li>Shuffle 过程中的输出分区个数少于 16777216 个。</li>
+</ul>
+<hr />
+<h3 id="sortshuffle_1">SortShuffle 总结</h3>
+<p>基于 Sort 的 Shuffle 机制的优缺点</p>
+<p>优点：</p>
+<ul>
+<li>小文件的数量大量减少，Mapper 端的内存占用变少</li>
+<li>Spark 不仅可以处理小规模的数据，即使处理大规模的数据，也不会很容易达到性能瓶颈</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>如果 Mapper 中 Task 的数量过大，依旧会产生很多小文件，此时在 Shuffle 传数据的过程中到 Reducer 端， Reducer 会需要同时大量地记录进行反序列化，导致大量内存消耗和 GC 负担巨大，造成系统缓慢，甚至崩溃</li>
+<li>强制了在 Mapper 端必须要排序，即使数据本身并不需要排序</li>
+<li>它要基于记录本身进行排序，这就是 Sort-Based Shuffle 最致命的性能消耗。</li>
+</ul>
+<hr />
+<h2 id="shuffle_2">Shuffle 为什么需要排序以及为什么要合并溢写文件</h2>
+<p>为什么需要排序：</p>
+<ol>
+<li>方便 map 端和 reduce 端聚合，相同 key 的数据会被放到一起，避免每次都要全量扫描，减少磁盘 IO</li>
+<li>溢写前的排序可以让每个溢写文件局部有序，方便最终的合并（merge），减少磁盘 IO</li>
+</ol>
+<p>为什么要合并溢写文件：</p>
+<ul>
+<li>避免产生大量的小文件，减少集群的管理资源开销</li>
+<li>减少 reduce 端读取的文件数量，减少内存占用和磁盘 IO</li>
+</ul>
+<hr />
+<h2 id="spark-task">Spark 为什么让 Task 以线程的方式运行而不是进程</h2>
+<p>在 Hadoop MapReduce 中，每个 map/reduce task 以一个 Java 进程的方式运行。这样的好处是 task 之间相互独立，每个 task 独享进程资源，不会相互干扰，而且监控管理也比较方便。但坏处是 task 之间<strong>不方便共享数据</strong>（e.g.多个 map task 需要读取同一份字典，需要将字典加载到每个 map task 进程中，造成重复加载、资源浪费）。另外，在应用执行过程中，需要不断启停新旧 task，<strong>进程的启停需要做很多初始化等工作</strong>，效率比较低。</p>
+<p>为了<strong>数据共享</strong>和<strong>提高执行效率</strong>，Spark 采用以线程为最小的执行单位，但缺点是线程间会有资源竞争。</p>
+<hr />
+<h2 id="cache-persist">cache 和 persist</h2>
+<p>缓存机制的主要目的是加速计算。</p>
+<ul>
+<li><code>rdd.cache()</code>：将 RDD 持久化到内存中</li>
+<li><code>rdd.persist()</code>：将 RDD 持久化到内存或磁盘中</li>
+<li><code>rdd.unpersist()</code>：将 RDD 从缓存中移除</li>
+</ul>
+<p>Spark 的缓存具有容错机制，如果一个缓存的 RDD 的某个分区丢失了，Spark 将按照原来的计算过程，自动重新计算并进行缓存。</p>
+<p>cache() 是 lazy 执行的，只有遇到 Action 算子时才会执行。</p>
+<p><code>cache() = persist(StorageLevel.MEMORY_ONLY)</code></p>
+<p>RDD 的 cache 默认方式采用 MEMORY_ONLY，DataFrame 的 cache 默认采用 MEMORY_AND_DISK（使用未序列化的 Java 对象格式，优先尝试将数据保存在内存中。如果内存不够存放所有的数据，会将数据写入磁盘文件中）。</p>
+<p>缓存由 Executor 的 blockManager 管理，一旦 Driver 执行结束，blockManager 也会被释放，因此缓存的数据也会丢失。缓存 RDD 的分区存储在 blockManager 的 memoryStore 中，memoryStore 包含了一个 LinkedHashMap，用来存放 RDD 的分区。同时 Spark 也直接利用了 LinkedHashMap 的 LRU 功能实现了缓存替换。</p>
+<hr />
+<h2 id="checkpoint">checkpoint</h2>
+<p><strong>Spark 的错误容忍机制的核心方法</strong>：</p>
+<ol>
+<li>重新执行计算任务（根据 lineage 数据依赖关系，在错误发生时回溯需要重新计算的部分）</li>
+<li>checkpoint 机制</li>
+</ol>
+<p>所谓的检查点其实就是通过将 RDD 中间结果写入磁盘由于血缘依赖过长会造成<strong>容错成本过高</strong>，这样就不如在中间阶段做检查点容错，如果检查点之后有节点出现问题，可以从检查点开始重做血缘，减少了开销。</p>
+<p>RDD Checkpoint 也是将 RDD 进行持久化，但是<strong>只支持硬盘存储</strong>。和缓存不同，Checkpoint 被认为是安全的，<strong>会切断 RDD 的血缘关系</strong>。</p>
+<p>我们知道缓存是分散存储在各个 Executor 上的，Checkpoint 是<strong>收集各个分区的数据，集中存储在一个地方</strong>，这个地方可以是 HDFS、本地文件系统等。</p>
+<p>checkpoint() 是等到 job 计算结束之后再重新启动该 job 计算一遍，对其中需要 checkpoint 的 RDD 进行持久化。也就是说，需要 checkpoint 的 RDD 会被计算两次。</p>
+<p>在实际使用中，Checkpoint 一般和 Cache 配合使用，<strong>先将数据 Cache 到内存中，然后再将数据 Checkpoint 到磁盘中</strong>。这样执行 checkpoint 的 Job 只需要从内存中读取数据，而不需要重新计算，从而提高了效率。</p>
+<div class="admonition note">
+<p class="admonition-title">Cache VS Checkpoint</p>
+<ul>
+<li><strong>目的不同</strong>：cache 的目的是加速计算，checkpoint 的目的更多是为了容错，在 job 运行失败后能够快速恢复</li>
+<li><strong>存储性质和位置不同</strong>：cache 是为了读写速度快，因此主要使用内存；而 checkpoint 是为了能够可靠读写，因此主要使用分布式文件系统</li>
+<li><strong>写入速度和规则不同</strong>：数据缓存速度较快，对 job 的执行时间影响较小；而 checkpoint 速度较慢，会额外启动专门的 job 进行持久化</li>
+<li><strong>对 lineage 的影响不同</strong>：cache 不会切断 RDD 的血缘关系，checkpoint 会切断 RDD 的血缘关系</li>
+<li>
+<p><strong>应用场景不同</strong>：cache 适合会被多次读取、占用空间不是很大的 RDD；checkpoint 适用于数据依赖关系复杂、重新计算代价较高的 RDD</p>
+</li>
+<li>
+<p>cache 是分散存储，各个 Executor 并行执行，效率高</p>
+</li>
+<li>checkpoint 是集中存储，需要将数据从各个 Executor 收集到 Driver</li>
+<li>cache 的数据在 Driver 执行结束后会被删除，而 checkpoint 的数据持久化到了 HDFS 或本地磁盘，不会被删除，也能被其他 Driver program 使用</li>
+</ul>
+</div>
+<hr />
+<h2 id="_4">广播变量</h2>
+<p>广播变量：分布式共享<strong>只读</strong>变量</p>
+<p>广播变量（Broadcast Variables）是一种用于高效分发较大数据集给所有工作节点的机制。它们可以用于<strong>在每个节点上缓存一个只读的大型变量，以便在并行操作中共享</strong>。</p>
+<p>由于 Executor 是进程，进程内各线程资源共享，因此，可以将数据放置在 Executor 的内存中，达到共享的目的。</p>
+<p>相比于闭包数据都是以 Task 为单位发送的，每个 Task 中都包含闭包数据可能会导致一个 Executor 中含有大量重复的数据，占用大量的内存。因此，完全可以将任务中的闭包数据放置在 Executor 的内存中，达到共享的目的。</p>
+<p>当多个 Executor 上需要同一份数据时，可以考虑使用广播变量形式发送数据。尤其当该份数据在多个 Stage 中使用时，通过广播变量一次性发送的方案，执行性能将明显优于当数据需要时再发送的多次发送方案。</p>
+<p>总结：</p>
+<ul>
+<li><strong>减少数据传输</strong>：通过将只读变量广播到集群中，避免了在网络上传输大量数据的开销，减少了网络通信的负担。</li>
+<li><strong>提高性能</strong>：广播变量在每个节点上只有一份副本，减少了内存使用和垃圾回收的压力，提高了任务的执行效率。</li>
+<li><strong>共享数据</strong>：广播变量可以在集群中的所有任务中共享，使得每个任务都可以访问相同的数据，方便数据共享和操作。</li>
+</ul>
+<p><a class="glightbox" href="https://raw.githubusercontent.com/MXJULY/image/main/img/202311210341962.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="https://raw.githubusercontent.com/MXJULY/image/main/img/202311210341962.png" /></a></p>
+<hr />
+<h2 id="_5">累加器</h2>
+<p>累加器：分布式共享<strong>只写</strong>变量</p>
+<p>累加器用来把 Executor 端变量信息聚合到 Driver 端。在 Driver 程序中定义的变量，在 Executor 端的每个 Task 都会得到这个变量的一份新的副本，每个 task 更新这些副本的值后，传回 Driver 端进行 merge。</p>
+<p>累加器区别于广播变量的特性是：累加器取值 accumulator.value 在 Executor 端无法被读取，只能在 Driver 端被读取，而 Executor 端只能执行累加操作。</p>
+<p>注意：在转换算子中调用累加器，如果没有行动算子的话，那么相当于没有执行，累加器结果会不正确。因此一般情况下累加器要放在行动算子中使用。同时注意，如果使用累加器的 RDD 被多次行动算子使用，那么累加器会被多次调用，这样可能会导致产生非预期的结果（建议在行动算子前 <code>cache()</code>）。</p>
+<p>一些思考：一些简单的统计类累加逻辑可以通过自定义累加器解决，这样可以通过使用全局分布式的累加器避免 shuffle。</p>
+<blockquote>
+<p>累加器解决了什么问题？</p>
+<p>在分布式代码执行中，进行全局累加或统计信息。</p>
+</blockquote>
+<p>使用方法：先定义累加器变量，然后在 RDD 算子中调用 add 函数，从而更新累加器状态，最后通过调用 value 函数来获取累加器的最终结果。</p>
+<p>总结：</p>
+<ul>
+<li><strong>分布式累加</strong>：累加器变量可以在并行任务中进行累加操作，无论任务在集群中的哪个节点执行，都可以正确地对变量进行更新，确保了数据的一致性。</li>
+<li><strong>统计信息收集</strong>：累加器变量可以用于收集任务执行期间的统计信息，例如计数、求和、最大值、最小值等。这对于分布式计算中的调试和监控非常有用。</li>
+</ul>
+<hr />
+<h2 id="spark-oom">Spark OOM</h2>
+<ul>
+<li><strong>情况一：在 Driver 端出现 OOM</strong></li>
+</ul>
+<p>一般来说 Driver 的内存大小不用设置，但是当出现使用 collect() 等 Action 算子时，Driver 会将所有的数据都拉取到 Driver 端，如果数据量过大，就会出现 OOM 的情况。</p>
+<ul>
+<li><strong>情况二：mapPartitions OOM</strong></li>
+</ul>
+<p>mapPartitions 可以以分区为单位进行数据转换操作，但是会将整个分区的数据加载到内存进行引用，处理完的数据是不会被释放的，存在对象的引用，只有程序结束才会释放。因此在内存较小、数据量较大的场合下，容易导致 OOM。</p>
+<ul>
+<li><strong>情况三：Hash Join OOM</strong></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "search.suggest", "search.highlight", "content.code.copy", "navigation.top", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.f1b6f286.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
+</html>
